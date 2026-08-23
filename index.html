@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en" data-osx-theme="aqua">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A showcase for OS X-inspired web components authored with Vue." />
+    <title>OSX Components</title>
+  </head>
+  <body>
+    <main>
+      <header class="site-header">
+        <a class="brand" href="#top" aria-label="OSX Components home"><span>◆</span><strong>OSX Components</strong></a>
+        <nav aria-label="Showcase"><a href="#components">Components</a><a href="#playground">Playground</a><a href="#tokens">Tokens</a><a href="https://github.com/Vequan23/osx-components" rel="noreferrer">GitHub</a></nav>
+      </header>
+
+      <section id="top" class="hero">
+        <p class="eyebrow">VUE-POWERED · FRAMEWORK-AGNOSTIC</p>
+        <h1>The interface language of a beloved era, rebuilt for the modern web.</h1>
+        <p class="lede">Accessible custom elements with Aqua precision, Graphite restraint, and a Panther dark theme that feels native to the family.</p>
+        <div class="hero-actions"><osx-button variant="primary" id="explore">Explore components</osx-button><code>npm install osx-components</code></div>
+      </section>
+
+      <section class="catalog" id="components">
+        <header><div><p class="eyebrow">COMPONENT CATALOG</p><h2>A complete application vocabulary.</h2></div><span>12 components · v0.1</span></header>
+        <div class="catalog-grid">
+          <article><span>Action</span><strong>&lt;osx-button&gt;</strong><p>Default, primary, danger, compact, and loading actions.</p><b>Stable</b></article>
+          <article><span>Form</span><strong>&lt;osx-checkbox&gt;</strong><p>Checked, mixed, disabled, and slotted-label states.</p><b>New</b></article>
+          <article><span>Feedback</span><strong>&lt;osx-progress&gt;</strong><p>Determinate and indeterminate Aqua progress bars.</p><b>Stable</b></article>
+          <article><span>Navigation</span><strong>&lt;osx-segmented-control&gt;</strong><p>Compact single-selection views with radio semantics.</p><b>Stable</b></article>
+          <article><span>Form</span><strong>&lt;osx-select&gt;</strong><p>Native selection behavior with OS X pop-up styling.</p><b>New</b></article>
+          <article><span>Overlay</span><strong>&lt;osx-sheet&gt;</strong><p>Window-attached confirmation and task dialogs.</p><b>New</b></article>
+          <article><span>Navigation</span><strong>&lt;osx-source-list&gt;</strong><p>Finder-style application navigation and selection.</p><b>New</b></article>
+          <article><span>Layout</span><strong>&lt;osx-split-view&gt;</strong><p>Horizontal and vertical primary-detail composition.</p><b>New</b></article>
+          <article><span>Feedback</span><strong>&lt;osx-status-bar&gt;</strong><p>Compact readiness, activity, and connection state.</p><b>New</b></article>
+          <article><span>Form</span><strong>&lt;osx-text-field&gt;</strong><p>Labeled text, email, password, and search inputs.</p><b>Stable</b></article>
+          <article><span>Structure</span><strong>&lt;osx-toolbar&gt;</strong><p>Leading, centered, and trailing application actions.</p><b>Stable</b></article>
+          <article><span>Structure</span><strong>&lt;osx-window&gt;</strong><p>Window chrome, controls, toolbar, content, and footer.</p><b>Stable</b></article>
+        </div>
+      </section>
+
+      <section class="showcase" id="playground">
+        <div class="showcase-copy"><p class="eyebrow">LIVE COMPONENTS</p><h2>One vocabulary. Three appearances.</h2><p>Everything below is a registered web component. Change the appearance and every Shadow DOM component updates through inherited design tokens.</p><osx-segmented-control id="theme-picker" items="Aqua,Graphite,Panther" value="Aqua" label="Theme"></osx-segmented-control></div>
+
+        <osx-window id="demo-window" title="System Preferences" subtitle="Appearance" class="demo-window">
+          <osx-toolbar slot="toolbar" label="Preference categories">
+            <strong slot="leading">Appearance</strong>
+            <osx-segmented-control id="preference-view" items="General,Controls" value="General" label="Preference view"></osx-segmented-control>
+            <osx-button id="show-all" slot="trailing" size="small">Show All</osx-button>
+          </osx-toolbar>
+          <osx-split-view class="preference-pane" primary-size="155px" label="Preference navigation and detail">
+            <osx-source-list id="source-list" slot="primary" items="Appearance,Desktop,Dock,Accounts" value="Appearance" heading="Personal"></osx-source-list>
+            <section class="settings-pane">
+              <h3>Interface controls</h3>
+              <p>Composed primitives remain crisp at practical application sizes.</p>
+              <div class="field-grid"><osx-text-field id="display-name" label="Display name" value="Susan Kare" hint="Visible to collaborators"></osx-text-field><osx-select id="highlight-select" label="Highlight color" options="Aqua,Graphite,Panther" value="Aqua"></osx-select></div>
+              <div class="option-row"><osx-checkbox id="smooth-scroll" checked label="Use smooth scrolling"></osx-checkbox><osx-checkbox id="reduce-transparency" label="Reduce transparency"></osx-checkbox></div>
+              <div class="button-row"><osx-button id="open-sheet">Open sheet</osx-button><osx-button id="remove-preference" variant="danger">Remove</osx-button><osx-button id="save-preferences" variant="primary">Save changes</osx-button></div>
+              <label class="progress-label">Installing components <span id="progress-value">68%</span></label><osx-progress id="progress" value="68" label="Installing components"></osx-progress>
+            </section>
+          </osx-split-view>
+          <osx-status-bar id="demo-status" label="Components ready" status="ready" detail="12 registered"></osx-status-bar>
+        </osx-window>
+        <osx-sheet id="demo-sheet" title="Apply appearance?" description="This updates every component through inherited design tokens."><p>Your application state stays untouched.</p></osx-sheet>
+      </section>
+
+      <section id="tokens" class="token-section"><p class="eyebrow">THEMING CONTRACT</p><h2>Change the system, not every component.</h2><div class="token-grid"><article><i style="--swatch:var(--osx-accent)"></i><strong>--osx-accent</strong><span>Selection and primary action color</span></article><article><i style="--swatch:var(--osx-surface)"></i><strong>--osx-surface</strong><span>Primary application surface</span></article><article><i style="--swatch:var(--osx-border)"></i><strong>--osx-border</strong><span>Structural chrome and separation</span></article><article><i style="--swatch:var(--osx-focus)"></i><strong>--osx-focus</strong><span>Visible keyboard focus treatment</span></article></div></section>
+    </main>
+    <script type="module" src="/demo/main.ts"></script>
+  </body>
+</html>
