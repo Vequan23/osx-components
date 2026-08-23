@@ -10,7 +10,7 @@
     <main>
       <header class="site-header">
         <a class="brand" href="#top" aria-label="OSX Components home"><span>◆</span><strong>OSX Components</strong></a>
-        <nav aria-label="Showcase"><a href="#components">Components</a><a href="#playground">Playground</a><a href="#agents">Agents</a><a href="#tokens">Tokens</a><a href="https://github.com/Vequan23/osx-components" rel="noreferrer">GitHub</a></nav>
+        <nav aria-label="Showcase"><a href="#components">Components</a><a href="#playground">Playground</a><a href="#agents">Agents</a><a href="#snippets">Snippets</a><a href="#tokens">Tokens</a><a href="https://github.com/Vequan23/osx-components" rel="noreferrer">GitHub</a></nav>
       </header>
 
       <section id="top" class="hero">
@@ -21,7 +21,7 @@
       </section>
 
       <section class="catalog" id="components">
-        <header><div><p class="eyebrow">COMPONENT CATALOG</p><h2>A complete application vocabulary.</h2></div><span>18 components · v0.2</span></header>
+        <header><div><p class="eyebrow">COMPONENT CATALOG</p><h2>A complete application vocabulary.</h2></div><span>21 components · v0.3</span></header>
         <div class="catalog-grid">
           <article><span>Application</span><strong>&lt;osx-app-shell&gt;</strong><p>Responsive workspace chrome with navigation, content, inspector, composer, and status regions.</p><b>New</b></article>
           <article><span>Agent</span><strong>&lt;osx-agent-composer&gt;</strong><p>Prompt entry with Enter-to-send, model context, busy state, and stop action.</p><b>New</b></article>
@@ -29,6 +29,9 @@
           <article><span>Agent</span><strong>&lt;osx-agent-run-status&gt;</strong><p>Plan, work, verify, complete, and failure lifecycle visualization.</p><b>New</b></article>
           <article><span>Agent</span><strong>&lt;osx-agent-approval&gt;</strong><p>Risk-aware human approval with explicit scope and allow or deny actions.</p><b>New</b></article>
           <article><span>Agent</span><strong>&lt;osx-tool-call&gt;</strong><p>Expandable queued, running, successful, and failed tool activity.</p><b>New</b></article>
+          <article><span>Developer</span><strong>&lt;osx-diff-viewer&gt;</strong><p>Unified and split patches with line numbers, stats, layout switching, and copy events.</p><b>New</b></article>
+          <article><span>Developer</span><strong>&lt;osx-terminal&gt;</strong><p>Command, output, duration, running state, rerun, interrupt, and clear controls.</p><b>New</b></article>
+          <article><span>Developer</span><strong>&lt;osx-file-tree&gt;</strong><p>Filterable repository hierarchy with folders, selection, and Git status markers.</p><b>New</b></article>
           <article><span>Action</span><strong>&lt;osx-button&gt;</strong><p>Default, primary, danger, compact, and loading actions.</p><b>Stable</b></article>
           <article><span>Form</span><strong>&lt;osx-checkbox&gt;</strong><p>Checked, mixed, disabled, and slotted-label states.</p><b>New</b></article>
           <article><span>Feedback</span><strong>&lt;osx-progress&gt;</strong><p>Determinate and indeterminate Aqua progress bars.</p><b>Stable</b></article>
@@ -71,21 +74,17 @@
 
       <section class="agent-section" id="agents">
         <header><div><p class="eyebrow">AGENT APPLICATION KIT</p><h2>Build trustworthy agent workspaces, not mystery boxes.</h2></div><p>Every consequential step has a visible state, bounded scope, and human decision point. The components stay model- and runtime-agnostic.</p></header>
-        <osx-app-shell id="agent-shell" app-title="Project Agent" sidebar-width="180px" inspector-width="240px" label="Agent workspace demonstration">
+        <osx-app-shell id="agent-shell" app-title="Project Agent" sidebar-width="250px" inspector-width="240px" label="Agent workspace demonstration">
           <osx-segmented-control slot="toolbar" items="Chat,Changes" value="Chat" label="Workspace view"></osx-segmented-control>
-          <nav class="agent-nav" slot="sidebar" aria-label="Agent sessions">
-            <p>WORKSPACE</p>
-            <button class="active" type="button"><span>✦</span><strong>New task</strong></button>
-            <button type="button"><span>✓</span><strong>Responsive audit</strong><small>2m</small></button>
-            <button type="button"><span>⌘</span><strong>Package release</strong><small>18m</small></button>
-          </nav>
+          <osx-file-tree id="agent-file-tree" slot="sidebar" files="README.md,package.json,src/index.ts,src/theme.css,src/components/OsxAgentComposer.ce.vue,src/components/OsxDiffViewer.ce.vue,src/components/OsxFileTree.ce.vue,src/components/OsxTerminal.ce.vue,test/package.test.mjs" selected="src/components/OsxDiffViewer.ce.vue" label="Project files"></osx-file-tree>
           <div class="agent-thread" id="agent-thread">
             <osx-agent-message role="user" author="You" timestamp="Just now"><p>Audit the authentication flow and fix the failing refresh-token test.</p></osx-agent-message>
             <osx-agent-message role="assistant" author="Aperta" model="Claude Sonnet" timestamp="Just now"><p>I found the failure in token rotation. I’ll update the service and verify the focused test before requesting promotion.</p></osx-agent-message>
             <div class="agent-run-stack">
               <osx-agent-run-status id="agent-run" phase="verifying" label="Fix refresh-token rotation" detail="3 of 4 phases"></osx-agent-run-status>
+              <osx-diff-viewer id="agent-diff" file="src/services/RefreshTokenService.java" language="java" view="unified" label="Refresh token patch"></osx-diff-viewer>
+              <osx-terminal id="agent-terminal" title="Focused verification" cwd="~/auth-service" command="./mvnw -q -Dtest=RefreshTokenTest test" status="success" duration="7.4s"></osx-terminal>
               <osx-tool-call name="Read" status="success" summary="RefreshTokenService.java" duration="82ms"><span>Loaded 164 lines from the service implementation.</span></osx-tool-call>
-              <osx-tool-call name="Test" status="success" summary="./mvnw -q -Dtest=RefreshTokenTest test" duration="7.4s" open><span>Tests run: 6, Failures: 0, Errors: 0, Skipped: 0</span></osx-tool-call>
               <osx-agent-approval id="agent-approval" title="Promote verified patch" description="Apply the isolated changes to your working tree." risk="medium" scope="2 files · +18 −6" approve-label="Promote" reject-label="Keep isolated"></osx-agent-approval>
             </div>
           </div>
@@ -96,6 +95,19 @@
           </aside>
           <osx-status-bar id="agent-status" slot="status" label="Waiting for approval" status="working" detail="Evidence retained locally"></osx-status-bar>
         </osx-app-shell>
+      </section>
+
+      <section class="snippet-section" id="snippets">
+        <header><div><p class="eyebrow">SHAREABLE SNIPPET LAB</p><h2>One component system. Every frontend.</h2></div><p>Switch frameworks, copy a working starter, or share the exact selection through the URL. The output stays native because the runtime is built on Custom Elements.</p></header>
+        <osx-window title="Agent shell starter" subtitle="Framework-ready" closeable="false" minimizable="false" zoomable="false" class="snippet-window">
+          <osx-toolbar slot="toolbar" label="Snippet controls">
+            <strong slot="leading">Framework</strong>
+            <osx-segmented-control id="snippet-framework" items="HTML,Vue,React,Svelte" value="HTML" label="Snippet framework"></osx-segmented-control>
+            <div class="snippet-actions" slot="trailing"><osx-button id="copy-snippet" size="small">Copy</osx-button><osx-button id="share-snippet" variant="primary" size="small">Share link</osx-button></div>
+          </osx-toolbar>
+          <div class="snippet-code"><div class="snippet-meta"><span id="snippet-file">index.html</span><span id="snippet-status" role="status">Ready to copy</span></div><pre><code id="snippet-output">Loading snippet…</code></pre></div>
+          <osx-status-bar label="Framework-neutral Custom Elements" status="ready" detail="No runtime lock-in"></osx-status-bar>
+        </osx-window>
       </section>
 
       <section id="tokens" class="token-section"><p class="eyebrow">THEMING CONTRACT</p><h2>Change the system, not every component.</h2><div class="token-grid"><article><i style="--swatch:var(--osx-accent)"></i><strong>--osx-accent</strong><span>Selection and primary action color</span></article><article><i style="--swatch:var(--osx-surface)"></i><strong>--osx-surface</strong><span>Primary application surface</span></article><article><i style="--swatch:var(--osx-border)"></i><strong>--osx-border</strong><span>Structural chrome and separation</span></article><article><i style="--swatch:var(--osx-focus)"></i><strong>--osx-focus</strong><span>Visible keyboard focus treatment</span></article></div></section>

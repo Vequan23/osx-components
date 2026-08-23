@@ -97,3 +97,190 @@ approval?.addEventListener("reject", () => {
   approval.disabled = true;
   setAgentStatus("Patch kept isolated", "ready", "Working tree unchanged");
 });
+
+type DiffViewerElement = HTMLElement & { patch: string; file: string; view: "unified" | "split" };
+type TerminalElement = HTMLElement & { output: string; status: "idle" | "running" | "success" | "error"; duration: string };
+type FileTreeElement = HTMLElement & { statuses: string };
+const agentDiff = document.querySelector("#agent-diff") as DiffViewerElement | null;
+const agentTerminal = document.querySelector("#agent-terminal") as TerminalElement | null;
+const agentFileTree = document.querySelector("#agent-file-tree") as FileTreeElement | null;
+const demoPatch = [
+  "@@ -42,8 +42,12 @@ public TokenPair rotate(String rawToken) {",
+  "+     RefreshToken current = repository.findValid(hash(rawToken))",
+  "+         .orElseThrow(InvalidRefreshTokenException::new);",
+  "-     current.setRevoked(true);",
+  "-     return issuePair(current.getAccount());",
+  "+     current.revoke(clock.instant());",
+  "+     TokenPair replacement = issuePair(current.getAccount());",
+  "+     repository.save(current);",
+  "+     audit.recordRotation(current, replacement.refreshToken());",
+  "+     return replacement;",
+  "  }",
+].join("\n");
+if (agentDiff) agentDiff.patch = demoPatch;
+if (agentTerminal) agentTerminal.output = [
+  "[INFO] Scanning for projects…",
+  "[INFO] Running RefreshTokenTest",
+  "[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0",
+  "[INFO] BUILD SUCCESS",
+].join("\n");
+if (agentFileTree) agentFileTree.statuses = JSON.stringify({
+  "src/components/OsxDiffViewer.ce.vue": "modified",
+  "src/components/OsxFileTree.ce.vue": "added",
+  "src/components/OsxTerminal.ce.vue": "added",
+});
+agentFileTree?.addEventListener("select", (event) => setAgentStatus(`${eventValue(event)} selected`, "ready", "Repository context"));
+agentDiff?.addEventListener("view-change", (event) => setAgentStatus(`${eventValue(event)} diff selected`, "ready", "Review layout"));
+agentDiff?.addEventListener("copy", async (event) => {
+  await copyText(eventValue(event));
+  setAgentStatus("Patch copied", "ready", "Clipboard updated");
+});
+agentTerminal?.addEventListener("rerun", () => {
+  agentTerminal.status = "running";
+  agentTerminal.duration = "";
+  agentTerminal.output = "[INFO] Running focused verification…";
+  setAgentStatus("Verification running", "working", "Focused test");
+  window.setTimeout(() => {
+    agentTerminal.status = "success";
+    agentTerminal.duration = "7.2s";
+    agentTerminal.output = "[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0\n[INFO] BUILD SUCCESS";
+    setAgentStatus("Verification passed", "ready", "6 tests passed");
+  }, 900);
+});
+agentTerminal?.addEventListener("interrupt", () => {
+  agentTerminal.status = "error";
+  agentTerminal.output += "\n[ERROR] Command interrupted by user";
+  setAgentStatus("Verification interrupted", "offline", "Review required");
+});
+agentTerminal?.addEventListener("clear", () => setAgentStatus("Terminal cleared", "ready", "Output removed"));
+
+const snippets = {
+  HTML: {
+    file: "index.html",
+    code: `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/osx-components@0.3.0/dist/osx-components.css" />
+<script type="module">
+  import { registerOsxComponents } from "https://cdn.jsdelivr.net/npm/osx-components@0.3.0/dist/osx-components.js";
+  registerOsxComponents();
+</script>
+
+<div data-osx-theme="panther">
+  <osx-app-shell app-title="Project Agent" inspector-open>
+    <osx-agent-message author="Agent" model="Your model">
+      I inspected the patch and verified the focused test.
+    </osx-agent-message>
+    <osx-agent-composer slot="composer" model="Provider · Model">
+    </osx-agent-composer>
+  </osx-app-shell>
+</div>`,
+  },
+  Vue: {
+    file: "AgentWorkspace.vue",
+    code: `<script setup lang="ts">
+import { onMounted } from "vue";
+import { registerOsxComponents } from "osx-components";
+import "osx-components/theme.css";
+
+onMounted(registerOsxComponents);
+</script>
+
+<template>
+  <div data-osx-theme="panther">
+    <osx-app-shell app-title="Project Agent" inspector-open>
+      <osx-agent-message author="Agent" model="Your model">
+        I inspected the patch and verified the focused test.
+      </osx-agent-message>
+      <osx-agent-composer slot="composer" model="Provider · Model" />
+    </osx-app-shell>
+  </div>
+</template>`,
+  },
+  React: {
+    file: "AgentWorkspace.tsx",
+    code: `import { useEffect } from "react";
+import { registerOsxComponents } from "osx-components";
+import "osx-components/theme.css";
+
+export function AgentWorkspace() {
+  useEffect(() => registerOsxComponents(), []);
+
+  return (
+    <div data-osx-theme="panther">
+      <osx-app-shell app-title="Project Agent" inspector-open="true">
+        <osx-agent-message author="Agent" model="Your model">
+          I inspected the patch and verified the focused test.
+        </osx-agent-message>
+        <osx-agent-composer slot="composer" model="Provider · Model" />
+      </osx-app-shell>
+    </div>
+  );
+}`,
+  },
+  Svelte: {
+    file: "AgentWorkspace.svelte",
+    code: `<script lang="ts">
+  import { onMount } from "svelte";
+  import { registerOsxComponents } from "osx-components";
+  import "osx-components/theme.css";
+
+  onMount(registerOsxComponents);
+</script>
+
+<div data-osx-theme="panther">
+  <osx-app-shell app-title="Project Agent" inspector-open>
+    <osx-agent-message author="Agent" model="Your model">
+      I inspected the patch and verified the focused test.
+    </osx-agent-message>
+    <osx-agent-composer slot="composer" model="Provider · Model" />
+  </osx-app-shell>
+</div>`,
+  },
+} as const;
+type Framework = keyof typeof snippets;
+const snippetPicker = document.querySelector("#snippet-framework") as HTMLElement & { value: string } | null;
+const snippetOutput = document.querySelector("#snippet-output");
+const snippetFile = document.querySelector("#snippet-file");
+const snippetStatus = document.querySelector("#snippet-status");
+let currentFramework: Framework = "HTML";
+function isFramework(value: string): value is Framework { return value in snippets; }
+function renderSnippet(framework: Framework, syncUrl = true) {
+  currentFramework = framework;
+  if (snippetPicker) snippetPicker.value = framework;
+  if (snippetOutput) snippetOutput.textContent = snippets[framework].code;
+  if (snippetFile) snippetFile.textContent = snippets[framework].file;
+  if (snippetStatus) snippetStatus.textContent = `${framework} starter ready`;
+  if (syncUrl) {
+    const url = new URL(window.location.href);
+    url.searchParams.set("framework", framework.toLowerCase());
+    url.hash = "snippets";
+    window.history.replaceState({}, "", url);
+  }
+}
+async function copyText(value: string): Promise<void> {
+  if (navigator.clipboard?.writeText) {
+    try { await navigator.clipboard.writeText(value); return; } catch { /* Use the selection fallback below. */ }
+  }
+  const field = document.createElement("textarea");
+  field.value = value;
+  field.style.position = "fixed";
+  field.style.opacity = "0";
+  document.body.append(field);
+  field.select();
+  document.execCommand("copy");
+  field.remove();
+}
+snippetPicker?.addEventListener("change", (event) => {
+  const framework = eventValue(event);
+  if (isFramework(framework)) renderSnippet(framework);
+});
+document.querySelector("#copy-snippet")?.addEventListener("click", async () => {
+  await copyText(snippets[currentFramework].code);
+  if (snippetStatus) snippetStatus.textContent = `${currentFramework} snippet copied`;
+});
+document.querySelector("#share-snippet")?.addEventListener("click", async () => {
+  renderSnippet(currentFramework);
+  await copyText(window.location.href);
+  if (snippetStatus) snippetStatus.textContent = "Share link copied";
+});
+const requestedFramework = new URL(window.location.href).searchParams.get("framework");
+const initialFramework = requestedFramework ? `${requestedFramework.slice(0,1).toUpperCase()}${requestedFramework.slice(1).toLowerCase()}` : "HTML";
+renderSnippet(isFramework(initialFramework) ? initialFramework : "HTML", false);

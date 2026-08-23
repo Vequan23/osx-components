@@ -7,6 +7,8 @@ import OsxAgentRunStatusComponent from "./components/OsxAgentRunStatus.ce.vue";
 import OsxAppShellComponent from "./components/OsxAppShell.ce.vue";
 import OsxButtonComponent from "./components/OsxButton.ce.vue";
 import OsxCheckboxComponent from "./components/OsxCheckbox.ce.vue";
+import OsxDiffViewerComponent from "./components/OsxDiffViewer.ce.vue";
+import OsxFileTreeComponent from "./components/OsxFileTree.ce.vue";
 import OsxProgressComponent from "./components/OsxProgress.ce.vue";
 import OsxSegmentedControlComponent from "./components/OsxSegmentedControl.ce.vue";
 import OsxSelectComponent from "./components/OsxSelect.ce.vue";
@@ -15,6 +17,7 @@ import OsxSourceListComponent from "./components/OsxSourceList.ce.vue";
 import OsxSplitViewComponent from "./components/OsxSplitView.ce.vue";
 import OsxStatusBarComponent from "./components/OsxStatusBar.ce.vue";
 import OsxTextFieldComponent from "./components/OsxTextField.ce.vue";
+import OsxTerminalComponent from "./components/OsxTerminal.ce.vue";
 import OsxToolCallComponent from "./components/OsxToolCall.ce.vue";
 import OsxToolbarComponent from "./components/OsxToolbar.ce.vue";
 import OsxWindowComponent from "./components/OsxWindow.ce.vue";
@@ -27,6 +30,8 @@ export const componentDefinitions = {
   "osx-app-shell": OsxAppShellComponent,
   "osx-button": OsxButtonComponent,
   "osx-checkbox": OsxCheckboxComponent,
+  "osx-diff-viewer": OsxDiffViewerComponent,
+  "osx-file-tree": OsxFileTreeComponent,
   "osx-progress": OsxProgressComponent,
   "osx-segmented-control": OsxSegmentedControlComponent,
   "osx-select": OsxSelectComponent,
@@ -35,6 +40,7 @@ export const componentDefinitions = {
   "osx-split-view": OsxSplitViewComponent,
   "osx-status-bar": OsxStatusBarComponent,
   "osx-text-field": OsxTextFieldComponent,
+  "osx-terminal": OsxTerminalComponent,
   "osx-tool-call": OsxToolCallComponent,
   "osx-toolbar": OsxToolbarComponent,
   "osx-window": OsxWindowComponent,
@@ -57,6 +63,8 @@ export {
   OsxAppShellComponent,
   OsxButtonComponent,
   OsxCheckboxComponent,
+  OsxDiffViewerComponent,
+  OsxFileTreeComponent,
   OsxProgressComponent,
   OsxSegmentedControlComponent,
   OsxSelectComponent,
@@ -65,6 +73,7 @@ export {
   OsxSplitViewComponent,
   OsxStatusBarComponent,
   OsxTextFieldComponent,
+  OsxTerminalComponent,
   OsxToolCallComponent,
   OsxToolbarComponent,
   OsxWindowComponent,

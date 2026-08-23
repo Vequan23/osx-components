@@ -30,7 +30,7 @@ withDefaults(defineProps<{
 
 <style>
 :host { display: block; min-width: 0; color: var(--osx-text); font-family: var(--osx-font); }
-.shell { min-height: 520px; display: grid; grid-template: "toolbar toolbar toolbar" auto "sidebar main inspector" minmax(0,1fr) "status status status" auto / var(--osx-sidebar-width) minmax(0,1fr) var(--osx-inspector-width); overflow: hidden; border: 1px solid var(--osx-border); border-radius: 9px; background: var(--osx-surface); box-shadow: var(--osx-shadow); }
+.shell { height: 100%; min-height: 520px; display: grid; grid-template: "toolbar toolbar toolbar" auto "sidebar main inspector" minmax(0,1fr) "status status status" auto / var(--osx-sidebar-width) minmax(0,1fr) var(--osx-inspector-width); overflow: hidden; border: 1px solid var(--osx-border); border-radius: 9px; background: var(--osx-surface); box-shadow: var(--osx-shadow); }
 .shell.without-inspector { grid-template: "toolbar toolbar" auto "sidebar main" minmax(0,1fr) "status status" auto / var(--osx-sidebar-width) minmax(0,1fr); }
 header { grid-area: toolbar; min-height: 44px; display: flex; gap: 16px; align-items: center; justify-content: space-between; padding: 7px 12px; border-bottom: 1px solid var(--osx-border); background: linear-gradient(var(--osx-title-start),var(--osx-title-end)); box-shadow: 0 1px var(--osx-highlight) inset; }
 header strong { overflow: hidden; font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }

@@ -22,6 +22,8 @@ export type OsxButtonProps = {
 };
 
 export type OsxCheckboxProps = { checked?: boolean; label?: string; disabled?: boolean; indeterminate?: boolean };
+export type OsxDiffViewerProps = { file?: string; patch?: string; view?: "unified" | "split"; language?: string; additions?: number; deletions?: number; label?: string };
+export type OsxFileTreeProps = { files?: string; selected?: string; statuses?: string; label?: string; filterable?: boolean };
 export type OsxProgressProps = { value?: number; max?: number; indeterminate?: boolean; label?: string };
 export type OsxSegmentedControlProps = { items?: string; value?: string; label?: string; disabled?: boolean };
 export type OsxSelectProps = { options?: string; value?: string; label?: string; disabled?: boolean };
@@ -37,6 +39,7 @@ export type OsxTextFieldProps = {
   disabled?: boolean;
   hint?: string;
 };
+export type OsxTerminalProps = { title?: string; command?: string; output?: string; cwd?: string; status?: "idle" | "running" | "success" | "error"; duration?: string; label?: string };
 export type OsxToolbarProps = { label?: string; compact?: boolean };
 export type OsxToolCallProps = { name?: string; status?: "queued" | "running" | "success" | "error"; summary?: string; duration?: string; open?: boolean };
 export type OsxWindowProps = { title?: string; subtitle?: string; active?: boolean; closeable?: boolean; minimizable?: boolean; zoomable?: boolean };
@@ -48,6 +51,8 @@ export const OsxAgentRunStatusComponent: DefineComponent<OsxAgentRunStatusProps>
 export const OsxAppShellComponent: DefineComponent<OsxAppShellProps>;
 export const OsxButtonComponent: DefineComponent<OsxButtonProps>;
 export const OsxCheckboxComponent: DefineComponent<OsxCheckboxProps>;
+export const OsxDiffViewerComponent: DefineComponent<OsxDiffViewerProps>;
+export const OsxFileTreeComponent: DefineComponent<OsxFileTreeProps>;
 export const OsxProgressComponent: DefineComponent<OsxProgressProps>;
 export const OsxSegmentedControlComponent: DefineComponent<OsxSegmentedControlProps>;
 export const OsxSelectComponent: DefineComponent<OsxSelectProps>;
@@ -56,6 +61,7 @@ export const OsxSourceListComponent: DefineComponent<OsxSourceListProps>;
 export const OsxSplitViewComponent: DefineComponent<OsxSplitViewProps>;
 export const OsxStatusBarComponent: DefineComponent<OsxStatusBarProps>;
 export const OsxTextFieldComponent: DefineComponent<OsxTextFieldProps>;
+export const OsxTerminalComponent: DefineComponent<OsxTerminalProps>;
 export const OsxToolbarComponent: DefineComponent<OsxToolbarProps>;
 export const OsxToolCallComponent: DefineComponent<OsxToolCallProps>;
 export const OsxWindowComponent: DefineComponent<OsxWindowProps>;
@@ -68,6 +74,8 @@ export const componentDefinitions: {
   "osx-app-shell": typeof OsxAppShellComponent;
   "osx-button": typeof OsxButtonComponent;
   "osx-checkbox": typeof OsxCheckboxComponent;
+  "osx-diff-viewer": typeof OsxDiffViewerComponent;
+  "osx-file-tree": typeof OsxFileTreeComponent;
   "osx-progress": typeof OsxProgressComponent;
   "osx-segmented-control": typeof OsxSegmentedControlComponent;
   "osx-select": typeof OsxSelectComponent;
@@ -76,6 +84,7 @@ export const componentDefinitions: {
   "osx-split-view": typeof OsxSplitViewComponent;
   "osx-status-bar": typeof OsxStatusBarComponent;
   "osx-text-field": typeof OsxTextFieldComponent;
+  "osx-terminal": typeof OsxTerminalComponent;
   "osx-toolbar": typeof OsxToolbarComponent;
   "osx-tool-call": typeof OsxToolCallComponent;
   "osx-window": typeof OsxWindowComponent;

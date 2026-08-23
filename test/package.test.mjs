@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
-const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-app-shell", "osx-button", "osx-checkbox", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-source-list", "osx-split-view", "osx-status-bar", "osx-text-field", "osx-tool-call", "osx-toolbar", "osx-window"];
-const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAppShell.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxSourceList.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTextField.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxWindow.ce.vue"];
+const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-app-shell", "osx-button", "osx-checkbox", "osx-diff-viewer", "osx-file-tree", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-source-list", "osx-split-view", "osx-status-bar", "osx-terminal", "osx-text-field", "osx-tool-call", "osx-toolbar", "osx-window"];
+const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAppShell.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxDiffViewer.ce.vue", "OsxFileTree.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxSourceList.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxWindow.ce.vue"];
 
 test("publishes a framework-neutral custom element registry", async () => {
   const source = await read("src/index.ts");
@@ -38,8 +38,41 @@ test("component typography respects a 12px accessibility floor", async () => {
 test("showcase catalog names every published element", async () => {
   const [source, page] = await Promise.all([read("src/index.ts"), read("index.html")]);
   const tags = [...source.matchAll(/"(osx-[a-z-]+)":/g)].map((match) => match[1]);
-  assert.equal(tags.length, 18);
+  assert.equal(tags.length, 21);
   for (const tag of tags) assert.match(page, new RegExp(`&lt;${tag}&gt;`));
+});
+
+test("signature developer components expose inspectable repository evidence", async () => {
+  const [diff, terminal, tree, types, page, behavior] = await Promise.all([
+    read("src/components/OsxDiffViewer.ce.vue"),
+    read("src/components/OsxTerminal.ce.vue"),
+    read("src/components/OsxFileTree.ce.vue"),
+    read("types/index.d.ts"),
+    read("index.html"),
+    read("demo/main.ts"),
+  ]);
+  assert.match(diff, /"unified" \| "split"/);
+  assert.match(diff, /"view-change": \[view:/);
+  assert.match(terminal, /rerun: \[command: string\]; interrupt: \[\]; clear: \[\]/);
+  assert.match(terminal, /role="log"/);
+  assert.match(tree, /role="tree"/);
+  assert.match(tree, /select: \[path: string\]; toggle: \[path: string, open: boolean\]/);
+  for (const name of ["OsxDiffViewerProps", "OsxTerminalProps", "OsxFileTreeProps"]) assert.match(types, new RegExp(name));
+  for (const id of ["agent-diff", "agent-terminal", "agent-file-tree"]) {
+    assert.match(page, new RegExp(`id="${id}"`));
+    assert.match(behavior, new RegExp(`#${id}`));
+  }
+});
+
+test("snippet lab creates framework-specific shareable adoption paths", async () => {
+  const [page, behavior] = await Promise.all([read("index.html"), read("demo/main.ts")]);
+  for (const framework of ["HTML", "Vue", "React", "Svelte"]) assert.match(behavior, new RegExp(`${framework}: \\{`));
+  for (const id of ["snippet-framework", "snippet-output", "snippet-file", "snippet-status", "copy-snippet", "share-snippet"]) {
+    assert.match(page, new RegExp(`id="${id}"`));
+    assert.match(behavior, new RegExp(`#${id}`));
+  }
+  assert.match(behavior, /url\.searchParams\.set\("framework"/);
+  assert.match(behavior, /navigator\.clipboard/);
 });
 
 test("agent primitives expose bounded interactions without owning a provider", async () => {
@@ -58,6 +91,7 @@ test("agent primitives expose bounded interactions without owning a provider", a
   for (const region of ["toolbar", "sidebar", "composer", "inspector", "status"]) assert.match(shell, new RegExp(`name="${region}"`));
   assert.match(shell, /aria-label="Workspace content"/);
   assert.doesNotMatch(shell, /<main>/);
+  assert.match(shell, /\.shell \{ height: 100%; min-height: 520px/);
   for (const name of ["OsxAgentComposerProps", "OsxAgentApprovalProps", "OsxAppShellProps", "OsxToolCallProps"]) assert.match(types, new RegExp(name));
   assert.match(page, /id="agent-shell"/);
   for (const id of ["agent-thread", "agent-composer", "agent-run", "agent-approval", "agent-status"]) {
