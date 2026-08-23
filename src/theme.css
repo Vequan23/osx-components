@@ -12,6 +12,9 @@
   --osx-title-end: #bdc8cf;
   --osx-accent: #1688cf;
   --osx-accent-light: #75c8f5;
+  --osx-success: #2f9951;
+  --osx-warning: #c9821e;
+  --osx-danger: #c74d47;
   --osx-focus: rgba(35, 145, 218, 0.32);
   --osx-shadow: 0 14px 38px rgba(31, 49, 61, 0.24), 0 2px 7px rgba(31, 49, 61, 0.2);
   --osx-highlight: rgba(255, 255, 255, 0.86);
@@ -35,6 +38,9 @@
   --osx-title-end: #293138;
   --osx-accent: #1594d6;
   --osx-accent-light: #54bced;
+  --osx-success: #42ae67;
+  --osx-warning: #dfa23b;
+  --osx-danger: #e16059;
   --osx-focus: rgba(59, 177, 233, 0.38);
   --osx-shadow: 0 16px 42px rgba(0, 0, 0, 0.52), 0 2px 7px rgba(0, 0, 0, 0.46);
   --osx-highlight: rgba(255, 255, 255, 0.13);

@@ -43,6 +43,12 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 
 | Element | Purpose |
 | --- | --- |
+| `<osx-app-shell>` | Responsive application workspace with toolbar, sidebar, content, composer, inspector, and status slots |
+| `<osx-agent-composer>` | Prompt input with Enter-to-send, busy state, model context, and stop action |
+| `<osx-agent-message>` | User, assistant, system, streaming, and error conversation states |
+| `<osx-agent-run-status>` | Plan, work, verify, complete, and failure lifecycle visualization |
+| `<osx-agent-approval>` | Risk-aware human approval with explicit action scope |
+| `<osx-tool-call>` | Expandable queued, running, successful, and failed tool activity |
 | `<osx-button>` | Default, primary, danger, loading, and compact actions |
 | `<osx-checkbox>` | Checked, mixed, disabled, and slotted-label states |
 | `<osx-window>` | Window chrome, controls, toolbar and footer slots |
@@ -67,6 +73,24 @@ document.querySelector("osx-segmented-control")
 
 `<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`.
 
+Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
+
+## Agent workspace
+
+The agent components are deliberately composable. The shell manages layout; it does not execute tools or call a model.
+
+```html
+<osx-app-shell app-title="Project Agent" inspector-open>
+  <nav slot="sidebar">...</nav>
+  <osx-agent-message author="Agent" model="Your model">
+    <p>I inspected the change and verified the focused test.</p>
+  </osx-agent-message>
+  <osx-agent-composer slot="composer" model="Provider · Model"></osx-agent-composer>
+  <aside slot="inspector">...</aside>
+  <osx-status-bar slot="status" label="Ready"></osx-status-bar>
+</osx-app-shell>
+```
+
 ## Development
 
 ```bash
@@ -80,7 +104,7 @@ The showcase deliberately consumes the library as native HTML elements. That kee
 
 ## Direction
 
-The next useful components are menus, popovers, tabs, disclosure groups, list rows, tables, alerts, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
+The next useful components are menus, popovers, tabs, diff viewers, context meters, artifact cards, citations, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
 
 ## License
 

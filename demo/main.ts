@@ -49,3 +49,51 @@ const demoWindow = document.querySelector("#demo-window");
 demoWindow?.addEventListener("close", () => setStatus("Close requested", "working"));
 demoWindow?.addEventListener("minimize", () => setStatus("Minimize requested", "working"));
 demoWindow?.addEventListener("zoom", () => setStatus("Zoom requested", "working"));
+
+type AgentComposerElement = HTMLElement & { value: string; busy: boolean };
+type AgentRunElement = HTMLElement & { phase: "planning" | "working" | "verifying" | "complete" | "error"; detail: string };
+const agentComposer = document.querySelector("#agent-composer") as AgentComposerElement | null;
+const agentRun = document.querySelector("#agent-run") as AgentRunElement | null;
+const agentStatus = document.querySelector("#agent-status") as StatusElement | null;
+const agentThread = document.querySelector("#agent-thread");
+function setAgentStatus(label: string, status: StatusElement["status"], detail: string) {
+  if (!agentStatus) return;
+  agentStatus.label = label;
+  agentStatus.status = status;
+  agentStatus.detail = detail;
+}
+agentComposer?.addEventListener("submit", (event) => {
+  const prompt = eventValue(event);
+  if (!prompt || !agentThread) return;
+  const message = document.createElement("osx-agent-message");
+  message.setAttribute("role", "user");
+  message.setAttribute("author", "You");
+  message.setAttribute("timestamp", "Just now");
+  const paragraph = document.createElement("p");
+  paragraph.textContent = prompt;
+  message.append(paragraph);
+  agentThread.append(message);
+  agentComposer.value = "";
+  agentComposer.busy = true;
+  if (agentRun) { agentRun.phase = "working"; agentRun.detail = "Working"; }
+  setAgentStatus("Agent is working", "working", "Prompt retained locally");
+  window.setTimeout(() => {
+    agentComposer.busy = false;
+    if (agentRun) { agentRun.phase = "complete"; agentRun.detail = "4 of 4 phases"; }
+    setAgentStatus("Demo run complete", "ready", "No repository changes");
+  }, 900);
+});
+agentComposer?.addEventListener("stop", () => {
+  agentComposer.busy = false;
+  if (agentRun) { agentRun.phase = "error"; agentRun.detail = "Stopped by user"; }
+  setAgentStatus("Run stopped", "offline", "No changes applied");
+});
+const approval = document.querySelector("#agent-approval") as HTMLElement & { disabled: boolean } | null;
+approval?.addEventListener("approve", () => {
+  approval.disabled = true;
+  setAgentStatus("Patch approved", "ready", "Ready to promote");
+});
+approval?.addEventListener("reject", () => {
+  approval.disabled = true;
+  setAgentStatus("Patch kept isolated", "ready", "Working tree unchanged");
+});
