@@ -35,4 +35,9 @@ header { min-height: 37px; display: grid; grid-template-columns: 1fr auto 1fr; g
 .content { min-height: 80px; }
 footer { padding: 7px 11px; border-top: 1px solid var(--osx-border-soft); color: var(--osx-muted); background: var(--osx-surface-sunken); font-size: 12px; }
 .inactive header { filter: saturate(.15); }.inactive .controls button { opacity: .46; }
+@media (max-width: 620px) {
+  header { grid-template-columns: auto minmax(0,1fr) auto; }
+  .title { min-width: 0; }
+  .title strong,.title small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
 </style>

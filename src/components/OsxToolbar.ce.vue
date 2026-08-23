@@ -13,4 +13,10 @@ withDefaults(defineProps<{ label?: string; compact?: boolean }>(), { label: "Too
 .toolbar > div { display: flex; gap: 7px; align-items: center; }
 .toolbar > div:last-child { justify-content: flex-end; }
 .center { justify-content: center; }
+@media (max-width: 620px) {
+  .toolbar { grid-template-columns: minmax(0,1fr) auto; gap: 8px; }
+  .toolbar > div:first-child { min-width: 0; }
+  .toolbar > .center { grid-column: 1 / -1; grid-row: 2; justify-content: stretch; }
+  .toolbar > div:last-child { grid-column: 2; grid-row: 1; }
+}
 </style>

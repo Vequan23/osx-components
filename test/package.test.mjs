@@ -59,3 +59,21 @@ test("Vercel deploys the showcase instead of the package artifact", async () => 
   assert.equal(deployment.buildCommand, "npm run build:site");
   assert.equal(deployment.outputDirectory, "site-dist");
 });
+
+test("mobile layouts stack dense application chrome instead of compressing it", async () => {
+  const [showcase, splitView, sourceList, toolbar, window, segmented] = await Promise.all([
+    read("demo/showcase.css"),
+    read("src/components/OsxSplitView.ce.vue"),
+    read("src/components/OsxSourceList.ce.vue"),
+    read("src/components/OsxToolbar.ce.vue"),
+    read("src/components/OsxWindow.ce.vue"),
+    read("src/components/OsxSegmentedControl.ce.vue"),
+  ]);
+  for (const source of [showcase, splitView, sourceList, toolbar, window, segmented]) {
+    assert.match(source, /@media \(max-width: 620px\)/);
+  }
+  assert.match(splitView, /grid-template-rows: auto 1px minmax\(0,1fr\)/);
+  assert.match(sourceList, /grid-template-columns: repeat\(2,minmax\(0,1fr\)\)/);
+  assert.match(toolbar, /grid-column: 1 \/ -1/);
+  assert.match(showcase, /#save-preferences/);
+});

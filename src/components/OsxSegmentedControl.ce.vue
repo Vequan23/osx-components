@@ -17,9 +17,14 @@ function select(item: string) { current.value = item; emit("change", item); }
 <style>
 :host { display: inline-block; font-family: var(--osx-font); }
 .segments { display: inline-flex; overflow: hidden; border: 1px solid var(--osx-border); border-radius: 7px; background: var(--osx-surface-sunken); box-shadow: 0 1px 2px rgba(0,0,0,.14); }
-button { min-height: 27px; padding: 4px 13px; border: 0; border-right: 1px solid var(--osx-border); color: var(--osx-text); background: linear-gradient(var(--osx-surface-raised), var(--osx-surface-sunken)); font: 600 12px/1.2 var(--osx-font); cursor: pointer; }
+button { min-width: 0; min-height: 27px; padding: 4px 13px; border: 0; border-right: 1px solid var(--osx-border); overflow: hidden; color: var(--osx-text); background: linear-gradient(var(--osx-surface-raised), var(--osx-surface-sunken)); font: 600 12px/1.2 var(--osx-font); text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
 button:last-child { border-right: 0; }
 button.active { color: white; background: linear-gradient(var(--osx-accent-light), var(--osx-accent)); text-shadow: 0 -1px rgba(0,0,0,.45); }
 button:focus-visible { position: relative; outline: 3px solid var(--osx-focus); outline-offset: -3px; }
 button:disabled { opacity: .55; cursor: not-allowed; }
+@media (max-width: 620px) {
+  :host { max-width: 100%; }
+  .segments { max-width: 100%; }
+  button { flex: 1 1 auto; padding-inline: 11px; }
+}
 </style>

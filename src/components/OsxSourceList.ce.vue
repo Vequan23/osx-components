@@ -18,4 +18,8 @@ nav { min-height: 100%; display: grid; align-content: start; gap: 2px; padding: 
 button { width: 100%; min-height: 31px; display: grid; grid-template-columns: 21px minmax(0,1fr); gap: 6px; align-items: center; padding: 5px 8px; border: 0; border-radius: 5px; color: var(--osx-text); background: transparent; font: 600 13px var(--osx-font); text-align: left; cursor: pointer; }
 button:hover { background: color-mix(in srgb, var(--osx-accent) 10%, transparent); }button.active { color: white; background: linear-gradient(var(--osx-accent-light), var(--osx-accent)); box-shadow: 0 1px rgba(255,255,255,.28) inset; text-shadow: 0 -1px rgba(0,0,0,.42); }button:focus-visible { outline: 3px solid var(--osx-focus); outline-offset: 1px; }
 button span { color: var(--osx-accent); text-align: center; }button.active span { color: white; }button strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }.compact button { min-height: 26px; font-size: 12px; }
+@media (max-width: 620px) {
+  nav { min-height: 0; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 4px; padding: 10px; }
+  h3 { grid-column: 1 / -1; margin-bottom: 2px; }
+}
 </style>
