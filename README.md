@@ -52,6 +52,11 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-diff-viewer>` | Unified and split code review with line numbers, statistics, and layout controls |
 | `<osx-terminal>` | Command output with lifecycle state, rerun, interrupt, and clear actions |
 | `<osx-file-tree>` | Filterable repository hierarchy with selection and Git status markers |
+| `<osx-alert>` | Persistent information, success, warning, and error feedback |
+| `<osx-toast>` | Transient notifications with placement, timeout, and dismissal control |
+| `<osx-shimmer>` | Flexible reduced-motion-aware loading placeholder |
+| `<osx-skeleton>` | Text, profile, and card loading compositions |
+| `<osx-icon>` | Consistent dependency-free SVG iconography with accessible labels |
 | `<osx-button>` | Default, primary, danger, loading, and compact actions |
 | `<osx-checkbox>` | Checked, mixed, disabled, and slotted-label states |
 | `<osx-window>` | Window chrome, controls, toolbar and footer slots |
@@ -76,7 +81,13 @@ document.querySelector("osx-segmented-control")
 
 `<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`.
 
-Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
+Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
+
+## Icons
+
+`<osx-icon>` is the library's shared icon contract. It ships a deliberately small, dependency-free set of inline SVG symbols with a consistent 24×24 view box, rounded stroke geometry, and `16`, `20`, or `24` pixel application sizes. Decorative icons are hidden from assistive technology; pass `label` when an icon carries meaning. Components can still accept slotted custom artwork when a product needs its own visual language.
+
+Use icons to clarify an action, not decorate every label. Pair unfamiliar icon-only actions with a tooltip in your application and preserve a minimum 32×32 pixel hit area.
 
 ## Agent workspace
 
@@ -97,6 +108,10 @@ The agent components are deliberately composable. The shell manages layout; it d
 ## Framework starters
 
 The showcase includes shareable, URL-addressable starters for HTML, Vue, React, and Svelte. Choose a framework in the [Snippet Lab](https://osx-components.vercel.app/#snippets), copy the generated component shell, or share a URL such as `?framework=react#snippets`.
+
+## Component explorer
+
+The [Component Explorer](https://osx-components.vercel.app/components) is a Storybook-style second entry point with searchable, deep-linkable, live examples of every published element. It is built from the same package entry point consumers install, so the stories exercise the actual Custom Elements API rather than a private Vue-only layer.
 
 ## Development
 

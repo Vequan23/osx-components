@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
-const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-app-shell", "osx-button", "osx-checkbox", "osx-diff-viewer", "osx-file-tree", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-source-list", "osx-split-view", "osx-status-bar", "osx-terminal", "osx-text-field", "osx-tool-call", "osx-toolbar", "osx-window"];
-const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAppShell.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxDiffViewer.ce.vue", "OsxFileTree.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxSourceList.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxWindow.ce.vue"];
+const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-alert", "osx-app-shell", "osx-button", "osx-checkbox", "osx-diff-viewer", "osx-file-tree", "osx-icon", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-shimmer", "osx-skeleton", "osx-source-list", "osx-split-view", "osx-status-bar", "osx-terminal", "osx-text-field", "osx-toast", "osx-tool-call", "osx-toolbar", "osx-window"];
+const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAlert.ce.vue", "OsxAppShell.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxDiffViewer.ce.vue", "OsxFileTree.ce.vue", "OsxIcon.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxShimmer.ce.vue", "OsxSkeleton.ce.vue", "OsxSourceList.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxToast.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxWindow.ce.vue"];
 
 test("publishes a framework-neutral custom element registry", async () => {
   const source = await read("src/index.ts");
@@ -35,11 +35,32 @@ test("component typography respects a 12px accessibility floor", async () => {
   }
 });
 
-test("showcase catalog names every published element", async () => {
-  const [source, page] = await Promise.all([read("src/index.ts"), read("index.html")]);
+test("component explorer renders every published element", async () => {
+  const [source, page, behavior, config] = await Promise.all([read("src/index.ts"), read("components.html"), read("demo/catalog.ts"), read("vite.site.config.ts")]);
   const tags = [...source.matchAll(/"(osx-[a-z-]+)":/g)].map((match) => match[1]);
-  assert.equal(tags.length, 21);
-  for (const tag of tags) assert.match(page, new RegExp(`&lt;${tag}&gt;`));
+  assert.equal(tags.length, 26);
+  for (const tag of tags) {
+    assert.match(page, new RegExp(`id="story-${tag}"`));
+    assert.match(page, new RegExp(`<${tag}(?:[ >])`));
+  }
+  assert.match(page, /id="story-search"/);
+  assert.match(behavior, /search\?\.addEventListener\("input"/);
+  assert.match(config, /components: resolve\(root, "components\.html"\)/);
+});
+
+test("feedback, loading, and icon primitives expose accessible contracts", async () => {
+  const [alert, toast, shimmer, skeleton, icon, types, readme] = await Promise.all([
+    read("src/components/OsxAlert.ce.vue"), read("src/components/OsxToast.ce.vue"), read("src/components/OsxShimmer.ce.vue"), read("src/components/OsxSkeleton.ce.vue"), read("src/components/OsxIcon.ce.vue"), read("types/index.d.ts"), read("README.md"),
+  ]);
+  assert.match(alert, /dismiss: \[\]/);
+  assert.match(alert, /"alert" : "status"/);
+  assert.match(toast, /dismiss: \[reason: "manual" \| "timeout"\]/);
+  assert.match(toast, /aria-live/);
+  for (const loading of [shimmer, skeleton]) { assert.match(loading, /aria-busy="true"/); assert.match(loading, /prefers-reduced-motion: reduce/); }
+  assert.match(icon, /aria-hidden/);
+  assert.match(icon, /viewBox="0 0 24 24"/);
+  for (const name of ["OsxAlertProps", "OsxToastProps", "OsxShimmerProps", "OsxSkeletonProps", "OsxIconProps"]) assert.match(types, new RegExp(name));
+  assert.match(readme, /shared icon contract/);
 });
 
 test("signature developer components expose inspectable repository evidence", async () => {
