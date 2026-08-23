@@ -157,9 +157,10 @@ agentTerminal?.addEventListener("clear", () => setAgentStatus("Terminal cleared"
 const snippets = {
   HTML: {
     file: "index.html",
-    code: `<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/osx-components@0.3.0/dist/osx-components.css" />
+    code: `<!-- npm install osx-components · serve with Vite -->
 <script type="module">
-  import { registerOsxComponents } from "https://cdn.jsdelivr.net/npm/osx-components@0.3.0/dist/osx-components.js";
+  import { registerOsxComponents } from "osx-components";
+  import "osx-components/theme.css";
   registerOsxComponents();
 </script>
 
