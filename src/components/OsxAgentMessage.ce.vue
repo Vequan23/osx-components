@@ -1,12 +1,13 @@
 <script setup lang="ts">
+import IconGlyph from "./IconGlyph.vue";
 withDefaults(defineProps<{
-  role?: "user" | "assistant" | "system";
+  messageRole?: "user" | "assistant" | "system";
   author?: string;
   model?: string;
   timestamp?: string;
   status?: "complete" | "streaming" | "error";
 }>(), {
-  role: "assistant",
+  messageRole: "assistant",
   author: "Agent",
   model: "",
   timestamp: "",
@@ -15,9 +16,9 @@ withDefaults(defineProps<{
 </script>
 
 <template>
-  <article :class="[role,status]" :aria-label="`${author} message`" :aria-busy="status === 'streaming' || undefined">
-    <header><span class="avatar" aria-hidden="true">{{ role === 'assistant' ? '✦' : role === 'user' ? '●' : 'i' }}</span><strong>{{ author }}</strong><small v-if="model">{{ model }}</small><time v-if="timestamp">{{ timestamp }}</time></header>
-    <div class="body"><slot></slot><span v-if="status === 'streaming'" class="cursor" aria-label="Streaming response"></span></div>
+  <article :class="[messageRole,status]" :aria-label="`${author} message`" :aria-busy="status === 'streaming' || undefined">
+    <header><span class="avatar"><IconGlyph :name="messageRole === 'assistant' ? 'bot' : messageRole === 'user' ? 'user' : 'info'" :size="13" /></span><strong>{{ author }}</strong><small v-if="model">{{ model }}</small><time v-if="timestamp">{{ timestamp }}</time></header>
+    <div class="body"><slot></slot><span v-if="status === 'streaming'" class="cursor" role="status" aria-label="Streaming response"></span></div>
     <footer><slot name="actions"></slot></footer>
   </article>
 </template>

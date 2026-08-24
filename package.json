@@ -1,6 +1,6 @@
 {
   "name": "osx-components",
-  "version": "0.4.0",
+  "version": "0.6.0",
   "description": "OS X-inspired web components authored with Vue.",
   "type": "module",
   "sideEffects": [
@@ -27,6 +27,10 @@
     "build": "vue-tsc -b && vite build",
     "build:site": "vite build --config vite.site.config.ts",
     "test": "node --test test/*.test.mjs",
+    "test:consumers": "npm run build && node test/packed-consumer.mjs && node test/framework-builds.mjs",
+    "test:browser": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots",
+    "test:quality": "npm run check && npm run test:consumers && npm run test:browser",
     "check": "npm run test && npm run build",
     "preview": "vite preview",
     "preview:site": "vite preview --config vite.site.config.ts"
@@ -47,11 +51,19 @@
   "homepage": "https://github.com/Vequan23/osx-components#readme",
   "bugs": "https://github.com/Vequan23/osx-components/issues",
   "dependencies": {
+    "@lucide/vue": "^1.33.0",
     "vue": "^3.5.21"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "@playwright/test": "^1.62.1",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "@types/node": "^26.2.0",
+    "@vitejs/plugin-react": "^5.2.0",
     "@vitejs/plugin-vue": "^6.0.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "svelte": "^5.56.10",
     "typescript": "^5.9.3",
     "vite": "^7.1.3",
     "vue-tsc": "^3.0.8"

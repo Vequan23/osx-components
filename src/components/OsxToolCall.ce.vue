@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import IconGlyph from "./IconGlyph.vue";
 withDefaults(defineProps<{
   name?: string;
   status?: "queued" | "running" | "success" | "error";
@@ -10,7 +11,7 @@ withDefaults(defineProps<{
 
 <template>
   <details :open="open" :class="status">
-    <summary><span class="state" aria-hidden="true">{{ status === 'success' ? '✓' : status === 'error' ? '!' : status === 'running' ? '…' : '○' }}</span><strong>{{ name }}</strong><span>{{ summary }}</span><time v-if="duration">{{ duration }}</time></summary>
+    <summary><span class="state"><IconGlyph :name="status === 'success' ? 'check' : status === 'error' ? 'close' : status === 'running' ? 'loader' : 'circle'" :size="13" /></span><strong>{{ name }}</strong><span>{{ summary }}</span><time v-if="duration">{{ duration }}</time></summary>
     <div class="result"><slot></slot></div>
   </details>
 </template>

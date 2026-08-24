@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import IconGlyph from "./IconGlyph.vue";
+import type { OsxIconName } from "../icons";
 type TreeNode = { name: string; path: string; directory: boolean; children: TreeNode[] };
 type TreeRow = TreeNode & { depth: number };
 const props = withDefaults(defineProps<{
@@ -55,13 +57,19 @@ function activate(node: TreeNode) {
   current.value = node.path;
   emit("select",node.path);
 }
+function fileIcon(node: TreeNode): OsxIconName {
+  if (node.directory) return collapsed.value.has(node.path) ? "folder" : "folder-open";
+  if (/\.(?:ts|tsx|js|jsx|vue|css|html|java|py|go|rs|rb|php)$/i.test(node.name)) return "file-code";
+  if (/\.(?:md|txt|json|ya?ml|toml|xml)$/i.test(node.name)) return "file-text";
+  return "file";
+}
 </script>
 
 <template>
   <section :aria-label="label" class="tree">
-    <label v-if="filterable"><span aria-hidden="true"></span><input v-model="query" type="search" placeholder="Filter files" aria-label="Filter files" /></label>
+    <label v-if="filterable"><IconGlyph name="search" :size="15" /><input v-model="query" type="search" placeholder="Filter files" aria-label="Filter files" /></label>
     <div class="rows" role="tree" :aria-label="label">
-      <button v-for="node in rows" :key="node.path" type="button" role="treeitem" :title="node.path" :aria-level="node.depth + 1" :aria-expanded="node.directory ? !collapsed.has(node.path) : undefined" :aria-selected="!node.directory ? node.path === current : undefined" :class="[{ selected: node.path === current }, node.directory ? 'directory' : 'file']" :style="{ '--depth': node.depth }" @click="activate(node)"><span v-if="node.directory" class="disclosure" aria-hidden="true">{{ collapsed.has(node.path) ? '›' : '⌄' }}</span><i aria-hidden="true"></i><strong>{{ node.name }}</strong><b v-if="statusMap[node.path]" :class="statusMap[node.path].toLowerCase()">{{ statusMap[node.path].slice(0,1).toUpperCase() }}</b></button>
+      <button v-for="node in rows" :key="node.path" type="button" role="treeitem" :title="node.path" :aria-level="node.depth + 1" :aria-expanded="node.directory ? !collapsed.has(node.path) : undefined" :aria-selected="!node.directory ? node.path === current : undefined" :class="[{ selected: node.path === current }, node.directory ? 'directory' : 'file']" :style="{ '--depth': node.depth }" @click="activate(node)"><IconGlyph class="disclosure" :name="node.directory ? (collapsed.has(node.path) ? 'chevron-right' : 'chevron-down') : 'circle'" :size="node.directory ? 14 : 5" /><IconGlyph class="file-icon" :name="fileIcon(node)" :size="16" /><strong>{{ node.name }}</strong><b v-if="statusMap[node.path]" :class="statusMap[node.path].toLowerCase()">{{ statusMap[node.path].slice(0,1).toUpperCase() }}</b></button>
       <p v-if="!rows.length">No matching files</p>
     </div>
   </section>

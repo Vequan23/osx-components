@@ -56,7 +56,20 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-toast>` | Transient notifications with placement, timeout, and dismissal control |
 | `<osx-shimmer>` | Flexible reduced-motion-aware loading placeholder |
 | `<osx-skeleton>` | Text, profile, and card loading compositions |
-| `<osx-icon>` | Consistent dependency-free SVG iconography with accessible labels |
+| `<osx-icon>` | Curated Lucide SVG iconography with consistent sizing and accessible labels |
+| `<osx-icon-button>` | Accessible icon-only actions with standardized hit areas and states |
+| `<osx-tooltip>` | Supplemental hover and focus hints for compact controls |
+| `<osx-popover>` | Anchored contextual content with explicit dismissal |
+| `<osx-menu>` | Keyboard-oriented collections of application commands |
+| `<osx-menu-item>` | Action and checkbox menu rows with optional shortcuts |
+| `<osx-tabs>` | Related content panels with roving keyboard selection |
+| `<osx-dialog>` | Centered modal with focus management and controlled actions |
+| `<osx-empty-state>` | Zero-data guidance with an optional recovery action |
+| `<osx-badge>` | Compact status, count, and category labels |
+| `<osx-avatar>` | Initials, image fallback, and presence status |
+| `<osx-heading>` | Semantic display, title, section, and label typography |
+| `<osx-copy>` | Body copy with readable measures, sizes, tones, and emphasis |
+| `<osx-link>` | Native navigation with external, download, and disabled states |
 | `<osx-button>` | Default, primary, danger, loading, and compact actions |
 | `<osx-checkbox>` | Checked, mixed, disabled, and slotted-label states |
 | `<osx-window>` | Window chrome, controls, toolbar and footer slots |
@@ -85,9 +98,9 @@ Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, 
 
 ## Icons
 
-`<osx-icon>` is the library's shared icon contract. It ships a deliberately small, dependency-free set of inline SVG symbols with a consistent 24×24 view box, rounded stroke geometry, and `16`, `20`, or `24` pixel application sizes. Decorative icons are hidden from assistive technology; pass `label` when an icon carries meaning. Components can still accept slotted custom artwork when a product needs its own visual language.
+`<osx-icon>` is the library's shared icon contract. It exposes a curated 56-icon vocabulary from the maintained `@lucide/vue` package, using direct SVG component imports instead of an icon font. Icons share Lucide's consistent stroke geometry and support custom size, stroke width, and accessible labels. Decorative icons are hidden from assistive technology; pass `label` when an icon carries meaning.
 
-Use icons to clarify an action, not decorate every label. Pair unfamiliar icon-only actions with a tooltip in your application and preserve a minimum 32×32 pixel hit area.
+Use `<osx-icon-button>` for icon-only actions. It requires an accessible label and standardizes small, medium, and large hit areas; pair unfamiliar actions with `<osx-tooltip>` for visible guidance.
 
 ## Agent workspace
 
@@ -96,7 +109,7 @@ The agent components are deliberately composable. The shell manages layout; it d
 ```html
 <osx-app-shell app-title="Project Agent" inspector-open>
   <nav slot="sidebar">...</nav>
-  <osx-agent-message author="Agent" model="Your model">
+  <osx-agent-message message-role="assistant" author="Agent" model="Your model">
     <p>I inspected the change and verified the focused test.</p>
   </osx-agent-message>
   <osx-agent-composer slot="composer" model="Provider · Model"></osx-agent-composer>
@@ -126,7 +139,7 @@ The showcase deliberately consumes the library as native HTML elements. That kee
 
 ## Direction
 
-The next useful components are menus, popovers, tabs, context meters, artifact cards, citations, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
+The next useful components are breadcrumbs, tables, date pickers, command palettes, disclosure groups, context meters, artifact cards, citations, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
 
 ## License
 

@@ -2,7 +2,7 @@
 [data-osx-theme="aqua"] {
   --osx-font: "Lucida Grande", "Helvetica Neue", Arial, sans-serif;
   --osx-text: #243b4a;
-  --osx-muted: #6f7f89;
+  --osx-muted: #526671;
   --osx-border: #8d9ba5;
   --osx-border-soft: #c6d0d6;
   --osx-surface: #f4f7f9;
@@ -10,7 +10,7 @@
   --osx-surface-sunken: #e4eaee;
   --osx-title-start: #eef3f6;
   --osx-title-end: #bdc8cf;
-  --osx-accent: #1688cf;
+  --osx-accent: #006da8;
   --osx-accent-light: #75c8f5;
   --osx-success: #2f9951;
   --osx-warning: #c9821e;
@@ -21,7 +21,7 @@
   color-scheme: light;
 }
 [data-osx-theme="graphite"] {
-  --osx-accent: #657c8c;
+  --osx-accent: #506978;
   --osx-accent-light: #a7bac6;
   --osx-focus: rgba(91, 121, 140, 0.32);
 }

@@ -20,7 +20,7 @@ function clear() { currentOutput.value = ""; emit("clear"); }
   <section :class="['terminal',status]" :aria-label="label">
     <header><div class="lights" aria-hidden="true"><i></i><i></i><i></i></div><strong>{{ title }}</strong><span v-if="duration">{{ duration }}</span><div class="actions"><button v-if="status === 'running'" type="button" @click="emit('interrupt')">Stop</button><button v-else type="button" :disabled="!command" @click="emit('rerun',command)">Rerun</button><button type="button" :disabled="!currentOutput" @click="clear">Clear</button></div></header>
     <div v-if="command" class="command"><span v-if="cwd">{{ cwd }}</span><b aria-hidden="true">$</b><code>{{ command }}</code></div>
-    <pre role="log" :aria-live="status === 'running' ? 'polite' : 'off'"><code>{{ cleanOutput || 'No output' }}</code><span v-if="status === 'running'" class="cursor" aria-label="Command running"></span></pre>
+    <pre role="log" :aria-live="status === 'running' ? 'polite' : 'off'"><code>{{ cleanOutput || 'No output' }}</code><span v-if="status === 'running'" class="cursor" role="status" aria-label="Command running"></span></pre>
     <footer><span class="state"><i aria-hidden="true"></i>{{ status }}</span><span><slot name="footer"></slot></span></footer>
   </section>
 </template>

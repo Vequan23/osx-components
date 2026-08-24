@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue";
+import IconGlyph from "./IconGlyph.vue";
 const props = withDefaults(defineProps<{ open?: boolean; tone?: "info" | "success" | "warning" | "error"; title?: string; message?: string; duration?: number; placement?: "top-right" | "top-left" | "bottom-right" | "bottom-left"; dismissible?: boolean; contained?: boolean }>(), { open: false, tone: "info", title: "Notification", message: "", duration: 4500, placement: "top-right", dismissible: true, contained: false });
 const emit = defineEmits<{ dismiss: [reason: "manual" | "timeout"] }>();
 const visible = ref(props.open);
 let timer: number | undefined;
-const glyph = computed(() => ({ info: "i", success: "✓", warning: "!", error: "×" })[props.tone]);
+const glyph = computed(() => ({ info: "info", success: "check", warning: "warning", error: "close" } as const)[props.tone]);
 function close(reason: "manual" | "timeout") { visible.value = false; emit("dismiss", reason); }
 function schedule() { window.clearTimeout(timer); if (visible.value && props.duration > 0) timer = window.setTimeout(() => close("timeout"), props.duration); }
 watch(() => [props.open, props.duration], () => { visible.value = props.open; schedule(); }, { immediate: true });
@@ -12,7 +13,7 @@ onBeforeUnmount(() => window.clearTimeout(timer));
 </script>
 <template>
   <Transition name="toast"><aside v-if="visible" :class="['toast',tone,placement,{ contained }]" :role="tone === 'error' ? 'alert' : 'status'" :aria-live="tone === 'error' ? 'assertive' : 'polite'">
-    <span class="glyph" aria-hidden="true">{{ glyph }}</span><div><strong>{{ title }}</strong><p v-if="message">{{ message }}</p><div class="content"><slot></slot></div></div><button v-if="dismissible" type="button" aria-label="Dismiss notification" @click="close('manual')">×</button>
+    <span class="glyph"><IconGlyph :name="glyph" :size="16" /></span><div><strong>{{ title }}</strong><p v-if="message">{{ message }}</p><div class="content"><slot></slot></div></div><button v-if="dismissible" type="button" aria-label="Dismiss notification" @click="close('manual')"><IconGlyph name="close" :size="18" /></button>
   </aside></Transition>
 </template>
 <style>

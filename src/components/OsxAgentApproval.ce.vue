@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import IconGlyph from "./IconGlyph.vue";
 withDefaults(defineProps<{
   title?: string;
   description?: string;
@@ -21,7 +22,7 @@ const emit = defineEmits<{ approve: []; reject: [] }>();
 
 <template>
   <section :class="['approval',risk]" aria-label="Agent approval request">
-    <div class="badge" aria-hidden="true">{{ risk === 'high' ? '!' : risk === 'medium' ? '◆' : '✓' }}</div>
+    <div class="badge"><IconGlyph :name="risk === 'low' ? 'check' : 'warning'" :size="15" /></div>
     <div class="copy"><header><strong>{{ title }}</strong><span>{{ risk }} risk</span></header><p>{{ description }}</p><code v-if="scope">{{ scope }}</code><slot></slot></div>
     <footer><button type="button" :disabled="disabled" @click="emit('reject')">{{ rejectLabel }}</button><button class="approve" type="button" :disabled="disabled" @click="emit('approve')">{{ approveLabel }}</button></footer>
   </section>

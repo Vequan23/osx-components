@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import IconGlyph from "./IconGlyph.vue";
 
 const props = withDefaults(defineProps<{
   value?: string;
@@ -41,8 +42,8 @@ function onKeydown(event: KeyboardEvent) {
     <textarea :value="current" :rows="rows" :placeholder="placeholder" :disabled="disabled" aria-label="Message to agent" @input="update" @keydown="onKeydown"></textarea>
     <footer>
       <div><slot name="tools"></slot><span v-if="model">{{ model }}</span></div>
-      <button v-if="busy" class="stop" type="button" aria-label="Stop agent" @click="emit('stop')">■ Stop</button>
-      <button v-else class="send" type="submit" :disabled="disabled || !current.trim()">Send <span aria-hidden="true">↵</span></button>
+      <button v-if="busy" class="stop" type="button" aria-label="Stop agent" @click="emit('stop')"><IconGlyph name="stop" :size="14" /> Stop</button>
+      <button v-else class="send" type="submit" :disabled="disabled || !current.trim()">Send <IconGlyph name="corner-down-left" :size="14" /></button>
     </footer>
   </form>
 </template>
@@ -55,7 +56,7 @@ textarea::placeholder { color: var(--osx-muted); }
 textarea:focus-visible { outline: 3px solid var(--osx-focus); outline-offset: 1px; }
 footer { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding-top: 8px; }
 footer div { min-width: 0; display: flex; gap: 8px; align-items: center; color: var(--osx-muted); font-size: 12px; }
-button { min-height: 28px; padding: 4px 12px; border: 1px solid var(--osx-border); border-radius: 7px; color: var(--osx-text); background: linear-gradient(var(--osx-surface-raised),var(--osx-surface-sunken)); font: 700 12px var(--osx-font); cursor: pointer; }
+button { min-height: 28px; display: inline-flex; gap: 5px; align-items: center; padding: 4px 12px; border: 1px solid var(--osx-border); border-radius: 7px; color: var(--osx-text); background: linear-gradient(var(--osx-surface-raised),var(--osx-surface-sunken)); font: 700 12px var(--osx-font); cursor: pointer; }
 button:focus-visible { outline: 3px solid var(--osx-focus); outline-offset: 2px; }
 button:disabled { opacity: .5; cursor: not-allowed; }
 .send { color: white; border-color: color-mix(in srgb,var(--osx-accent) 78%,#123); background: linear-gradient(var(--osx-accent-light),var(--osx-accent)); text-shadow: 0 -1px rgba(0,0,0,.4); }

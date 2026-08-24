@@ -1,5 +1,7 @@
 import type { DefineComponent } from "vue";
 
+export type OsxIconName = "activity" | "book" | "bot" | "boxes" | "check" | "chevron-down" | "chevron-left" | "chevron-right" | "chevron-up" | "circle" | "circle-dashed" | "clock" | "code" | "command" | "copy" | "corner-down-left" | "download" | "ellipsis" | "external" | "eye" | "eye-off" | "file" | "file-code" | "file-text" | "flask" | "folder" | "folder-open" | "git-branch" | "grid" | "inbox" | "info" | "dashboard" | "list-checks" | "loader" | "lock" | "unlock" | "menu" | "minus" | "palette" | "panel" | "pencil" | "play" | "plus" | "refresh" | "search" | "send" | "settings" | "sparkle" | "square" | "stop" | "terminal" | "trash" | "warning" | "upload" | "user" | "close";
+
 export type OsxAgentApprovalProps = {
   title?: string;
   description?: string;
@@ -10,9 +12,11 @@ export type OsxAgentApprovalProps = {
   disabled?: boolean;
 };
 export type OsxAgentComposerProps = { value?: string; placeholder?: string; model?: string; busy?: boolean; disabled?: boolean; rows?: number };
-export type OsxAgentMessageProps = { role?: "user" | "assistant" | "system"; author?: string; model?: string; timestamp?: string; status?: "complete" | "streaming" | "error" };
+export type OsxAgentMessageProps = { messageRole?: "user" | "assistant" | "system"; author?: string; model?: string; timestamp?: string; status?: "complete" | "streaming" | "error" };
 export type OsxAgentRunStatusProps = { phase?: "planning" | "working" | "verifying" | "complete" | "error"; label?: string; detail?: string };
 export type OsxAlertProps = { tone?: "info" | "success" | "warning" | "error"; title?: string; description?: string; dismissible?: boolean; label?: string };
+export type OsxAvatarProps = { name?: string; src?: string; alt?: string; size?: number; status?: "none" | "online" | "busy" | "offline" };
+export type OsxBadgeProps = { tone?: "neutral" | "info" | "success" | "warning" | "danger"; size?: "small" | "medium"; label?: string; dot?: boolean };
 export type OsxAppShellProps = { appTitle?: string; sidebarWidth?: string; inspectorWidth?: string; inspectorOpen?: boolean; label?: string };
 
 export type OsxButtonProps = {
@@ -23,16 +27,25 @@ export type OsxButtonProps = {
 };
 
 export type OsxCheckboxProps = { checked?: boolean; label?: string; disabled?: boolean; indeterminate?: boolean };
+export type OsxCopyProps = { as?: "p" | "span" | "div"; size?: "small" | "medium" | "large"; tone?: "default" | "muted" | "accent"; weight?: "regular" | "medium" | "bold"; measure?: "none" | "narrow" | "default" | "wide"; align?: "left" | "center" | "right" };
 export type OsxDiffViewerProps = { file?: string; patch?: string; view?: "unified" | "split"; language?: string; additions?: number; deletions?: number; label?: string };
+export type OsxDialogProps = { open?: boolean; title?: string; description?: string; size?: "small" | "medium" | "large"; dismissible?: boolean; confirmLabel?: string; cancelLabel?: string };
+export type OsxEmptyStateProps = { title?: string; description?: string; actionLabel?: string; icon?: OsxIconName };
 export type OsxFileTreeProps = { files?: string; selected?: string; statuses?: string; label?: string; filterable?: boolean };
-export type OsxIconProps = { name?: "search" | "chevron-right" | "chevron-down" | "check" | "close" | "info" | "warning" | "error" | "sparkle" | "terminal" | "file" | "folder" | "copy" | "play" | "stop" | "settings" | "grid"; size?: number; label?: string; strokeWidth?: number };
+export type OsxIconProps = { name?: OsxIconName; size?: number; label?: string; strokeWidth?: number; absoluteStrokeWidth?: boolean };
+export type OsxIconButtonProps = { icon?: OsxIconName; label: string; size?: "small" | "medium" | "large"; variant?: "default" | "primary" | "danger"; disabled?: boolean; pressed?: boolean };
+export type OsxHeadingProps = { level?: 1 | 2 | 3 | 4 | 5 | 6; variant?: "display" | "title" | "section" | "label"; align?: "left" | "center" | "right"; tone?: "default" | "muted" | "accent" };
+export type OsxLinkProps = { href?: string; target?: "_self" | "_blank" | "_parent" | "_top"; rel?: string; external?: boolean; download?: boolean | string; underline?: "always" | "hover" | "none"; disabled?: boolean };
+export type OsxMenuProps = { open?: boolean; label?: string; placement?: "start" | "end" };
+export type OsxMenuItemProps = { label?: string; shortcut?: string; disabled?: boolean; checked?: boolean; type?: "action" | "checkbox" };
+export type OsxPopoverProps = { open?: boolean; placement?: "top" | "right" | "bottom" | "left"; label?: string; dismissible?: boolean };
 export type OsxProgressProps = { value?: number; max?: number; indeterminate?: boolean; label?: string };
 export type OsxSegmentedControlProps = { items?: string; value?: string; label?: string; disabled?: boolean };
 export type OsxSelectProps = { options?: string; value?: string; label?: string; disabled?: boolean };
 export type OsxSheetProps = { open?: boolean; title?: string; description?: string; dismissible?: boolean };
 export type OsxShimmerProps = { width?: string; height?: string; radius?: string; paused?: boolean; label?: string };
 export type OsxSkeletonProps = { variant?: "text" | "card" | "profile"; lines?: number; animated?: boolean; label?: string };
-export type OsxSourceListProps = { items?: string; value?: string; label?: string; heading?: string; compact?: boolean };
+export type OsxSourceListProps = { items?: string; value?: string; label?: string; heading?: string; compact?: boolean; icons?: string };
 export type OsxSplitViewProps = { orientation?: "horizontal" | "vertical"; primarySize?: string; label?: string };
 export type OsxStatusBarProps = { label?: string; status?: "ready" | "working" | "offline"; detail?: string };
 export type OsxTextFieldProps = {
@@ -44,8 +57,10 @@ export type OsxTextFieldProps = {
   hint?: string;
 };
 export type OsxTerminalProps = { title?: string; command?: string; output?: string; cwd?: string; status?: "idle" | "running" | "success" | "error"; duration?: string; label?: string };
+export type OsxTabsProps = { items?: string; value?: string; label?: string; orientation?: "horizontal" | "vertical" };
 export type OsxToolbarProps = { label?: string; compact?: boolean };
 export type OsxToastProps = { open?: boolean; tone?: "info" | "success" | "warning" | "error"; title?: string; message?: string; duration?: number; placement?: "top-right" | "top-left" | "bottom-right" | "bottom-left"; dismissible?: boolean; contained?: boolean };
+export type OsxTooltipProps = { text?: string; placement?: "top" | "right" | "bottom" | "left"; open?: boolean; delay?: number };
 export type OsxToolCallProps = { name?: string; status?: "queued" | "running" | "success" | "error"; summary?: string; duration?: string; open?: boolean };
 export type OsxWindowProps = { title?: string; subtitle?: string; active?: boolean; closeable?: boolean; minimizable?: boolean; zoomable?: boolean };
 
@@ -54,12 +69,23 @@ export const OsxAgentComposerComponent: DefineComponent<OsxAgentComposerProps>;
 export const OsxAgentMessageComponent: DefineComponent<OsxAgentMessageProps>;
 export const OsxAgentRunStatusComponent: DefineComponent<OsxAgentRunStatusProps>;
 export const OsxAlertComponent: DefineComponent<OsxAlertProps>;
+export const OsxAvatarComponent: DefineComponent<OsxAvatarProps>;
+export const OsxBadgeComponent: DefineComponent<OsxBadgeProps>;
 export const OsxAppShellComponent: DefineComponent<OsxAppShellProps>;
 export const OsxButtonComponent: DefineComponent<OsxButtonProps>;
 export const OsxCheckboxComponent: DefineComponent<OsxCheckboxProps>;
+export const OsxCopyComponent: DefineComponent<OsxCopyProps>;
 export const OsxDiffViewerComponent: DefineComponent<OsxDiffViewerProps>;
+export const OsxDialogComponent: DefineComponent<OsxDialogProps>;
+export const OsxEmptyStateComponent: DefineComponent<OsxEmptyStateProps>;
 export const OsxFileTreeComponent: DefineComponent<OsxFileTreeProps>;
 export const OsxIconComponent: DefineComponent<OsxIconProps>;
+export const OsxIconButtonComponent: DefineComponent<OsxIconButtonProps>;
+export const OsxHeadingComponent: DefineComponent<OsxHeadingProps>;
+export const OsxLinkComponent: DefineComponent<OsxLinkProps>;
+export const OsxMenuComponent: DefineComponent<OsxMenuProps>;
+export const OsxMenuItemComponent: DefineComponent<OsxMenuItemProps>;
+export const OsxPopoverComponent: DefineComponent<OsxPopoverProps>;
 export const OsxProgressComponent: DefineComponent<OsxProgressProps>;
 export const OsxSegmentedControlComponent: DefineComponent<OsxSegmentedControlProps>;
 export const OsxSelectComponent: DefineComponent<OsxSelectProps>;
@@ -71,8 +97,10 @@ export const OsxSplitViewComponent: DefineComponent<OsxSplitViewProps>;
 export const OsxStatusBarComponent: DefineComponent<OsxStatusBarProps>;
 export const OsxTextFieldComponent: DefineComponent<OsxTextFieldProps>;
 export const OsxTerminalComponent: DefineComponent<OsxTerminalProps>;
+export const OsxTabsComponent: DefineComponent<OsxTabsProps>;
 export const OsxToolbarComponent: DefineComponent<OsxToolbarProps>;
 export const OsxToastComponent: DefineComponent<OsxToastProps>;
+export const OsxTooltipComponent: DefineComponent<OsxTooltipProps>;
 export const OsxToolCallComponent: DefineComponent<OsxToolCallProps>;
 export const OsxWindowComponent: DefineComponent<OsxWindowProps>;
 
@@ -82,12 +110,23 @@ export const componentDefinitions: {
   "osx-agent-message": typeof OsxAgentMessageComponent;
   "osx-agent-run-status": typeof OsxAgentRunStatusComponent;
   "osx-alert": typeof OsxAlertComponent;
+  "osx-avatar": typeof OsxAvatarComponent;
+  "osx-badge": typeof OsxBadgeComponent;
   "osx-app-shell": typeof OsxAppShellComponent;
   "osx-button": typeof OsxButtonComponent;
   "osx-checkbox": typeof OsxCheckboxComponent;
+  "osx-copy": typeof OsxCopyComponent;
   "osx-diff-viewer": typeof OsxDiffViewerComponent;
+  "osx-dialog": typeof OsxDialogComponent;
+  "osx-empty-state": typeof OsxEmptyStateComponent;
   "osx-file-tree": typeof OsxFileTreeComponent;
   "osx-icon": typeof OsxIconComponent;
+  "osx-icon-button": typeof OsxIconButtonComponent;
+  "osx-heading": typeof OsxHeadingComponent;
+  "osx-link": typeof OsxLinkComponent;
+  "osx-menu": typeof OsxMenuComponent;
+  "osx-menu-item": typeof OsxMenuItemComponent;
+  "osx-popover": typeof OsxPopoverComponent;
   "osx-progress": typeof OsxProgressComponent;
   "osx-segmented-control": typeof OsxSegmentedControlComponent;
   "osx-select": typeof OsxSelectComponent;
@@ -99,11 +138,15 @@ export const componentDefinitions: {
   "osx-status-bar": typeof OsxStatusBarComponent;
   "osx-text-field": typeof OsxTextFieldComponent;
   "osx-terminal": typeof OsxTerminalComponent;
+  "osx-tabs": typeof OsxTabsComponent;
   "osx-toolbar": typeof OsxToolbarComponent;
   "osx-toast": typeof OsxToastComponent;
+  "osx-tooltip": typeof OsxTooltipComponent;
   "osx-tool-call": typeof OsxToolCallComponent;
   "osx-window": typeof OsxWindowComponent;
 };
 
 export type OsxComponentName = keyof typeof componentDefinitions;
 export function registerOsxComponents(): void;
+export const iconNames: OsxIconName[];
+export const iconRegistry: Record<OsxIconName, DefineComponent>;

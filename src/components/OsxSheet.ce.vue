@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
+import IconGlyph from "./IconGlyph.vue";
 const props = withDefaults(defineProps<{ open?: boolean; title?: string; description?: string; dismissible?: boolean }>(), { open: false, title: "Confirm", description: "", dismissible: true });
 const emit = defineEmits<{ close: []; confirm: [] }>();
 const dialog = ref<HTMLElement | null>(null);
@@ -7,7 +8,7 @@ watch(() => props.open, async (open) => { if (open) { await nextTick(); dialog.v
 </script>
 
 <template>
-  <div v-if="open" class="backdrop" @click.self="dismissible && emit('close')"><section ref="dialog" role="dialog" aria-modal="true" :aria-label="title" tabindex="-1" @keydown.esc="dismissible && emit('close')"><header><span aria-hidden="true">!</span><div><h2>{{ title }}</h2><p v-if="description">{{ description }}</p></div></header><div class="content"><slot></slot></div><footer><slot name="actions"><button class="cancel" type="button" @click="emit('close')">Cancel</button><button class="confirm" type="button" @click="emit('confirm')">Continue</button></slot></footer></section></div>
+  <div v-if="open" class="backdrop" @click.self="dismissible && emit('close')"><section ref="dialog" role="dialog" aria-modal="true" :aria-label="title" tabindex="-1" @keydown.esc="dismissible && emit('close')"><header><span><IconGlyph name="warning" :size="19" /></span><div><h2>{{ title }}</h2><p v-if="description">{{ description }}</p></div></header><div class="content"><slot></slot></div><footer><slot name="actions"><button class="cancel" type="button" @click="emit('close')">Cancel</button><button class="confirm" type="button" @click="emit('confirm')">Continue</button></slot></footer></section></div>
 </template>
 
 <style>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import IconGlyph from "./IconGlyph.vue";
 const props = withDefaults(defineProps<{ value?: string; label?: string; placeholder?: string; type?: "text" | "email" | "password" | "search"; disabled?: boolean; hint?: string }>(), { value: "", type: "text", disabled: false });
 const emit = defineEmits<{ input: [value: string]; change: [value: string] }>();
 const localValue = ref(props.value);
@@ -10,7 +11,7 @@ function update(event: Event) { localValue.value = (event.target as HTMLInputEle
 <template>
   <label>
     <span v-if="label" class="label">{{ label }}</span>
-    <span class="field"><span v-if="type === 'search'" class="search" aria-hidden="true"></span><input :type="type" :value="localValue" :placeholder="placeholder" :disabled="disabled" @input="update" @change="emit('change', localValue)" /></span>
+    <span class="field"><IconGlyph v-if="type === 'search'" class="search" name="search" :size="15" /><input :type="type" :value="localValue" :placeholder="placeholder" :disabled="disabled" @input="update" @change="emit('change', localValue)" /></span>
     <small v-if="hint">{{ hint }}</small>
   </label>
 </template>
@@ -24,7 +25,6 @@ label { display: grid; gap: 5px; }
 input { width: 100%; min-width: 0; padding: 6px 9px; border: 0; outline: 0; color: var(--osx-text); background: transparent; font: 13px/1.25 var(--osx-font); }
 input::placeholder, small { color: var(--osx-muted); }
 input:disabled { opacity: .55; cursor: not-allowed; }
-.search { width: 9px; height: 9px; flex: 0 0 9px; margin-left: 9px; border: 2px solid var(--osx-muted); border-radius: 50%; position: relative; }
-.search::after { width: 5px; height: 2px; position: absolute; right: -4px; bottom: -2px; background: var(--osx-muted); content: ""; transform: rotate(45deg); }
+.search { flex: 0 0 auto; margin-left: 9px; color: var(--osx-muted); }
 small { font-size: 12px; }
 </style>

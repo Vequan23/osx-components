@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import IconGlyph from "./IconGlyph.vue";
 const props = withDefaults(defineProps<{
   phase?: "planning" | "working" | "verifying" | "complete" | "error";
   label?: string;
@@ -12,7 +13,7 @@ const activeIndex = computed(() => ({ planning: 0, working: 1, verifying: 2, com
 <template>
   <section :class="['run',phase]" :aria-label="label" :aria-busy="!['complete','error'].includes(phase)">
     <header><strong>{{ label }}</strong><span>{{ detail }}</span></header>
-    <ol><li v-for="(item,index) in phases" :key="item" :class="{ active: index === activeIndex, done: index < activeIndex || phase === 'complete', failed: phase === 'error' && index === activeIndex }"><i aria-hidden="true">{{ index < activeIndex || phase === 'complete' ? '✓' : index + 1 }}</i><span>{{ item }}</span></li></ol>
+    <ol><li v-for="(item,index) in phases" :key="item" :class="{ active: index === activeIndex, done: index < activeIndex || phase === 'complete', failed: phase === 'error' && index === activeIndex }"><i aria-hidden="true"><IconGlyph v-if="index < activeIndex || phase === 'complete'" name="check" :size="13" /><template v-else>{{ index + 1 }}</template></i><span>{{ item }}</span></li></ol>
   </section>
 </template>
 

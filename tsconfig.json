@@ -16,5 +16,5 @@
     "declaration": true,
     "declarationDir": "dist"
   },
-  "include": ["src/**/*.ts", "src/**/*.vue", "demo/**/*.ts", "vite.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.vue", "demo/**/*.ts", "vite.config.ts", "vite.site.config.ts", "playwright.config.ts"]
 }

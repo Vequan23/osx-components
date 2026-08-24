@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
-const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-alert", "osx-app-shell", "osx-button", "osx-checkbox", "osx-diff-viewer", "osx-file-tree", "osx-icon", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-shimmer", "osx-skeleton", "osx-source-list", "osx-split-view", "osx-status-bar", "osx-terminal", "osx-text-field", "osx-toast", "osx-tool-call", "osx-toolbar", "osx-window"];
-const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAlert.ce.vue", "OsxAppShell.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxDiffViewer.ce.vue", "OsxFileTree.ce.vue", "OsxIcon.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxShimmer.ce.vue", "OsxSkeleton.ce.vue", "OsxSourceList.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxToast.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxWindow.ce.vue"];
+const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-alert", "osx-app-shell", "osx-avatar", "osx-badge", "osx-button", "osx-checkbox", "osx-copy", "osx-dialog", "osx-diff-viewer", "osx-empty-state", "osx-file-tree", "osx-heading", "osx-icon", "osx-icon-button", "osx-link", "osx-menu", "osx-menu-item", "osx-popover", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-shimmer", "osx-skeleton", "osx-source-list", "osx-split-view", "osx-status-bar", "osx-tabs", "osx-terminal", "osx-text-field", "osx-toast", "osx-tool-call", "osx-toolbar", "osx-tooltip", "osx-window"];
+const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAlert.ce.vue", "OsxAppShell.ce.vue", "OsxAvatar.ce.vue", "OsxBadge.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxCopy.ce.vue", "OsxDialog.ce.vue", "OsxDiffViewer.ce.vue", "OsxEmptyState.ce.vue", "OsxFileTree.ce.vue", "OsxHeading.ce.vue", "OsxIcon.ce.vue", "OsxIconButton.ce.vue", "OsxLink.ce.vue", "OsxMenu.ce.vue", "OsxMenuItem.ce.vue", "OsxPopover.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxShimmer.ce.vue", "OsxSkeleton.ce.vue", "OsxSourceList.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTabs.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxToast.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxTooltip.ce.vue", "OsxWindow.ce.vue"];
 
 test("publishes a framework-neutral custom element registry", async () => {
   const source = await read("src/index.ts");
@@ -38,7 +38,7 @@ test("component typography respects a 12px accessibility floor", async () => {
 test("component explorer renders every published element", async () => {
   const [source, page, behavior, config] = await Promise.all([read("src/index.ts"), read("components.html"), read("demo/catalog.ts"), read("vite.site.config.ts")]);
   const tags = [...source.matchAll(/"(osx-[a-z-]+)":/g)].map((match) => match[1]);
-  assert.equal(tags.length, 26);
+  assert.equal(tags.length, 39);
   for (const tag of tags) {
     assert.match(page, new RegExp(`id="story-${tag}"`));
     assert.match(page, new RegExp(`<${tag}(?:[ >])`));
@@ -48,18 +48,47 @@ test("component explorer renders every published element", async () => {
   assert.match(config, /components: resolve\(root, "components\.html"\)/);
 });
 
-test("feedback, loading, and icon primitives expose accessible contracts", async () => {
-  const [alert, toast, shimmer, skeleton, icon, types, readme] = await Promise.all([
-    read("src/components/OsxAlert.ce.vue"), read("src/components/OsxToast.ce.vue"), read("src/components/OsxShimmer.ce.vue"), read("src/components/OsxSkeleton.ce.vue"), read("src/components/OsxIcon.ce.vue"), read("types/index.d.ts"), read("README.md"),
+test("typed documentation covers every component and every framework", async () => {
+  const [docs, behavior, page] = await Promise.all([read("demo/component-docs.ts"), read("demo/catalog.ts"), read("components.html")]);
+  for (const tag of componentTags) assert.match(docs, new RegExp(`"${tag}"`), `${tag} has no documentation metadata`);
+  for (const framework of ["HTML", "Vue", "React", "Svelte"]) assert.match(docs, new RegExp(`framework === "${framework}"|framework: "HTML" \\| "Vue" \\| "React" \\| "Svelte"`));
+  for (const contract of ["Props", "Events", "Slots", "CSS tokens", "States", "Accessibility"]) assert.match(behavior, new RegExp(contract));
+  assert.match(page, /id="docs-framework"/);
+  assert.match(behavior, /data-copy-code/);
+  assert.match(behavior, /data-copy-link/);
+});
+
+test("typography primitives preserve document semantics and readable defaults", async () => {
+  const [heading, copy, link, types] = await Promise.all([
+    read("src/components/OsxHeading.ce.vue"), read("src/components/OsxCopy.ce.vue"), read("src/components/OsxLink.ce.vue"), read("types/index.d.ts"),
+  ]);
+  assert.match(heading, /`h\$\{/);
+  assert.match(heading, /display.*title.*section.*label/s);
+  assert.match(copy, /max-width: 65ch/);
+  assert.match(copy, /size-small \{ font-size: 12px/);
+  assert.match(link, /<a /);
+  assert.match(link, /noreferrer noopener/);
+  assert.match(link, /aria-disabled/);
+  for (const name of ["OsxHeadingProps", "OsxCopyProps", "OsxLinkProps"]) assert.match(types, new RegExp(name));
+});
+
+test("feedback, loading, and Lucide icon primitives expose accessible contracts", async () => {
+  const [alert, toast, shimmer, skeleton, icon, iconButton, glyph, registry, types, readme] = await Promise.all([
+    read("src/components/OsxAlert.ce.vue"), read("src/components/OsxToast.ce.vue"), read("src/components/OsxShimmer.ce.vue"), read("src/components/OsxSkeleton.ce.vue"), read("src/components/OsxIcon.ce.vue"), read("src/components/OsxIconButton.ce.vue"), read("src/components/IconGlyph.vue"), read("src/icons.ts"), read("types/index.d.ts"), read("README.md"),
   ]);
   assert.match(alert, /dismiss: \[\]/);
   assert.match(alert, /"alert" : "status"/);
   assert.match(toast, /dismiss: \[reason: "manual" \| "timeout"\]/);
   assert.match(toast, /aria-live/);
   for (const loading of [shimmer, skeleton]) { assert.match(loading, /aria-busy="true"/); assert.match(loading, /prefers-reduced-motion: reduce/); }
-  assert.match(icon, /aria-hidden/);
-  assert.match(icon, /viewBox="0 0 24 24"/);
-  for (const name of ["OsxAlertProps", "OsxToastProps", "OsxShimmerProps", "OsxSkeletonProps", "OsxIconProps"]) assert.match(types, new RegExp(name));
+  assert.match(icon, /IconGlyph/);
+  assert.match(glyph, /aria-hidden/);
+  assert.match(glyph, /absolute-stroke-width/);
+  assert.match(registry, /from "@lucide\/vue"/);
+  assert.match(registry, /iconRegistry/);
+  assert.match(iconButton, /<button/);
+  assert.match(iconButton, /:aria-label="label"/);
+  for (const name of ["OsxAlertProps", "OsxToastProps", "OsxShimmerProps", "OsxSkeletonProps", "OsxIconProps", "OsxIconButtonProps"]) assert.match(types, new RegExp(name));
   assert.match(readme, /shared icon contract/);
 });
 

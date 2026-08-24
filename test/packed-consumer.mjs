@@ -1,0 +1,20 @@
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { build } from "vite";
+
+const workspace = await mkdtemp("/private/tmp/osx-packed-consumer-");
+const packOutput = JSON.parse(execFileSync("npm", ["pack", "--json", "--pack-destination", workspace], { encoding: "utf8" }));
+const archive = join(workspace, packOutput[0].filename);
+await writeFile(join(workspace, "package.json"), JSON.stringify({ private: true, type: "module", dependencies: { "osx-components": `file:${archive}` } }));
+execFileSync("npm", ["install", "--ignore-scripts", "--no-package-lock", "--prefer-offline"], { cwd: workspace, stdio: "pipe" });
+await writeFile(join(workspace, "index.html"), '<!doctype html><html><body><div id="app"></div><script type="module" src="/main.js"></script></body></html>');
+await writeFile(join(workspace, "main.js"), 'import { registerOsxComponents } from "osx-components"; import "osx-components/theme.css"; registerOsxComponents(); document.querySelector("#app").innerHTML = "<osx-alert title=Ready></osx-alert>";');
+const result = await build({ root: workspace, configFile: false, logLevel: "silent", build: { write: false } });
+const outputs = Array.isArray(result) ? result.flatMap((item) => item.output) : result.output;
+const code = outputs.filter((item) => item.type === "chunk").map((item) => item.code).join("\n");
+assert.match(code, /customElements/, "packed consumer bundle did not include registration runtime");
+const manifest = JSON.parse(await readFile(join(workspace, "node_modules/osx-components/package.json"), "utf8"));
+assert.equal(manifest.version, "0.6.0");
+process.stdout.write("✓ packed npm artifact installed and bundled\n");

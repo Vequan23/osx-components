@@ -26,6 +26,25 @@ document.querySelector("#explore")?.addEventListener("click", () => {
   document.querySelector("#components")?.scrollIntoView({ behavior: "smooth" });
 });
 
+const catalogGrid = document.querySelector(".catalog-grid");
+if (catalogGrid) {
+  const cards = [...catalogGrid.querySelectorAll<HTMLElement>("article")];
+  cards
+    .sort((left, right) => (left.querySelector("strong")?.textContent || "").localeCompare(right.querySelector("strong")?.textContent || ""))
+    .forEach((card) => {
+      const tag = card.querySelector("strong")?.textContent?.replace(/[<>]/g, "");
+      if (tag) {
+        const link = document.createElement("a");
+        link.className = "card-doc";
+        link.href = `/components.html#story-${tag}`;
+        link.textContent = "View docs";
+        link.setAttribute("aria-label", `View ${tag} documentation`);
+        card.append(link);
+      }
+      catalogGrid.append(card);
+    });
+}
+
 const sheet = document.querySelector("#demo-sheet") as HTMLElement & { open: boolean } | null;
 document.querySelector("#open-sheet")?.addEventListener("click", () => { if (sheet) sheet.open = true; });
 sheet?.addEventListener("close", () => { sheet.open = false; setStatus("Sheet dismissed"); });
@@ -66,7 +85,7 @@ agentComposer?.addEventListener("submit", (event) => {
   const prompt = eventValue(event);
   if (!prompt || !agentThread) return;
   const message = document.createElement("osx-agent-message");
-  message.setAttribute("role", "user");
+  message.setAttribute("message-role", "user");
   message.setAttribute("author", "You");
   message.setAttribute("timestamp", "Just now");
   const paragraph = document.createElement("p");

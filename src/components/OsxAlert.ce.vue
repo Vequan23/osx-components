@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import IconGlyph from "./IconGlyph.vue";
 const props = withDefaults(defineProps<{ tone?: "info" | "success" | "warning" | "error"; title?: string; description?: string; dismissible?: boolean; label?: string }>(), { tone: "info", title: "Notice", description: "", dismissible: false, label: "" });
 const emit = defineEmits<{ dismiss: [] }>();
-const glyph = computed(() => ({ info: "i", success: "✓", warning: "!", error: "×" })[props.tone]);
+const glyph = computed(() => ({ info: "info", success: "check", warning: "warning", error: "close" } as const)[props.tone]);
 const liveRole = computed(() => props.tone === "error" ? "alert" : "status");
 </script>
 
 <template>
   <section :class="['alert', tone]" :role="liveRole" :aria-label="label || title">
-    <span class="glyph" aria-hidden="true">{{ glyph }}</span>
+    <span class="glyph"><IconGlyph :name="glyph" :size="16" /></span>
     <div><strong>{{ title }}</strong><p v-if="description">{{ description }}</p><div class="content"><slot></slot></div><div class="actions"><slot name="actions"></slot></div></div>
-    <button v-if="dismissible" type="button" aria-label="Dismiss alert" @click="emit('dismiss')">×</button>
+    <button v-if="dismissible" type="button" aria-label="Dismiss alert" @click="emit('dismiss')"><IconGlyph name="close" :size="18" /></button>
   </section>
 </template>
 
