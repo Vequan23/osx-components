@@ -92,9 +92,9 @@ test("feedback, loading, and Lucide icon primitives expose accessible contracts"
   assert.match(readme, /shared icon contract/);
 });
 
-test("table, spinner, toggle, and icon buttons expose native accessible contracts", async () => {
-  const [table, spinner, toggle, button, types] = await Promise.all([
-    read("src/components/OsxTable.ce.vue"), read("src/components/OsxSpinner.ce.vue"), read("src/components/OsxToggle.ce.vue"), read("src/components/OsxButton.ce.vue"), read("types/index.d.ts"),
+test("table, spinner, toggle, buttons, and inputs expose native accessible contracts", async () => {
+  const [table, spinner, toggle, button, textField, types] = await Promise.all([
+    read("src/components/OsxTable.ce.vue"), read("src/components/OsxSpinner.ce.vue"), read("src/components/OsxToggle.ce.vue"), read("src/components/OsxButton.ce.vue"), read("src/components/OsxTextField.ce.vue"), read("types/index.d.ts"),
   ]);
   for (const semantic of ["<table>", "<caption", "scope=\"col\"", "aria-sort", "tabindex=\"0\""]) assert.match(table, new RegExp(semantic));
   assert.match(table, /sort: \[key: string, direction:/);
@@ -105,7 +105,9 @@ test("table, spinner, toggle, and icon buttons expose native accessible contract
   assert.match(toggle, /aria-describedby/);
   assert.match(button, /IconGlyph/);
   assert.match(button, /iconPosition/);
-  for (const name of ["OsxTableProps", "OsxSpinnerProps", "OsxToggleProps", "icon?: OsxIconName"]) assert.match(types, new RegExp(name.replace("?", "\\?")));
+  assert.match(textField, /displayedIcon/);
+  assert.match(textField, /iconPosition/);
+  for (const name of ["OsxTableProps", "OsxSpinnerProps", "OsxToggleProps", "icon?: OsxIconName", "iconPosition?: \"leading\" | \"trailing\""]) assert.match(types, new RegExp(name.replace("?", "\\?")));
 });
 
 test("signature developer components expose inspectable repository evidence", async () => {

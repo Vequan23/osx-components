@@ -25,6 +25,20 @@ test("documentation is searchable, framework-aware, and keyboard reachable", asy
   await expect(page.locator(":focus")).toBeVisible();
 });
 
+test("documentation disclosures align and advertise their action", async ({ page }) => {
+  const cards = page.locator("#story-osx-agent-composer, #story-osx-agent-message");
+  const summaries = cards.locator(".story-docs summary");
+  await expect(summaries).toHaveCount(2);
+  await expect(summaries.first()).toContainText("View details");
+  if ((page.viewportSize()?.width ?? 0) > 900) {
+    const boxes = await summaries.evaluateAll((items) => items.map((item) => item.getBoundingClientRect()));
+    expect(Math.abs(boxes[0].top - boxes[1].top)).toBeLessThanOrEqual(1);
+  }
+  await summaries.first().click();
+  await expect(summaries.first()).toContainText("Hide details");
+  await expect(cards.first().locator(".story-docs")).toHaveAttribute("open", "");
+});
+
 test("component discovery is alphabetical and the Lucide catalog is complete", async ({ page }) => {
   const labels = await page.locator("#story-nav a").allTextContents();
   expect(labels).toEqual([...labels].sort((left, right) => left.localeCompare(right)));
@@ -100,6 +114,22 @@ test("data, activity, and switch controls retain native interaction semantics", 
 
   await expect(page.locator("#story-osx-spinner osx-spinner").nth(1).getByRole("status", { name: "Loading results" })).toBeVisible();
   await expect(page.locator("#story-osx-button osx-button").nth(1).getByRole("button", { name: "Download" }).locator("svg")).toBeVisible();
+});
+
+test("text fields and file filters keep icon spacing inside the input boundary", async ({ page }) => {
+  const fields = page.locator("#story-osx-text-field osx-text-field");
+  await expect(fields).toHaveCount(3);
+  await expect(fields.nth(0).locator(".field-icon")).toBeVisible();
+  await expect(fields.nth(1).getByRole("searchbox", { name: "Filter" })).toBeVisible();
+  await expect(fields.nth(2).locator(".icon-trailing .field-icon")).toBeVisible();
+  const filter = page.locator("#story-osx-file-tree osx-file-tree .filter");
+  const spacing = await filter.evaluate((element) => {
+    const icon = element.querySelector("svg")!.getBoundingClientRect();
+    const bounds = element.getBoundingClientRect();
+    return { left: icon.left - bounds.left, right: bounds.right - icon.right };
+  });
+  expect(spacing.left).toBeGreaterThanOrEqual(9);
+  expect(spacing.right).toBeGreaterThan(spacing.left);
 });
 
 test("foundation overlays and navigation honor keyboard contracts", async ({ page }) => {

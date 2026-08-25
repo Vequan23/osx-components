@@ -68,6 +68,8 @@ export type OsxTextFieldProps = {
   type?: "text" | "email" | "password" | "search";
   disabled?: boolean;
   hint?: string;
+  icon?: OsxIconName;
+  iconPosition?: "leading" | "trailing";
 };
 export type OsxThinkingProps = { title?: string; summary?: string; status?: "idle" | "streaming" | "complete" | "error"; open?: boolean; label?: string };
 export type OsxTerminalProps = { title?: string; command?: string; output?: string; cwd?: string; status?: "idle" | "running" | "success" | "error"; duration?: string; label?: string };

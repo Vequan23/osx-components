@@ -89,7 +89,7 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-split-view>` | Primary-detail horizontal or vertical layout |
 | `<osx-status-bar>` | Readiness, activity, and connection state |
 | `<osx-table>` | Responsive native data table with sortable columns and safe narrow-screen scrolling |
-| `<osx-text-field>` | Labeled text, email, password, and search inputs |
+| `<osx-text-field>` | Labeled text, email, password, and search inputs with optional Lucide icons |
 | `<osx-progress>` | Determinate and indeterminate progress |
 
 ## Events
