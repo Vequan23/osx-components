@@ -48,6 +48,12 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-agent-message>` | User, assistant, system, streaming, and error conversation states |
 | `<osx-agent-run-status>` | Plan, work, verify, complete, and failure lifecycle visualization |
 | `<osx-agent-approval>` | Risk-aware human approval with explicit action scope |
+| `<osx-thinking>` | Collapsible, streaming reasoning summaries and progress traces |
+| `<osx-plan>` | Ordered agent steps with pending, active, done, failed, and skipped states |
+| `<osx-artifact>` | Generated file, document, and code output with copy, download, open, and version actions |
+| `<osx-markdown>` | Injection-safe, streaming Markdown with code copy, tables, lists, quotes, and links |
+| `<osx-citation>` | Inline citation chip for grounded RAG and search responses |
+| `<osx-source-panel>` | Coordinated source list with selection, domains, and supporting excerpts |
 | `<osx-tool-call>` | Expandable queued, running, successful, and failed tool activity |
 | `<osx-diff-viewer>` | Unified and split code review with line numbers, statistics, and layout controls |
 | `<osx-terminal>` | Command output with lifecycle state, rerun, interrupt, and clear actions |
@@ -94,7 +100,7 @@ document.querySelector("osx-segmented-control")
 
 `<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`.
 
-Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
+Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`; `<osx-thinking>` emits `toggle`; `<osx-artifact>` emits `copy`, `download`, and `open`; `<osx-markdown>` emits `copy`; and citations coordinate through `activate` and `select`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
 
 ## Icons
 
@@ -139,7 +145,7 @@ The showcase deliberately consumes the library as native HTML elements. That kee
 
 ## Direction
 
-The next useful components are breadcrumbs, tables, date pickers, command palettes, disclosure groups, context meters, artifact cards, citations, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
+The next useful components are breadcrumbs, data tables, date pickers, command palettes, disclosure groups, context meters, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
 
 ## License
 

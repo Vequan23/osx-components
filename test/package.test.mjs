@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
-const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-alert", "osx-app-shell", "osx-avatar", "osx-badge", "osx-button", "osx-checkbox", "osx-copy", "osx-dialog", "osx-diff-viewer", "osx-empty-state", "osx-file-tree", "osx-heading", "osx-icon", "osx-icon-button", "osx-link", "osx-menu", "osx-menu-item", "osx-popover", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-shimmer", "osx-skeleton", "osx-source-list", "osx-split-view", "osx-status-bar", "osx-tabs", "osx-terminal", "osx-text-field", "osx-toast", "osx-tool-call", "osx-toolbar", "osx-tooltip", "osx-window"];
-const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAlert.ce.vue", "OsxAppShell.ce.vue", "OsxAvatar.ce.vue", "OsxBadge.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxCopy.ce.vue", "OsxDialog.ce.vue", "OsxDiffViewer.ce.vue", "OsxEmptyState.ce.vue", "OsxFileTree.ce.vue", "OsxHeading.ce.vue", "OsxIcon.ce.vue", "OsxIconButton.ce.vue", "OsxLink.ce.vue", "OsxMenu.ce.vue", "OsxMenuItem.ce.vue", "OsxPopover.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxShimmer.ce.vue", "OsxSkeleton.ce.vue", "OsxSourceList.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTabs.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxToast.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxTooltip.ce.vue", "OsxWindow.ce.vue"];
+const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-alert", "osx-app-shell", "osx-artifact", "osx-avatar", "osx-badge", "osx-button", "osx-checkbox", "osx-citation", "osx-copy", "osx-dialog", "osx-diff-viewer", "osx-empty-state", "osx-file-tree", "osx-heading", "osx-icon", "osx-icon-button", "osx-link", "osx-markdown", "osx-menu", "osx-menu-item", "osx-plan", "osx-popover", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-shimmer", "osx-skeleton", "osx-source-list", "osx-source-panel", "osx-split-view", "osx-status-bar", "osx-tabs", "osx-terminal", "osx-text-field", "osx-thinking", "osx-toast", "osx-tool-call", "osx-toolbar", "osx-tooltip", "osx-window"];
+const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAlert.ce.vue", "OsxAppShell.ce.vue", "OsxArtifact.ce.vue", "OsxAvatar.ce.vue", "OsxBadge.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxCitation.ce.vue", "OsxCopy.ce.vue", "OsxDialog.ce.vue", "OsxDiffViewer.ce.vue", "OsxEmptyState.ce.vue", "OsxFileTree.ce.vue", "OsxHeading.ce.vue", "OsxIcon.ce.vue", "OsxIconButton.ce.vue", "OsxLink.ce.vue", "OsxMarkdown.ce.vue", "OsxMenu.ce.vue", "OsxMenuItem.ce.vue", "OsxPlan.ce.vue", "OsxPopover.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxShimmer.ce.vue", "OsxSkeleton.ce.vue", "OsxSourceList.ce.vue", "OsxSourcePanel.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTabs.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxThinking.ce.vue", "OsxToast.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxTooltip.ce.vue", "OsxWindow.ce.vue"];
 
 test("publishes a framework-neutral custom element registry", async () => {
   const source = await read("src/index.ts");
@@ -38,7 +38,7 @@ test("component typography respects a 12px accessibility floor", async () => {
 test("component explorer renders every published element", async () => {
   const [source, page, behavior, config] = await Promise.all([read("src/index.ts"), read("components.html"), read("demo/catalog.ts"), read("vite.site.config.ts")]);
   const tags = [...source.matchAll(/"(osx-[a-z-]+)":/g)].map((match) => match[1]);
-  assert.equal(tags.length, 39);
+  assert.equal(tags.length, componentTags.length);
   for (const tag of tags) {
     assert.match(page, new RegExp(`id="story-${tag}"`));
     assert.match(page, new RegExp(`<${tag}(?:[ >])`));
@@ -109,6 +109,36 @@ test("signature developer components expose inspectable repository evidence", as
   assert.match(tree, /select: \[path: string\]; toggle: \[path: string, open: boolean\]/);
   for (const name of ["OsxDiffViewerProps", "OsxTerminalProps", "OsxFileTreeProps"]) assert.match(types, new RegExp(name));
   for (const id of ["agent-diff", "agent-terminal", "agent-file-tree"]) {
+    assert.match(page, new RegExp(`id="${id}"`));
+    assert.match(behavior, new RegExp(`#${id}`));
+  }
+});
+
+test("agent output primitives stay streaming-safe, grounded, and backend-neutral", async () => {
+  const [thinking, plan, artifact, citation, sources, markdown, types, page, behavior] = await Promise.all([
+    read("src/components/OsxThinking.ce.vue"),
+    read("src/components/OsxPlan.ce.vue"),
+    read("src/components/OsxArtifact.ce.vue"),
+    read("src/components/OsxCitation.ce.vue"),
+    read("src/components/OsxSourcePanel.ce.vue"),
+    read("src/components/OsxMarkdown.ce.vue"),
+    read("types/index.d.ts"),
+    read("components.html"),
+    read("demo/catalog.ts"),
+  ]);
+  assert.match(thinking, /<details/);
+  assert.match(thinking, /aria-busy/);
+  for (const state of ["pending", "active", "done", "failed", "skipped"]) assert.match(plan, new RegExp(state));
+  assert.match(plan, /aria-current/);
+  assert.match(artifact, /copy: \[content: string\]; download: \[filename: string\]; open: \[href: string\]/);
+  assert.match(citation, /activate: \[sourceId: string\]/);
+  assert.match(sources, /select: \[sourceId: string\]/);
+  for (const semantic of ["<table>", "<code>", "block.ordered ? 'ol' : 'ul'"]) assert.ok(markdown.includes(semantic));
+  assert.match(markdown, /safeHref/);
+  assert.doesNotMatch(markdown, /v-html/);
+  assert.match(markdown, /block\.incomplete && streaming/);
+  for (const name of ["OsxThinkingProps", "OsxPlanProps", "OsxArtifactProps", "OsxCitationProps", "OsxSourcePanelProps", "OsxMarkdownProps"]) assert.match(types, new RegExp(name));
+  for (const id of ["catalog-plan", "catalog-artifact", "catalog-markdown", "catalog-source-panel"]) {
     assert.match(page, new RegExp(`id="${id}"`));
     assert.match(behavior, new RegExp(`#${id}`));
   }

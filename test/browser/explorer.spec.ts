@@ -61,6 +61,27 @@ test("typography stories preserve semantic hierarchy and link states", async ({ 
   await expect(links.nth(2).getByRole("link", { name: "Unavailable destination" })).toHaveAttribute("aria-disabled", "true");
 });
 
+test("agent output primitives preserve structure, state, and source coordination", async ({ page }) => {
+  const thinking = page.locator("#story-osx-thinking osx-thinking").first();
+  await expect(thinking.locator("details")).toHaveAttribute("aria-busy", "true");
+  await expect(thinking.locator("details")).toHaveAttribute("open", "");
+
+  const plan = page.locator("#catalog-plan");
+  await expect(plan.locator("li")).toHaveCount(4);
+  await expect(plan.locator('[aria-current="step"]')).toContainText("Trace token rotation");
+
+  const markdown = page.locator("#catalog-markdown");
+  await expect(markdown.getByRole("heading", { level: 2, name: "Verification result" })).toBeVisible();
+  await expect(markdown.locator("pre code")).toContainText("const result");
+  await expect(markdown.locator("table")).toBeVisible();
+  await expect(markdown.getByRole("button", { name: /Copy .*code/ })).toBeVisible();
+
+  await expect(page.locator("#catalog-artifact").getByRole("button")).toHaveCount(3);
+  await expect(page.locator("#catalog-source-panel li")).toHaveCount(3);
+  await page.locator("#story-osx-citation osx-citation").nth(1).getByRole("button").click();
+  await expect(page.locator("#catalog-source-panel").getByRole("button", { name: /OWASP/ })).toHaveAttribute("aria-pressed", "true");
+});
+
 test("foundation overlays and navigation honor keyboard contracts", async ({ page }) => {
   await expect(page.getByRole("tooltip", { name: "Open component settings" })).toBeVisible();
   await page.getByRole("button", { name: "Project info" }).click();

@@ -5,12 +5,14 @@ import OsxAgentComposerComponent from "./components/OsxAgentComposer.ce.vue";
 import OsxAgentMessageComponent from "./components/OsxAgentMessage.ce.vue";
 import OsxAgentRunStatusComponent from "./components/OsxAgentRunStatus.ce.vue";
 import OsxAlertComponent from "./components/OsxAlert.ce.vue";
+import OsxArtifactComponent from "./components/OsxArtifact.ce.vue";
 import OsxAvatarComponent from "./components/OsxAvatar.ce.vue";
 import OsxBadgeComponent from "./components/OsxBadge.ce.vue";
 import OsxAppShellComponent from "./components/OsxAppShell.ce.vue";
 import OsxButtonComponent from "./components/OsxButton.ce.vue";
 import OsxCheckboxComponent from "./components/OsxCheckbox.ce.vue";
 import OsxCopyComponent from "./components/OsxCopy.ce.vue";
+import OsxCitationComponent from "./components/OsxCitation.ce.vue";
 import OsxDiffViewerComponent from "./components/OsxDiffViewer.ce.vue";
 import OsxDialogComponent from "./components/OsxDialog.ce.vue";
 import OsxEmptyStateComponent from "./components/OsxEmptyState.ce.vue";
@@ -21,6 +23,8 @@ import OsxHeadingComponent from "./components/OsxHeading.ce.vue";
 import OsxLinkComponent from "./components/OsxLink.ce.vue";
 import OsxMenuComponent from "./components/OsxMenu.ce.vue";
 import OsxMenuItemComponent from "./components/OsxMenuItem.ce.vue";
+import OsxMarkdownComponent from "./components/OsxMarkdown.ce.vue";
+import OsxPlanComponent from "./components/OsxPlan.ce.vue";
 import OsxPopoverComponent from "./components/OsxPopover.ce.vue";
 import OsxProgressComponent from "./components/OsxProgress.ce.vue";
 import OsxSegmentedControlComponent from "./components/OsxSegmentedControl.ce.vue";
@@ -29,9 +33,11 @@ import OsxSheetComponent from "./components/OsxSheet.ce.vue";
 import OsxShimmerComponent from "./components/OsxShimmer.ce.vue";
 import OsxSkeletonComponent from "./components/OsxSkeleton.ce.vue";
 import OsxSourceListComponent from "./components/OsxSourceList.ce.vue";
+import OsxSourcePanelComponent from "./components/OsxSourcePanel.ce.vue";
 import OsxSplitViewComponent from "./components/OsxSplitView.ce.vue";
 import OsxStatusBarComponent from "./components/OsxStatusBar.ce.vue";
 import OsxTextFieldComponent from "./components/OsxTextField.ce.vue";
+import OsxThinkingComponent from "./components/OsxThinking.ce.vue";
 import OsxTerminalComponent from "./components/OsxTerminal.ce.vue";
 import OsxTabsComponent from "./components/OsxTabs.ce.vue";
 import OsxToolCallComponent from "./components/OsxToolCall.ce.vue";
@@ -46,12 +52,14 @@ export const componentDefinitions = {
   "osx-agent-message": OsxAgentMessageComponent,
   "osx-agent-run-status": OsxAgentRunStatusComponent,
   "osx-alert": OsxAlertComponent,
+  "osx-artifact": OsxArtifactComponent,
   "osx-avatar": OsxAvatarComponent,
   "osx-badge": OsxBadgeComponent,
   "osx-app-shell": OsxAppShellComponent,
   "osx-button": OsxButtonComponent,
   "osx-checkbox": OsxCheckboxComponent,
   "osx-copy": OsxCopyComponent,
+  "osx-citation": OsxCitationComponent,
   "osx-diff-viewer": OsxDiffViewerComponent,
   "osx-dialog": OsxDialogComponent,
   "osx-empty-state": OsxEmptyStateComponent,
@@ -62,6 +70,8 @@ export const componentDefinitions = {
   "osx-link": OsxLinkComponent,
   "osx-menu": OsxMenuComponent,
   "osx-menu-item": OsxMenuItemComponent,
+  "osx-markdown": OsxMarkdownComponent,
+  "osx-plan": OsxPlanComponent,
   "osx-popover": OsxPopoverComponent,
   "osx-progress": OsxProgressComponent,
   "osx-segmented-control": OsxSegmentedControlComponent,
@@ -70,9 +80,11 @@ export const componentDefinitions = {
   "osx-shimmer": OsxShimmerComponent,
   "osx-skeleton": OsxSkeletonComponent,
   "osx-source-list": OsxSourceListComponent,
+  "osx-source-panel": OsxSourcePanelComponent,
   "osx-split-view": OsxSplitViewComponent,
   "osx-status-bar": OsxStatusBarComponent,
   "osx-text-field": OsxTextFieldComponent,
+  "osx-thinking": OsxThinkingComponent,
   "osx-terminal": OsxTerminalComponent,
   "osx-tabs": OsxTabsComponent,
   "osx-tool-call": OsxToolCallComponent,
@@ -97,12 +109,14 @@ export {
   OsxAgentMessageComponent,
   OsxAgentRunStatusComponent,
   OsxAlertComponent,
+  OsxArtifactComponent,
   OsxAvatarComponent,
   OsxBadgeComponent,
   OsxAppShellComponent,
   OsxButtonComponent,
   OsxCheckboxComponent,
   OsxCopyComponent,
+  OsxCitationComponent,
   OsxDiffViewerComponent,
   OsxDialogComponent,
   OsxEmptyStateComponent,
@@ -113,6 +127,8 @@ export {
   OsxLinkComponent,
   OsxMenuComponent,
   OsxMenuItemComponent,
+  OsxMarkdownComponent,
+  OsxPlanComponent,
   OsxPopoverComponent,
   OsxProgressComponent,
   OsxSegmentedControlComponent,
@@ -121,9 +137,11 @@ export {
   OsxShimmerComponent,
   OsxSkeletonComponent,
   OsxSourceListComponent,
+  OsxSourcePanelComponent,
   OsxSplitViewComponent,
   OsxStatusBarComponent,
   OsxTextFieldComponent,
+  OsxThinkingComponent,
   OsxTerminalComponent,
   OsxTabsComponent,
   OsxToolCallComponent,

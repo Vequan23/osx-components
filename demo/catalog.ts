@@ -60,12 +60,58 @@ document.addEventListener("click", async (event) => {
 type Diff = HTMLElement & { patch: string };
 type Terminal = HTMLElement & { output: string };
 type Tree = HTMLElement & { statuses: string };
+type Plan = HTMLElement & { steps: Array<{ title: string; detail?: string; state: "pending" | "active" | "done" | "failed" | "skipped" }> };
+type Markdown = HTMLElement & { content: string; streaming: boolean };
+type Artifact = HTMLElement & { content: string };
+type SourcePanel = HTMLElement & { sources: Array<{ id: string; title: string; url?: string; snippet?: string }>; selected: string };
 const diff = document.querySelector("#catalog-diff") as Diff | null;
 if (diff) diff.patch = ["@@ -14,6 +14,9 @@ export function createSession() {", "-  return store.create();", "+  const session = store.create();", "+  evidence.capture(session.id);", "+  return session;"].join("\n");
 const terminal = document.querySelector("#catalog-terminal") as Terminal | null;
-if (terminal) terminal.output = ["✓ 39 component stories", "✓ accessibility contracts", "✓ package exports", "", "Tests: 14 passed"].join("\n");
+if (terminal) terminal.output = ["✓ 45 component stories", "✓ accessibility contracts", "✓ package exports", "", "Tests: 14 passed"].join("\n");
 const tree = document.querySelector("#catalog-tree") as Tree | null;
 if (tree) tree.statuses = JSON.stringify({ "src/components/OsxAlert.ce.vue": "added", "src/components/OsxToast.ce.vue": "added", "src/index.ts": "modified" });
+const plan = document.querySelector("#catalog-plan") as Plan | null;
+if (plan) plan.steps = [
+  { title: "Inspect the failing test", detail: "Located the stale token assertion", state: "done" },
+  { title: "Trace token rotation", detail: "Following service and repository writes", state: "active" },
+  { title: "Implement the fix", state: "pending" },
+  { title: "Run focused verification", state: "pending" },
+];
+const markdown = document.querySelector("#catalog-markdown") as Markdown | null;
+if (markdown) markdown.content = [
+  "## Verification result",
+  "",
+  "The focused test now **passes** and the token rotation remains atomic.",
+  "",
+  "- Preserved the previous-token audit record",
+  "- Added a regression assertion",
+  "- Kept the public API unchanged",
+  "",
+  "```typescript",
+  "const result = await rotateToken(currentToken);",
+  "expect(result.previous.revoked).toBe(true);",
+  "```",
+  "",
+  "| Check | Result |",
+  "| --- | --- |",
+  "| Focused test | Passed |",
+  "| Full suite | Running |",
+].join("\n");
+const artifact = document.querySelector("#catalog-artifact") as Artifact | null;
+if (artifact) artifact.content = ["# Refresh-token migration", "", "1. Apply the verified service patch.", "2. Run the focused test.", "3. Promote after review."].join("\n");
+const sourcePanel = document.querySelector("#catalog-source-panel") as SourcePanel | null;
+if (sourcePanel) sourcePanel.sources = [
+  { id: "node-release", title: "Node.js release schedule", url: "https://github.com/nodejs/Release", snippet: "Official lifecycle dates for supported Node.js release lines." },
+  { id: "security-guide", title: "OWASP secure coding guidance", url: "https://owasp.org", snippet: "Primary security guidance used to frame the recommendation." },
+  { id: "project-tests", title: "Project verification output", snippet: "The focused test passed in the isolated workspace." },
+];
+for (const citation of document.querySelectorAll<HTMLElement & { selected: boolean }>("#story-osx-citation osx-citation")) {
+  citation.addEventListener("activate", (event) => {
+    const id = detailValue(event); if (sourcePanel) sourcePanel.selected = id;
+    for (const item of document.querySelectorAll<HTMLElement & { sourceId: string; selected: boolean }>("#story-osx-citation osx-citation")) item.selected = item.sourceId === id;
+  });
+}
+sourcePanel?.addEventListener("select", (event) => { sourcePanel.selected = detailValue(event); });
 
 const iconGrid = document.querySelector("#catalog-icon-grid");
 for (const name of iconNames) {
