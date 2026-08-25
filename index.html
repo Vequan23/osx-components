@@ -10,7 +10,7 @@
     <main>
       <header class="site-header">
         <a class="brand" href="#top" aria-label="OSX Components home"><span aria-hidden="true">O</span><strong>OSX Components</strong></a>
-        <nav aria-label="Showcase"><a href="/components.html">Docs</a><a href="#components">Components</a><a href="#playground">Playground</a><a href="#agents">Agents</a><a href="#snippets">Snippets</a><a href="#tokens">Tokens</a><a href="https://github.com/Vequan23/osx-components" rel="noreferrer">GitHub</a></nav>
+        <nav aria-label="Showcase"><a href="/components.html">Docs</a><a href="#components">Components</a><a href="#playground">Playground</a><a href="#agents">Agents</a><a href="#snippets">Snippets</a><a href="#ecosystem">Ecosystem</a><a href="#tokens">Tokens</a><a href="https://github.com/Vequan23/osx-components" rel="noreferrer">GitHub</a></nav>
       </header>
 
       <section id="top" class="hero">
@@ -21,7 +21,7 @@
       </section>
 
       <section class="catalog" id="components">
-        <header><div><p class="eyebrow">COMPONENT CATALOG</p><h2>A complete application vocabulary.</h2></div><div class="catalog-meta"><span>48 components · v0.6</span><a href="/components.html">Open complete docs</a></div></header>
+        <header><div><p class="eyebrow">COMPONENT CATALOG</p><h2>A complete application vocabulary.</h2></div><div class="catalog-meta"><span>49 components · v0.8</span><a href="/components.html">Open complete docs</a></div></header>
         <div class="catalog-grid">
           <article><span>Application</span><strong>&lt;osx-app-shell&gt;</strong><p>Responsive workspace chrome with navigation, content, inspector, composer, and status regions.</p><b>New</b></article>
           <article><span>Agent</span><strong>&lt;osx-agent-composer&gt;</strong><p>Prompt entry with Enter-to-send, model context, busy state, and stop action.</p><b>New</b></article>
@@ -52,6 +52,7 @@
           <article><span>Navigation</span><strong>&lt;osx-tabs&gt;</strong><p>Related content panels with roving keyboard selection.</p><b>New</b></article>
           <article><span>Overlay</span><strong>&lt;osx-dialog&gt;</strong><p>Centered modal with focus management and controlled actions.</p><b>New</b></article>
           <article><span>Feedback</span><strong>&lt;osx-empty-state&gt;</strong><p>Zero-data guidance with an optional recovery action.</p><b>New</b></article>
+          <article><span>Discovery</span><strong>&lt;osx-ecosystem-card&gt;</strong><p>Trust-preserving cross-product discovery with explicit provenance and host-owned activation.</p><b>New</b></article>
           <article><span>Foundation</span><strong>&lt;osx-badge&gt;</strong><p>Compact status, count, and category labels.</p><b>New</b></article>
           <article><span>Foundation</span><strong>&lt;osx-avatar&gt;</strong><p>Initials, image fallback, and presence status.</p><b>New</b></article>
           <article><span>Typography</span><strong>&lt;osx-heading&gt;</strong><p>Semantic display, title, section, and label hierarchy.</p><b>New</b></article>
@@ -94,7 +95,7 @@
               <label class="progress-label">Installing components <span id="progress-value">68%</span></label><osx-progress id="progress" value="68" label="Installing components"></osx-progress>
             </section>
           </osx-split-view>
-          <osx-status-bar id="demo-status" label="Components ready" status="ready" detail="48 registered"></osx-status-bar>
+          <osx-status-bar id="demo-status" label="Components ready" status="ready" detail="49 registered"></osx-status-bar>
         </osx-window>
         <osx-sheet id="demo-sheet" title="Apply appearance?" description="This updates every component through inherited design tokens."><p>Your application state stays untouched.</p></osx-sheet>
       </section>
@@ -135,6 +136,14 @@
           <div class="snippet-code"><div class="snippet-meta"><span id="snippet-file">index.html</span><span id="snippet-status" role="status">Ready to copy</span></div><pre><code id="snippet-output">Loading snippet…</code></pre></div>
           <osx-status-bar label="Framework-neutral Custom Elements" status="ready" detail="No runtime lock-in"></osx-status-bar>
         </osx-window>
+      </section>
+
+      <section class="ecosystem-section" id="ecosystem">
+        <header><div><p class="eyebrow">BUILT WITH THE SYSTEM</p><h2>Components should prove they can ship products.</h2></div><p>Explore independent products that use OSX Components as a shared interface language—not a promotional feed.</p></header>
+        <div class="ecosystem-grid">
+          <osx-ecosystem-card name="Aperta" category="Code comprehension" description="Turn AI-generated code into evidence-backed understanding and durable ownership." href="https://aperta-six.vercel.app/" action-label="Explore Aperta" mark="A" tone="info" tracking-id="osx-site-aperta"></osx-ecosystem-card>
+          <osx-ecosystem-card name="Distribution OS" category="Founder distribution" description="Build an evidence-grounded, human-governed practice for earning useful attention." href="https://distribution-os-murex.vercel.app/" action-label="Explore Distribution OS" mark="D" tone="success" tracking-id="osx-site-distribution"></osx-ecosystem-card>
+        </div>
       </section>
 
       <section id="tokens" class="token-section"><p class="eyebrow">THEMING CONTRACT</p><h2>Change the system, not every component.</h2><div class="token-grid"><article><i style="--swatch:var(--osx-accent)"></i><strong>--osx-accent</strong><span>Selection and primary action color</span></article><article><i style="--swatch:var(--osx-surface)"></i><strong>--osx-surface</strong><span>Primary application surface</span></article><article><i style="--swatch:var(--osx-border)"></i><strong>--osx-border</strong><span>Structural chrome and separation</span></article><article><i style="--swatch:var(--osx-focus)"></i><strong>--osx-focus</strong><span>Visible keyboard focus treatment</span></article></div></section>
