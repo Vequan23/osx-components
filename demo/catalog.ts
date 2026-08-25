@@ -64,10 +64,11 @@ type Plan = HTMLElement & { steps: Array<{ title: string; detail?: string; state
 type Markdown = HTMLElement & { content: string; streaming: boolean };
 type Artifact = HTMLElement & { content: string };
 type SourcePanel = HTMLElement & { sources: Array<{ id: string; title: string; url?: string; snippet?: string }>; selected: string };
+type Table = HTMLElement & { columns: Array<{ key: string; label: string; align?: "left" | "center" | "right"; sortable?: boolean }>; rows: Array<Record<string, string | number>> };
 const diff = document.querySelector("#catalog-diff") as Diff | null;
 if (diff) diff.patch = ["@@ -14,6 +14,9 @@ export function createSession() {", "-  return store.create();", "+  const session = store.create();", "+  evidence.capture(session.id);", "+  return session;"].join("\n");
 const terminal = document.querySelector("#catalog-terminal") as Terminal | null;
-if (terminal) terminal.output = ["✓ 45 component stories", "✓ accessibility contracts", "✓ package exports", "", "Tests: 14 passed"].join("\n");
+if (terminal) terminal.output = ["✓ 48 component stories", "✓ accessibility contracts", "✓ package exports", "", "Tests: 15 passed"].join("\n");
 const tree = document.querySelector("#catalog-tree") as Tree | null;
 if (tree) tree.statuses = JSON.stringify({ "src/components/OsxAlert.ce.vue": "added", "src/components/OsxToast.ce.vue": "added", "src/index.ts": "modified" });
 const plan = document.querySelector("#catalog-plan") as Plan | null;
@@ -112,6 +113,11 @@ for (const citation of document.querySelectorAll<HTMLElement & { selected: boole
   });
 }
 sourcePanel?.addEventListener("select", (event) => { sourcePanel.selected = detailValue(event); });
+const table = document.querySelector("#catalog-table") as Table | null;
+if (table) {
+  table.columns = [{ key: "task", label: "Task", sortable: true }, { key: "status", label: "Status", sortable: true }, { key: "duration", label: "Duration", align: "right", sortable: true }];
+  table.rows = [{ task: "Verify refresh tokens", status: "Passed", duration: "7.4s" }, { task: "Audit source handling", status: "Passed", duration: "3.1s" }, { task: "Build component package", status: "Running", duration: "12.8s" }];
+}
 
 const iconGrid = document.querySelector("#catalog-icon-grid");
 for (const name of iconNames) {

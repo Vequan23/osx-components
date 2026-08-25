@@ -82,6 +82,26 @@ test("agent output primitives preserve structure, state, and source coordination
   await expect(page.locator("#catalog-source-panel").getByRole("button", { name: /OWASP/ })).toHaveAttribute("aria-pressed", "true");
 });
 
+test("data, activity, and switch controls retain native interaction semantics", async ({ page }) => {
+  const table = page.locator("#catalog-table");
+  await expect(table.getByRole("table", { name: "Recent agent runs" })).toBeVisible();
+  await expect(table.getByRole("row")).toHaveCount(4);
+  const taskHeader = table.getByRole("button", { name: /Task/ });
+  await taskHeader.click();
+  await expect(table.getByRole("columnheader", { name: /Task/ })).toHaveAttribute("aria-sort", "ascending");
+  await taskHeader.click();
+  await expect(table.getByRole("columnheader", { name: /Task/ })).toHaveAttribute("aria-sort", "descending");
+
+  const toggle = page.locator("#story-osx-toggle osx-toggle").first();
+  const control = toggle.getByRole("switch", { name: "Enable agent tools" });
+  await expect(control).toBeChecked();
+  await control.press("Space");
+  await expect(control).not.toBeChecked();
+
+  await expect(page.locator("#story-osx-spinner osx-spinner").nth(1).getByRole("status", { name: "Loading results" })).toBeVisible();
+  await expect(page.locator("#story-osx-button osx-button").nth(1).getByRole("button", { name: "Download" }).locator("svg")).toBeVisible();
+});
+
 test("foundation overlays and navigation honor keyboard contracts", async ({ page }) => {
   await expect(page.getByRole("tooltip", { name: "Open component settings" })).toBeVisible();
   await page.getByRole("button", { name: "Project info" }).click();

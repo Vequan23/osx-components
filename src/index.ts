@@ -32,16 +32,19 @@ import OsxSelectComponent from "./components/OsxSelect.ce.vue";
 import OsxSheetComponent from "./components/OsxSheet.ce.vue";
 import OsxShimmerComponent from "./components/OsxShimmer.ce.vue";
 import OsxSkeletonComponent from "./components/OsxSkeleton.ce.vue";
+import OsxSpinnerComponent from "./components/OsxSpinner.ce.vue";
 import OsxSourceListComponent from "./components/OsxSourceList.ce.vue";
 import OsxSourcePanelComponent from "./components/OsxSourcePanel.ce.vue";
 import OsxSplitViewComponent from "./components/OsxSplitView.ce.vue";
 import OsxStatusBarComponent from "./components/OsxStatusBar.ce.vue";
+import OsxTableComponent from "./components/OsxTable.ce.vue";
 import OsxTextFieldComponent from "./components/OsxTextField.ce.vue";
 import OsxThinkingComponent from "./components/OsxThinking.ce.vue";
 import OsxTerminalComponent from "./components/OsxTerminal.ce.vue";
 import OsxTabsComponent from "./components/OsxTabs.ce.vue";
 import OsxToolCallComponent from "./components/OsxToolCall.ce.vue";
 import OsxToolbarComponent from "./components/OsxToolbar.ce.vue";
+import OsxToggleComponent from "./components/OsxToggle.ce.vue";
 import OsxToastComponent from "./components/OsxToast.ce.vue";
 import OsxTooltipComponent from "./components/OsxTooltip.ce.vue";
 import OsxWindowComponent from "./components/OsxWindow.ce.vue";
@@ -79,16 +82,19 @@ export const componentDefinitions = {
   "osx-sheet": OsxSheetComponent,
   "osx-shimmer": OsxShimmerComponent,
   "osx-skeleton": OsxSkeletonComponent,
+  "osx-spinner": OsxSpinnerComponent,
   "osx-source-list": OsxSourceListComponent,
   "osx-source-panel": OsxSourcePanelComponent,
   "osx-split-view": OsxSplitViewComponent,
   "osx-status-bar": OsxStatusBarComponent,
+  "osx-table": OsxTableComponent,
   "osx-text-field": OsxTextFieldComponent,
   "osx-thinking": OsxThinkingComponent,
   "osx-terminal": OsxTerminalComponent,
   "osx-tabs": OsxTabsComponent,
   "osx-tool-call": OsxToolCallComponent,
   "osx-toolbar": OsxToolbarComponent,
+  "osx-toggle": OsxToggleComponent,
   "osx-toast": OsxToastComponent,
   "osx-tooltip": OsxTooltipComponent,
   "osx-window": OsxWindowComponent,
@@ -136,16 +142,19 @@ export {
   OsxSheetComponent,
   OsxShimmerComponent,
   OsxSkeletonComponent,
+  OsxSpinnerComponent,
   OsxSourceListComponent,
   OsxSourcePanelComponent,
   OsxSplitViewComponent,
   OsxStatusBarComponent,
+  OsxTableComponent,
   OsxTextFieldComponent,
   OsxThinkingComponent,
   OsxTerminalComponent,
   OsxTabsComponent,
   OsxToolCallComponent,
   OsxToolbarComponent,
+  OsxToggleComponent,
   OsxToastComponent,
   OsxTooltipComponent,
   OsxWindowComponent,

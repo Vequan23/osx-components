@@ -62,6 +62,7 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-toast>` | Transient notifications with placement, timeout, and dismissal control |
 | `<osx-shimmer>` | Flexible reduced-motion-aware loading placeholder |
 | `<osx-skeleton>` | Text, profile, and card loading compositions |
+| `<osx-spinner>` | Compact reduced-motion-aware indeterminate activity feedback |
 | `<osx-icon>` | Curated Lucide SVG iconography with consistent sizing and accessible labels |
 | `<osx-icon-button>` | Accessible icon-only actions with standardized hit areas and states |
 | `<osx-tooltip>` | Supplemental hover and focus hints for compact controls |
@@ -76,8 +77,9 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-heading>` | Semantic display, title, section, and label typography |
 | `<osx-copy>` | Body copy with readable measures, sizes, tones, and emphasis |
 | `<osx-link>` | Native navigation with external, download, and disabled states |
-| `<osx-button>` | Default, primary, danger, loading, and compact actions |
+| `<osx-button>` | Default, primary, danger, loading, compact, and Lucide icon actions |
 | `<osx-checkbox>` | Checked, mixed, disabled, and slotted-label states |
+| `<osx-toggle>` | Immediate on/off settings with native switch semantics |
 | `<osx-window>` | Window chrome, controls, toolbar and footer slots |
 | `<osx-toolbar>` | Three-region application toolbar |
 | `<osx-segmented-control>` | Accessible single-selection view control |
@@ -86,6 +88,7 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-source-list>` | Finder-style application navigation |
 | `<osx-split-view>` | Primary-detail horizontal or vertical layout |
 | `<osx-status-bar>` | Readiness, activity, and connection state |
+| `<osx-table>` | Responsive native data table with sortable columns and safe narrow-screen scrolling |
 | `<osx-text-field>` | Labeled text, email, password, and search inputs |
 | `<osx-progress>` | Determinate and indeterminate progress |
 
@@ -98,7 +101,7 @@ document.querySelector("osx-segmented-control")
   .addEventListener("change", (event) => console.log(event.detail[0]));
 ```
 
-`<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`.
+`<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`, and `<osx-table>` emits `sort` with the selected key and direction.
 
 Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`; `<osx-thinking>` emits `toggle`; `<osx-artifact>` emits `copy`, `download`, and `open`; `<osx-markdown>` emits `copy`; and citations coordinate through `activate` and `select`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
 
@@ -106,7 +109,7 @@ Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, 
 
 `<osx-icon>` is the library's shared icon contract. It exposes a curated 56-icon vocabulary from the maintained `@lucide/vue` package, using direct SVG component imports instead of an icon font. Icons share Lucide's consistent stroke geometry and support custom size, stroke width, and accessible labels. Decorative icons are hidden from assistive technology; pass `label` when an icon carries meaning.
 
-Use `<osx-icon-button>` for icon-only actions. It requires an accessible label and standardizes small, medium, and large hit areas; pair unfamiliar actions with `<osx-tooltip>` for visible guidance.
+Use `<osx-icon-button>` for icon-only actions. It requires an accessible label and standardizes small, medium, and large hit areas; pair unfamiliar actions with `<osx-tooltip>` for visible guidance. Standard `<osx-button>` actions accept `icon` and `icon-position` when an icon should reinforce a visible text label.
 
 ## Agent workspace
 
@@ -145,7 +148,7 @@ The showcase deliberately consumes the library as native HTML elements. That kee
 
 ## Direction
 
-The next useful components are breadcrumbs, data tables, date pickers, command palettes, disclosure groups, context meters, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
+The next useful components are breadcrumbs, date pickers, command palettes, disclosure groups, context meters, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
 
 ## License
 
