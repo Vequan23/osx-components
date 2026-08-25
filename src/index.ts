@@ -15,6 +15,7 @@ import OsxCopyComponent from "./components/OsxCopy.ce.vue";
 import OsxCitationComponent from "./components/OsxCitation.ce.vue";
 import OsxDiffViewerComponent from "./components/OsxDiffViewer.ce.vue";
 import OsxDialogComponent from "./components/OsxDialog.ce.vue";
+import OsxEcosystemCardComponent from "./components/OsxEcosystemCard.ce.vue";
 import OsxEmptyStateComponent from "./components/OsxEmptyState.ce.vue";
 import OsxFileTreeComponent from "./components/OsxFileTree.ce.vue";
 import OsxIconComponent from "./components/OsxIcon.ce.vue";
@@ -65,6 +66,7 @@ export const componentDefinitions = {
   "osx-citation": OsxCitationComponent,
   "osx-diff-viewer": OsxDiffViewerComponent,
   "osx-dialog": OsxDialogComponent,
+  "osx-ecosystem-card": OsxEcosystemCardComponent,
   "osx-empty-state": OsxEmptyStateComponent,
   "osx-file-tree": OsxFileTreeComponent,
   "osx-icon": OsxIconComponent,
@@ -125,6 +127,7 @@ export {
   OsxCitationComponent,
   OsxDiffViewerComponent,
   OsxDialogComponent,
+  OsxEcosystemCardComponent,
   OsxEmptyStateComponent,
   OsxFileTreeComponent,
   OsxIconComponent,

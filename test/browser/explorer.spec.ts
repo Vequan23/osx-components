@@ -75,6 +75,20 @@ test("typography stories preserve semantic hierarchy and link states", async ({ 
   await expect(links.nth(2).getByRole("link", { name: "Unavailable destination" })).toHaveAttribute("aria-disabled", "true");
 });
 
+test("ecosystem cards expose provenance and host-owned activation", async ({ page }) => {
+  const card = page.locator("#story-osx-ecosystem-card osx-ecosystem-card").first();
+  const link = card.getByRole("link", { name: "Explore Aperta: Aperta" });
+  await expect(card.getByText("Built with OSX Components")).toBeVisible();
+  await expect(link).toHaveAttribute("href", "https://aperta-six.vercel.app/");
+  await expect(link).toHaveAttribute("rel", "noreferrer noopener");
+  await card.evaluate((element) => {
+    element.shadowRoot?.querySelector("a")?.addEventListener("click", (event) => event.preventDefault());
+    element.addEventListener("activate", (event) => { (window as Window & { __ecosystemActivation?: unknown }).__ecosystemActivation = (event as CustomEvent).detail?.[0]; }, { once: true });
+  });
+  await link.click();
+  expect(await page.evaluate(() => (window as Window & { __ecosystemActivation?: unknown }).__ecosystemActivation)).toEqual({ name: "Aperta", href: "https://aperta-six.vercel.app/", trackingId: "docs-aperta" });
+});
+
 test("agent output primitives preserve structure, state, and source coordination", async ({ page }) => {
   const thinking = page.locator("#story-osx-thinking osx-thinking").first();
   await expect(thinking.locator("details")).toHaveAttribute("aria-busy", "true");
@@ -152,7 +166,9 @@ test("signature stories remain visually stable", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Desktop baselines own theme fidelity");
   await expect(page.locator("#story-osx-alert")).toHaveScreenshot("alert-aqua.png");
   await expect(page.locator("#story-osx-diff-viewer")).toHaveScreenshot("diff-aqua.png");
+  await expect(page.locator("#story-osx-ecosystem-card")).toHaveScreenshot("ecosystem-card-aqua.png");
   await page.getByRole("radio", { name: "Panther" }).click();
   await expect(page.locator("#story-osx-alert")).toHaveScreenshot("alert-panther.png");
   await expect(page.locator("#story-osx-terminal")).toHaveScreenshot("terminal-panther.png");
+  await expect(page.locator("#story-osx-ecosystem-card")).toHaveScreenshot("ecosystem-card-panther.png");
 });

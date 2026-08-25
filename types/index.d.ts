@@ -34,6 +34,7 @@ export type OsxCopyProps = { as?: "p" | "span" | "div"; size?: "small" | "medium
 export type OsxCitationProps = { index?: string | number; label?: string; title?: string; sourceId?: string; href?: string; selected?: boolean; disabled?: boolean };
 export type OsxDiffViewerProps = { file?: string; patch?: string; view?: "unified" | "split"; language?: string; additions?: number; deletions?: number; label?: string };
 export type OsxDialogProps = { open?: boolean; title?: string; description?: string; size?: "small" | "medium" | "large"; dismissible?: boolean; confirmLabel?: string; cancelLabel?: string };
+export type OsxEcosystemCardProps = { name?: string; category?: string; description?: string; href?: string; actionLabel?: string; mark?: string; provenance?: string; trackingId?: string; tone?: "neutral" | "info" | "success" | "warning"; compact?: boolean; external?: boolean };
 export type OsxEmptyStateProps = { title?: string; description?: string; actionLabel?: string; icon?: OsxIconName };
 export type OsxFileTreeProps = { files?: string; selected?: string; statuses?: string; label?: string; filterable?: boolean };
 export type OsxIconProps = { name?: OsxIconName; size?: number; label?: string; strokeWidth?: number; absoluteStrokeWidth?: boolean };
@@ -96,6 +97,7 @@ export const OsxCopyComponent: DefineComponent<OsxCopyProps>;
 export const OsxCitationComponent: DefineComponent<OsxCitationProps>;
 export const OsxDiffViewerComponent: DefineComponent<OsxDiffViewerProps>;
 export const OsxDialogComponent: DefineComponent<OsxDialogProps>;
+export const OsxEcosystemCardComponent: DefineComponent<OsxEcosystemCardProps>;
 export const OsxEmptyStateComponent: DefineComponent<OsxEmptyStateProps>;
 export const OsxFileTreeComponent: DefineComponent<OsxFileTreeProps>;
 export const OsxIconComponent: DefineComponent<OsxIconProps>;
@@ -146,6 +148,7 @@ export const componentDefinitions: {
   "osx-citation": typeof OsxCitationComponent;
   "osx-diff-viewer": typeof OsxDiffViewerComponent;
   "osx-dialog": typeof OsxDialogComponent;
+  "osx-ecosystem-card": typeof OsxEcosystemCardComponent;
   "osx-empty-state": typeof OsxEmptyStateComponent;
   "osx-file-tree": typeof OsxFileTreeComponent;
   "osx-icon": typeof OsxIconComponent;

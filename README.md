@@ -71,6 +71,7 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-menu-item>` | Action and checkbox menu rows with optional shortcuts |
 | `<osx-tabs>` | Related content panels with roving keyboard selection |
 | `<osx-dialog>` | Centered modal with focus management and controlled actions |
+| `<osx-ecosystem-card>` | Transparent first-party product discovery with provenance and host-owned tracking hooks |
 | `<osx-empty-state>` | Zero-data guidance with an optional recovery action |
 | `<osx-badge>` | Compact status, count, and category labels |
 | `<osx-avatar>` | Initials, image fallback, and presence status |
@@ -101,7 +102,7 @@ document.querySelector("osx-segmented-control")
   .addEventListener("change", (event) => console.log(event.detail[0]));
 ```
 
-`<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`, and `<osx-table>` emits `sort` with the selected key and direction.
+`<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`, and `<osx-table>` emits `sort` with the selected key and direction. `<osx-ecosystem-card>` emits `activate` with its product name, destination, and optional tracking ID. It never sends analytics or makes network requests itself; the host application decides whether and how to measure discovery.
 
 Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`; `<osx-thinking>` emits `toggle`; `<osx-artifact>` emits `copy`, `download`, and `open`; `<osx-markdown>` emits `copy`; and citations coordinate through `activate` and `select`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
 

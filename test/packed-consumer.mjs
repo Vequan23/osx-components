@@ -5,6 +5,7 @@ import { join } from "node:path";
 import { build } from "vite";
 
 const workspace = await mkdtemp("/private/tmp/osx-packed-consumer-");
+const sourceManifest = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 const packOutput = JSON.parse(execFileSync("npm", ["pack", "--json", "--pack-destination", workspace], { encoding: "utf8" }));
 const archive = join(workspace, packOutput[0].filename);
 await writeFile(join(workspace, "package.json"), JSON.stringify({ private: true, type: "module", dependencies: { "osx-components": `file:${archive}` } }));
@@ -16,5 +17,5 @@ const outputs = Array.isArray(result) ? result.flatMap((item) => item.output) : 
 const code = outputs.filter((item) => item.type === "chunk").map((item) => item.code).join("\n");
 assert.match(code, /customElements/, "packed consumer bundle did not include registration runtime");
 const manifest = JSON.parse(await readFile(join(workspace, "node_modules/osx-components/package.json"), "utf8"));
-assert.equal(manifest.version, "0.6.0");
+assert.equal(manifest.version, sourceManifest.version);
 process.stdout.write("✓ packed npm artifact installed and bundled\n");
