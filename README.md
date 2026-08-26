@@ -90,6 +90,7 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-split-view>` | Primary-detail horizontal or vertical layout |
 | `<osx-status-bar>` | Readiness, activity, and connection state |
 | `<osx-table>` | Responsive native data table with sortable columns and safe narrow-screen scrolling |
+| `<osx-data-table>` | Searchable, sortable, selectable, paginated application data with client and server orchestration modes |
 | `<osx-text-field>` | Labeled text, email, password, and search inputs with optional Lucide icons |
 | `<osx-progress>` | Determinate and indeterminate progress |
 
@@ -102,7 +103,7 @@ document.querySelector("osx-segmented-control")
   .addEventListener("change", (event) => console.log(event.detail[0]));
 ```
 
-`<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`, and `<osx-table>` emits `sort` with the selected key and direction. `<osx-ecosystem-card>` emits `activate` with its product name, destination, and optional tracking ID. It never sends analytics or makes network requests itself; the host application decides whether and how to measure discovery.
+`<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`, and `<osx-table>` emits `sort` with the selected key and direction. `<osx-data-table>` emits `search`, `sort`, `page-change`, `page-size-change`, `selection-change`, and `row-activate`, allowing its client-side behavior to be replaced by server orchestration without changing the visual contract. `<osx-ecosystem-card>` emits `activate` with its product name, destination, and optional tracking ID. It never sends analytics or makes network requests itself; the host application decides whether and how to measure discovery.
 
 Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`; `<osx-thinking>` emits `toggle`; `<osx-artifact>` emits `copy`, `download`, and `open`; `<osx-markdown>` emits `copy`; and citations coordinate through `activate` and `select`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
 

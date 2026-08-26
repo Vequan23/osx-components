@@ -3,8 +3,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 
 const read = (path) => readFile(new URL(`../${path}`, import.meta.url), "utf8");
-const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-alert", "osx-app-shell", "osx-artifact", "osx-avatar", "osx-badge", "osx-button", "osx-checkbox", "osx-citation", "osx-copy", "osx-dialog", "osx-diff-viewer", "osx-ecosystem-card", "osx-empty-state", "osx-file-tree", "osx-heading", "osx-icon", "osx-icon-button", "osx-link", "osx-markdown", "osx-menu", "osx-menu-item", "osx-plan", "osx-popover", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-shimmer", "osx-skeleton", "osx-source-list", "osx-source-panel", "osx-spinner", "osx-split-view", "osx-status-bar", "osx-table", "osx-tabs", "osx-terminal", "osx-text-field", "osx-thinking", "osx-toast", "osx-toggle", "osx-tool-call", "osx-toolbar", "osx-tooltip", "osx-window"];
-const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAlert.ce.vue", "OsxAppShell.ce.vue", "OsxArtifact.ce.vue", "OsxAvatar.ce.vue", "OsxBadge.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxCitation.ce.vue", "OsxCopy.ce.vue", "OsxDialog.ce.vue", "OsxDiffViewer.ce.vue", "OsxEcosystemCard.ce.vue", "OsxEmptyState.ce.vue", "OsxFileTree.ce.vue", "OsxHeading.ce.vue", "OsxIcon.ce.vue", "OsxIconButton.ce.vue", "OsxLink.ce.vue", "OsxMarkdown.ce.vue", "OsxMenu.ce.vue", "OsxMenuItem.ce.vue", "OsxPlan.ce.vue", "OsxPopover.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxShimmer.ce.vue", "OsxSkeleton.ce.vue", "OsxSourceList.ce.vue", "OsxSourcePanel.ce.vue", "OsxSpinner.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTable.ce.vue", "OsxTabs.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxThinking.ce.vue", "OsxToast.ce.vue", "OsxToggle.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxTooltip.ce.vue", "OsxWindow.ce.vue"];
+const componentTags = ["osx-agent-approval", "osx-agent-composer", "osx-agent-message", "osx-agent-run-status", "osx-alert", "osx-app-shell", "osx-artifact", "osx-avatar", "osx-badge", "osx-button", "osx-checkbox", "osx-citation", "osx-copy", "osx-data-table", "osx-dialog", "osx-diff-viewer", "osx-ecosystem-card", "osx-empty-state", "osx-file-tree", "osx-heading", "osx-icon", "osx-icon-button", "osx-link", "osx-markdown", "osx-menu", "osx-menu-item", "osx-plan", "osx-popover", "osx-progress", "osx-segmented-control", "osx-select", "osx-sheet", "osx-shimmer", "osx-skeleton", "osx-source-list", "osx-source-panel", "osx-spinner", "osx-split-view", "osx-status-bar", "osx-table", "osx-tabs", "osx-terminal", "osx-text-field", "osx-thinking", "osx-toast", "osx-toggle", "osx-tool-call", "osx-toolbar", "osx-tooltip", "osx-window"];
+const componentFiles = ["OsxAgentApproval.ce.vue", "OsxAgentComposer.ce.vue", "OsxAgentMessage.ce.vue", "OsxAgentRunStatus.ce.vue", "OsxAlert.ce.vue", "OsxAppShell.ce.vue", "OsxArtifact.ce.vue", "OsxAvatar.ce.vue", "OsxBadge.ce.vue", "OsxButton.ce.vue", "OsxCheckbox.ce.vue", "OsxCitation.ce.vue", "OsxCopy.ce.vue", "OsxDataTable.ce.vue", "OsxDialog.ce.vue", "OsxDiffViewer.ce.vue", "OsxEcosystemCard.ce.vue", "OsxEmptyState.ce.vue", "OsxFileTree.ce.vue", "OsxHeading.ce.vue", "OsxIcon.ce.vue", "OsxIconButton.ce.vue", "OsxLink.ce.vue", "OsxMarkdown.ce.vue", "OsxMenu.ce.vue", "OsxMenuItem.ce.vue", "OsxPlan.ce.vue", "OsxPopover.ce.vue", "OsxProgress.ce.vue", "OsxSegmentedControl.ce.vue", "OsxSelect.ce.vue", "OsxSheet.ce.vue", "OsxShimmer.ce.vue", "OsxSkeleton.ce.vue", "OsxSourceList.ce.vue", "OsxSourcePanel.ce.vue", "OsxSpinner.ce.vue", "OsxSplitView.ce.vue", "OsxStatusBar.ce.vue", "OsxTable.ce.vue", "OsxTabs.ce.vue", "OsxTerminal.ce.vue", "OsxTextField.ce.vue", "OsxThinking.ce.vue", "OsxToast.ce.vue", "OsxToggle.ce.vue", "OsxToolCall.ce.vue", "OsxToolbar.ce.vue", "OsxTooltip.ce.vue", "OsxWindow.ce.vue"];
 
 test("publishes a framework-neutral custom element registry", async () => {
   const source = await read("src/index.ts");
@@ -122,6 +122,21 @@ test("table, spinner, toggle, buttons, and inputs expose native accessible contr
   assert.match(textField, /displayedIcon/);
   assert.match(textField, /iconPosition/);
   for (const name of ["OsxTableProps", "OsxSpinnerProps", "OsxToggleProps", "icon?: OsxIconName", "iconPosition?: \"leading\" | \"trailing\""]) assert.match(types, new RegExp(name.replace("?", "\\?")));
+});
+
+test("data table exposes search, selection, pagination, loading, and server-control contracts", async () => {
+  const [table, types, docs, page, behavior] = await Promise.all([
+    read("src/components/OsxDataTable.ce.vue"), read("types/index.d.ts"), read("demo/component-docs.ts"), read("components.html"), read("demo/catalog.ts"),
+  ]);
+  for (const semantic of ["<table>", "<caption", "scope=\"col\"", "aria-sort", "aria-busy", "type=\"search\"", "aria-label=\"Table pagination\""]) assert.match(table, new RegExp(semantic));
+  for (const event of ["search", "sort", "page-change", "page-size-change", "selection-change", "row-activate"]) assert.match(table, new RegExp(`\"${event}\"`));
+  assert.match(table, /serverMode/);
+  assert.match(table, /selectedKeys/);
+  assert.match(table, /noResultsMessage/);
+  assert.match(types, /OsxDataTableProps/);
+  assert.match(docs, /"osx-data-table"/);
+  assert.match(page, /id="catalog-data-table"/);
+  assert.match(behavior, /#catalog-data-table/);
 });
 
 test("signature developer components expose inspectable repository evidence", async () => {

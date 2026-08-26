@@ -13,6 +13,7 @@ import OsxButtonComponent from "./components/OsxButton.ce.vue";
 import OsxCheckboxComponent from "./components/OsxCheckbox.ce.vue";
 import OsxCopyComponent from "./components/OsxCopy.ce.vue";
 import OsxCitationComponent from "./components/OsxCitation.ce.vue";
+import OsxDataTableComponent from "./components/OsxDataTable.ce.vue";
 import OsxDiffViewerComponent from "./components/OsxDiffViewer.ce.vue";
 import OsxDialogComponent from "./components/OsxDialog.ce.vue";
 import OsxEcosystemCardComponent from "./components/OsxEcosystemCard.ce.vue";
@@ -64,6 +65,7 @@ export const componentDefinitions = {
   "osx-checkbox": OsxCheckboxComponent,
   "osx-copy": OsxCopyComponent,
   "osx-citation": OsxCitationComponent,
+  "osx-data-table": OsxDataTableComponent,
   "osx-diff-viewer": OsxDiffViewerComponent,
   "osx-dialog": OsxDialogComponent,
   "osx-ecosystem-card": OsxEcosystemCardComponent,
@@ -125,6 +127,7 @@ export {
   OsxCheckboxComponent,
   OsxCopyComponent,
   OsxCitationComponent,
+  OsxDataTableComponent,
   OsxDiffViewerComponent,
   OsxDialogComponent,
   OsxEcosystemCardComponent,

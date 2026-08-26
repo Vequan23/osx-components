@@ -130,6 +130,28 @@ test("data, activity, and switch controls retain native interaction semantics", 
   await expect(page.locator("#story-osx-button osx-button").nth(1).getByRole("button", { name: "Download" }).locator("svg")).toBeVisible();
 });
 
+test("data table searches, sorts, selects, and paginates without losing semantics", async ({ page }) => {
+  const table = page.locator("#catalog-data-table");
+  await expect(table.getByRole("table", { name: "Distribution opportunities" })).toBeVisible();
+  await expect(table.getByRole("row")).toHaveCount(6);
+  await expect(table.getByText("1–5 of 7")).toBeVisible();
+
+  await table.getByRole("searchbox", { name: "Search Distribution opportunities" }).fill("GitHub");
+  await expect(table.getByRole("row")).toHaveCount(3);
+  await expect(table.getByText("1–2 of 2")).toBeVisible();
+  await table.getByRole("button", { name: "Clear search" }).click();
+
+  await table.getByRole("button", { name: /Score/ }).click();
+  await expect(table.getByRole("columnheader", { name: /Score/ })).toHaveAttribute("aria-sort", "ascending");
+  const rowCheckboxes = table.getByRole("checkbox");
+  await rowCheckboxes.nth(1).check();
+  await expect(rowCheckboxes.nth(1)).toBeChecked();
+
+  await table.getByRole("button", { name: "Next page" }).click();
+  await expect(table.getByText("6–7 of 7")).toBeVisible();
+  await expect(table.getByText("Page 2 of 2")).toBeVisible();
+});
+
 test("text fields and file filters keep icon spacing inside the input boundary", async ({ page }) => {
   const fields = page.locator("#story-osx-text-field osx-text-field");
   await expect(fields).toHaveCount(3);

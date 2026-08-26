@@ -65,6 +65,7 @@ type Markdown = HTMLElement & { content: string; streaming: boolean };
 type Artifact = HTMLElement & { content: string };
 type SourcePanel = HTMLElement & { sources: Array<{ id: string; title: string; url?: string; snippet?: string }>; selected: string };
 type Table = HTMLElement & { columns: Array<{ key: string; label: string; align?: "left" | "center" | "right"; sortable?: boolean }>; rows: Array<Record<string, string | number>> };
+type DataTable = HTMLElement & { columns: Array<{ key: string; label: string; align?: "left" | "center" | "right"; sortable?: boolean; searchable?: boolean }>; rows: Array<Record<string, string | number>> };
 const diff = document.querySelector("#catalog-diff") as Diff | null;
 if (diff) diff.patch = ["@@ -14,6 +14,9 @@ export function createSession() {", "-  return store.create();", "+  const session = store.create();", "+  evidence.capture(session.id);", "+  return session;"].join("\n");
 const terminal = document.querySelector("#catalog-terminal") as Terminal | null;
@@ -117,6 +118,24 @@ const table = document.querySelector("#catalog-table") as Table | null;
 if (table) {
   table.columns = [{ key: "task", label: "Task", sortable: true }, { key: "status", label: "Status", sortable: true }, { key: "duration", label: "Duration", align: "right", sortable: true }];
   table.rows = [{ task: "Verify refresh tokens", status: "Passed", duration: "7.4s" }, { task: "Audit source handling", status: "Passed", duration: "3.1s" }, { task: "Build component package", status: "Running", duration: "12.8s" }];
+}
+const dataTable = document.querySelector("#catalog-data-table") as DataTable | null;
+if (dataTable) {
+  dataTable.columns = [
+    { key: "name", label: "Opportunity", sortable: true },
+    { key: "channel", label: "Channel", sortable: true },
+    { key: "status", label: "Status", sortable: true },
+    { key: "score", label: "Score", align: "right", sortable: true, searchable: false },
+  ];
+  dataTable.rows = [
+    { id: "opp-1", name: "Answer the local-first workflow question", channel: "Hacker News", status: "Ready", score: 92 },
+    { id: "opp-2", name: "Publish the evidence-loop walkthrough", channel: "LinkedIn", status: "Draft", score: 87 },
+    { id: "opp-3", name: "Share the Vue component starter", channel: "GitHub", status: "Ready", score: 84 },
+    { id: "opp-4", name: "Respond to the agent governance thread", channel: "Reddit", status: "Review", score: 79 },
+    { id: "opp-5", name: "Update the comparison page", channel: "Website", status: "Planned", score: 74 },
+    { id: "opp-6", name: "Document the private memory boundary", channel: "GitHub", status: "Planned", score: 69 },
+    { id: "opp-7", name: "Create the TypeScript integration snippet", channel: "Website", status: "Backlog", score: 61 },
+  ];
 }
 
 const iconGrid = document.querySelector("#catalog-icon-grid");
