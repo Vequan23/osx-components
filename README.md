@@ -17,6 +17,33 @@ import "osx-components/theme.css";
 registerOsxComponents();
 ```
 
+## Build with an AI agent
+
+Install the versioned `build-with-osx-components` skill so coding agents select real components, follow the theme and accessibility contracts, and verify the finished interface instead of approximating the system from screenshots.
+
+```bash
+# Portable Agent Skills location; works with compatible agents
+npx osx-components agent install
+
+# Agent-specific project installation
+npx osx-components agent install --target codex
+npx osx-components agent install --target claude
+npx osx-components agent install --target opencode
+npx osx-components agent install --target cursor
+
+# Install every project adapter
+npx osx-components agent install --target all
+```
+
+Use `--scope user` with `agents`, `codex`, `claude`, or `opencode` to install the skill globally. Re-run with `--force` after upgrading the package. Cursor rules remain project scoped.
+
+The skill includes component-selection guidance, framework integration patterns, application and agent-workspace compositions, the project quality standard, and a deterministic interface audit:
+
+```bash
+npx osx-components agent install --target agents
+node .agents/skills/build-with-osx-components/scripts/audit-osx-ui.mjs .
+```
+
 ```html
 <div data-osx-theme="aqua">
   <osx-window title="Preferences" subtitle="Appearance">

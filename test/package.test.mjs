@@ -18,7 +18,28 @@ test("package exports point to shipped runtime, theme, and consumer types", asyn
   assert.equal(manifest.exports["."].import, "./dist/osx-components.js");
   assert.equal(manifest.exports["."].types, "./types/index.d.ts");
   assert.equal(manifest.exports["./theme.css"], "./dist/osx-components.css");
+  assert.equal(manifest.exports["./skill"], "./skills/build-with-osx-components/SKILL.md");
   assert.ok(manifest.files.includes("types"));
+  assert.ok(manifest.files.includes("skills"));
+  assert.equal(manifest.bin["osx-components"], "bin/osx-components.mjs");
+});
+
+test("ships one canonical, progressively disclosed agent skill", async () => {
+  const [skill, metadata, selection, frameworks, composition, quality, audit] = await Promise.all([
+    read("skills/build-with-osx-components/SKILL.md"),
+    read("skills/build-with-osx-components/agents/openai.yaml"),
+    read("skills/build-with-osx-components/references/component-selection.md"),
+    read("skills/build-with-osx-components/references/framework-usage.md"),
+    read("skills/build-with-osx-components/references/composition-patterns.md"),
+    read("skills/build-with-osx-components/references/quality-standard.md"),
+    read("skills/build-with-osx-components/scripts/audit-osx-ui.mjs"),
+  ]);
+  assert.match(skill, /^---\nname: build-with-osx-components\ndescription: .+\n---/);
+  for (const reference of ["component-selection.md", "framework-usage.md", "composition-patterns.md", "quality-standard.md"]) assert.match(skill, new RegExp(reference.replace(".", "\\.")));
+  assert.match(metadata, /\$build-with-osx-components/);
+  for (const source of [selection, frameworks, composition, quality]) assert.ok(source.length > 300);
+  assert.match(audit, /minimum-font-size/);
+  assert.match(audit, /icon-button-label/);
 });
 
 test("ships Aqua, Graphite, and Panther token contracts", async () => {

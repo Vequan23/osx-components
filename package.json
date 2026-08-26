@@ -1,13 +1,15 @@
 {
   "name": "osx-components",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "OS X-inspired web components authored with Vue.",
   "type": "module",
   "sideEffects": [
     "*.css"
   ],
   "files": [
+    "bin",
     "dist",
+    "skills",
     "types",
     "README.md",
     "LICENSE"
@@ -15,12 +17,16 @@
   "main": "./dist/osx-components.js",
   "module": "./dist/osx-components.js",
   "types": "./types/index.d.ts",
+  "bin": {
+    "osx-components": "bin/osx-components.mjs"
+  },
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
       "import": "./dist/osx-components.js"
     },
-    "./theme.css": "./dist/osx-components.css"
+    "./theme.css": "./dist/osx-components.css",
+    "./skill": "./skills/build-with-osx-components/SKILL.md"
   },
   "scripts": {
     "dev": "vite",
@@ -33,7 +39,8 @@
     "test:quality": "npm run check && npm run test:consumers && npm run test:browser",
     "check": "npm run test && npm run build",
     "preview": "vite preview",
-    "preview:site": "vite preview --config vite.site.config.ts"
+    "preview:site": "vite preview --config vite.site.config.ts",
+    "audit:osx": "node skills/build-with-osx-components/scripts/audit-osx-ui.mjs ."
   },
   "keywords": [
     "web-components",

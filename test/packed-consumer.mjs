@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtemp, readFile, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { build } from "vite";
 
@@ -18,4 +18,9 @@ const code = outputs.filter((item) => item.type === "chunk").map((item) => item.
 assert.match(code, /customElements/, "packed consumer bundle did not include registration runtime");
 const manifest = JSON.parse(await readFile(join(workspace, "node_modules/osx-components/package.json"), "utf8"));
 assert.equal(manifest.version, sourceManifest.version);
+const packagedSkill = join(workspace, "node_modules/osx-components/skills/build-with-osx-components/SKILL.md");
+assert.ok((await stat(packagedSkill)).isFile(), "packed artifact did not include the agent skill");
+const agentTarget = join(workspace, "agent-target");
+execFileSync(process.execPath, [join(workspace, "node_modules/osx-components/bin/osx-components.mjs"), "agent", "install", "--target", "agents", "--cwd", agentTarget], { stdio: "pipe" });
+assert.ok((await stat(join(agentTarget, ".agents/skills/build-with-osx-components/SKILL.md"))).isFile(), "packed installer did not install the agent skill");
 process.stdout.write("✓ packed npm artifact installed and bundled\n");
