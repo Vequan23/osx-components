@@ -4,7 +4,7 @@ Use this guide to choose a primitive. Inspect the installed `types/index.d.ts` b
 
 ## Application structure
 
-- `osx-app-shell`: full workspace with toolbar, sidebar, main content, composer, inspector, and status areas.
+- `osx-app-shell`: full workspace with toolbar, sidebar, main content, composer, inspector, and status areas; opt into accessible side-panel resizing with `resizable`.
 - `osx-window`: bounded window chrome for demos, settings, and focused surfaces.
 - `osx-toolbar`: leading, center, and trailing application actions.
 - `osx-source-list`: Finder-style navigation.
@@ -16,8 +16,10 @@ Use this guide to choose a primitive. Inspect the installed `types/index.d.ts` b
 
 - `osx-button`: visible text action, optionally reinforced by a Lucide icon.
 - `osx-icon-button`: compact icon-only action with a required accessible label.
-- `osx-text-field`: labeled text, email, password, or search input with optional icon.
-- `osx-select`: native single-choice input.
+- `osx-text-field`: labeled single-line text, email, password, search, telephone, or URL input with validation and an optional icon.
+- `osx-textarea`: labeled multi-line input with validation and controlled resize behavior.
+- `osx-select`: native single-choice input with comma-separated labels or structured options.
+- `osx-radio-group`: native single-choice group when every option should stay visible; use its card variant for choices with supporting descriptions.
 - `osx-checkbox`: independent or multi-select choice.
 - `osx-toggle`: immediate on/off setting.
 - `osx-segmented-control`: compact single selection among a few views.

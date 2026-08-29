@@ -18,7 +18,7 @@ export type OsxAlertProps = { tone?: "info" | "success" | "warning" | "error"; t
 export type OsxArtifactProps = { title?: string; description?: string; kind?: "file" | "document" | "code"; filename?: string; version?: string; language?: string; content?: string; href?: string; copyable?: boolean; downloadable?: boolean; openable?: boolean; status?: "draft" | "ready" | "updated" };
 export type OsxAvatarProps = { name?: string; src?: string; alt?: string; size?: number; status?: "none" | "online" | "busy" | "offline" };
 export type OsxBadgeProps = { tone?: "neutral" | "info" | "success" | "warning" | "danger"; size?: "small" | "medium"; label?: string; dot?: boolean };
-export type OsxAppShellProps = { appTitle?: string; sidebarWidth?: string; inspectorWidth?: string; inspectorOpen?: boolean; label?: string };
+export type OsxAppShellProps = { appTitle?: string; sidebarWidth?: string; inspectorWidth?: string; inspectorOpen?: boolean; label?: string; resizable?: boolean; sidebarMinWidth?: number; sidebarMaxWidth?: number; inspectorMinWidth?: number; inspectorMaxWidth?: number };
 
 export type OsxButtonProps = {
   variant?: "default" | "primary" | "danger";
@@ -77,8 +77,11 @@ export type OsxPlanStep = { id?: string; title: string; detail?: string; state?:
 export type OsxPlanProps = { steps?: string | OsxPlanStep[]; title?: string; label?: string; compact?: boolean; showProgress?: boolean };
 export type OsxPopoverProps = { open?: boolean; placement?: "top" | "right" | "bottom" | "left"; label?: string; dismissible?: boolean };
 export type OsxProgressProps = { value?: number; max?: number; indeterminate?: boolean; label?: string };
+export type OsxRadioOption = { value: string; label: string; description?: string; disabled?: boolean };
+export type OsxRadioGroupProps = { options?: string | OsxRadioOption[]; value?: string; label?: string; name?: string; disabled?: boolean; required?: boolean; invalid?: boolean; hint?: string; error?: string; orientation?: "horizontal" | "vertical"; variant?: "default" | "cards" };
 export type OsxSegmentedControlProps = { items?: string; value?: string; label?: string; disabled?: boolean };
-export type OsxSelectProps = { options?: string; value?: string; label?: string; disabled?: boolean };
+export type OsxSelectOption = { value: string; label: string; disabled?: boolean };
+export type OsxSelectProps = { options?: string | OsxSelectOption[]; value?: string; label?: string; name?: string; disabled?: boolean; required?: boolean; invalid?: boolean; hint?: string; error?: string };
 export type OsxSheetProps = { open?: boolean; title?: string; description?: string; dismissible?: boolean };
 export type OsxShimmerProps = { width?: string; height?: string; radius?: string; paused?: boolean; label?: string };
 export type OsxSkeletonProps = { variant?: "text" | "card" | "profile"; lines?: number; animated?: boolean; label?: string };
@@ -91,13 +94,21 @@ export type OsxStatusBarProps = { label?: string; status?: "ready" | "working" |
 export type OsxTableColumn = { key: string; label: string; align?: "left" | "center" | "right"; sortable?: boolean; width?: string };
 export type OsxTableRow = Record<string, string | number | boolean | null | undefined>;
 export type OsxTableProps = { columns?: string | OsxTableColumn[]; rows?: string | OsxTableRow[]; caption?: string; label?: string; compact?: boolean; striped?: boolean; stickyHeader?: boolean; sortKey?: string; sortDirection?: "ascending" | "descending"; emptyMessage?: string };
+export type OsxTextAreaProps = { value?: string; label?: string; placeholder?: string; name?: string; rows?: number; maxlength?: number; disabled?: boolean; readonly?: boolean; required?: boolean; invalid?: boolean; hint?: string; error?: string; resize?: "none" | "vertical" | "horizontal" | "both" };
 export type OsxTextFieldProps = {
   value?: string;
   label?: string;
   placeholder?: string;
-  type?: "text" | "email" | "password" | "search";
+  type?: "text" | "email" | "password" | "search" | "tel" | "url";
+  name?: string;
+  autocomplete?: string;
+  maxlength?: number;
   disabled?: boolean;
+  readonly?: boolean;
+  required?: boolean;
+  invalid?: boolean;
   hint?: string;
+  error?: string;
   icon?: OsxIconName;
   iconPosition?: "leading" | "trailing";
 };
@@ -140,6 +151,7 @@ export const OsxMarkdownComponent: DefineComponent<OsxMarkdownProps>;
 export const OsxPlanComponent: DefineComponent<OsxPlanProps>;
 export const OsxPopoverComponent: DefineComponent<OsxPopoverProps>;
 export const OsxProgressComponent: DefineComponent<OsxProgressProps>;
+export const OsxRadioGroupComponent: DefineComponent<OsxRadioGroupProps>;
 export const OsxSegmentedControlComponent: DefineComponent<OsxSegmentedControlProps>;
 export const OsxSelectComponent: DefineComponent<OsxSelectProps>;
 export const OsxSheetComponent: DefineComponent<OsxSheetProps>;
@@ -151,6 +163,7 @@ export const OsxSourcePanelComponent: DefineComponent<OsxSourcePanelProps>;
 export const OsxSplitViewComponent: DefineComponent<OsxSplitViewProps>;
 export const OsxStatusBarComponent: DefineComponent<OsxStatusBarProps>;
 export const OsxTableComponent: DefineComponent<OsxTableProps>;
+export const OsxTextAreaComponent: DefineComponent<OsxTextAreaProps>;
 export const OsxTextFieldComponent: DefineComponent<OsxTextFieldProps>;
 export const OsxThinkingComponent: DefineComponent<OsxThinkingProps>;
 export const OsxTerminalComponent: DefineComponent<OsxTerminalProps>;
@@ -192,6 +205,7 @@ export const componentDefinitions: {
   "osx-plan": typeof OsxPlanComponent;
   "osx-popover": typeof OsxPopoverComponent;
   "osx-progress": typeof OsxProgressComponent;
+  "osx-radio-group": typeof OsxRadioGroupComponent;
   "osx-segmented-control": typeof OsxSegmentedControlComponent;
   "osx-select": typeof OsxSelectComponent;
   "osx-sheet": typeof OsxSheetComponent;
@@ -203,6 +217,7 @@ export const componentDefinitions: {
   "osx-split-view": typeof OsxSplitViewComponent;
   "osx-status-bar": typeof OsxStatusBarComponent;
   "osx-table": typeof OsxTableComponent;
+  "osx-textarea": typeof OsxTextAreaComponent;
   "osx-text-field": typeof OsxTextFieldComponent;
   "osx-thinking": typeof OsxThinkingComponent;
   "osx-terminal": typeof OsxTerminalComponent;

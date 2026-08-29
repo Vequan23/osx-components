@@ -13,6 +13,21 @@ test("explorer has no serious accessibility violations", async ({ page }) => {
   expect(serious, serious.map((item) => `${item.id}: ${item.help}`).join("\n")).toEqual([]);
 });
 
+test("changed forms and app shell have no serious violations in every theme", async ({ page }) => {
+  for (const theme of ["Aqua", "Graphite", "Panther"]) {
+    await page.getByRole("radio", { name: theme }).click();
+    const results = await new AxeBuilder({ page })
+      .include("#story-osx-app-shell")
+      .include("#story-osx-text-field")
+      .include("#story-osx-textarea")
+      .include("#story-osx-select")
+      .include("#story-osx-radio-group")
+      .analyze();
+    const serious = results.violations.filter((item) => ["serious", "critical"].includes(item.impact ?? ""));
+    expect(serious, `${theme}: ${serious.map((item) => `${item.id}: ${item.help}`).join("\n")}`).toEqual([]);
+  }
+});
+
 test("documentation is searchable, framework-aware, and keyboard reachable", async ({ page }) => {
   await page.getByPlaceholder("Search components…").fill("toast");
   await expect(page.locator(".story:visible")).toHaveCount(1);
@@ -123,8 +138,10 @@ test("data, activity, and switch controls retain native interaction semantics", 
   const toggle = page.locator("#story-osx-toggle osx-toggle").first();
   const control = toggle.getByRole("switch", { name: "Enable agent tools" });
   await expect(control).toBeChecked();
+  await toggle.evaluate((element) => element.addEventListener("change", (event) => { (window as Window & { __toggleValue?: boolean }).__toggleValue = Boolean((event as CustomEvent).detail?.[0]); }, { once: true }));
   await control.press("Space");
   await expect(control).not.toBeChecked();
+  expect(await page.evaluate(() => (window as Window & { __toggleValue?: boolean }).__toggleValue)).toBe(false);
 
   await expect(page.locator("#story-osx-spinner osx-spinner").nth(1).getByRole("status", { name: "Loading results" })).toBeVisible();
   await expect(page.locator("#story-osx-button osx-button").nth(1).getByRole("button", { name: "Download" }).locator("svg")).toBeVisible();
@@ -166,6 +183,75 @@ test("text fields and file filters keep icon spacing inside the input boundary",
   });
   expect(spacing.left).toBeGreaterThanOrEqual(9);
   expect(spacing.right).toBeGreaterThan(spacing.left);
+});
+
+test("text field host delegates focus and keyboard input to its native control", async ({ page }) => {
+  const field = page.locator("#story-osx-text-field osx-text-field").first();
+  const input = field.getByRole("textbox", { name: "Project name" });
+
+  await field.locator(".label").dispatchEvent("pointerdown");
+  await expect(input).toBeFocused();
+  await field.evaluate((element) => (element as HTMLElement).focus());
+  await expect(input).toBeFocused();
+  await page.keyboard.press("ControlOrMeta+A");
+  await page.keyboard.type("vraxis-home");
+
+  await expect(input).toHaveValue("vraxis-home");
+  expect(await field.evaluate((element) => element.shadowRoot?.delegatesFocus)).toBe(true);
+});
+
+test("form controls preserve native input, choice, option, and validation semantics", async ({ page }) => {
+  const invalidField = page.locator("#story-osx-text-field osx-text-field").nth(2);
+  const account = invalidField.getByRole("textbox", { name: "Account" });
+  await expect(account).toHaveAttribute("aria-invalid", "true");
+  const fieldDescription = await account.getAttribute("aria-describedby");
+  expect(fieldDescription).toBeTruthy();
+  await expect(invalidField.locator(`[id="${fieldDescription}"]`)).toContainText("could not be verified");
+
+  const textArea = page.locator("#story-osx-textarea osx-textarea").first();
+  const notes = textArea.getByRole("textbox", { name: /Review notes/ });
+  await textArea.evaluate((element) => element.addEventListener("input", (event) => { (window as Window & { __textareaValue?: string }).__textareaValue = String((event as CustomEvent).detail?.[0]); }));
+  await notes.fill("The contract is ready for review.");
+  expect(await page.evaluate(() => (window as Window & { __textareaValue?: string }).__textareaValue)).toBe("The contract is ready for review.");
+
+  const radioGroup = page.locator("osx-radio-group#catalog-radio-group");
+  await expect(radioGroup.getByRole("radio")).toHaveCount(3);
+  await expect(radioGroup.getByRole("radio", { name: /Managed/ })).toBeDisabled();
+  await radioGroup.evaluate((element) => element.addEventListener("change", (event) => { (window as Window & { __radioValue?: string }).__radioValue = String((event as CustomEvent).detail?.[0]); }, { once: true }));
+  await radioGroup.getByRole("radio", { name: /Cloud/ }).check();
+  expect(await page.evaluate(() => (window as Window & { __radioValue?: string }).__radioValue)).toBe("cloud");
+
+  const checkbox = page.locator("#story-osx-checkbox osx-checkbox").first();
+  await checkbox.evaluate((element) => element.addEventListener("change", (event) => { (window as Window & { __checkboxValue?: boolean }).__checkboxValue = Boolean((event as CustomEvent).detail?.[0]); }, { once: true }));
+  await checkbox.getByRole("checkbox", { name: "Use smooth scrolling" }).uncheck();
+  expect(await page.evaluate(() => (window as Window & { __checkboxValue?: boolean }).__checkboxValue)).toBe(false);
+
+  const select = page.locator("#catalog-select").getByRole("combobox", { name: /Appearance/ });
+  await expect(select.locator("option")).toHaveCount(4);
+  await expect(select.locator('option[value="classic"]')).toHaveAttribute("disabled", "");
+});
+
+test("app shell panels resize with pointer and keyboard then stack without handles", async ({ page }, testInfo) => {
+  const shell = page.locator("#story-osx-app-shell osx-app-shell");
+  const handles = shell.locator(".resizer:visible");
+  if (testInfo.project.name === "mobile") {
+    await expect(handles).toHaveCount(0);
+    return;
+  }
+
+  await expect(handles).toHaveCount(2);
+  const sidebar = shell.getByRole("separator", { name: "Resize navigation panel" });
+  const initial = Number(await sidebar.getAttribute("aria-valuenow"));
+  await shell.evaluate((element) => element.addEventListener("panel-resize", (event) => { (window as Window & { __panelResize?: unknown[] }).__panelResize = (event as CustomEvent).detail; }));
+  await sidebar.focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(sidebar).toHaveAttribute("aria-valuenow", String(initial + 10));
+  expect(await page.evaluate(() => (window as Window & { __panelResize?: unknown[] }).__panelResize)).toEqual(["sidebar", initial + 10]);
+
+  await sidebar.dispatchEvent("pointerdown", { pointerId: 17, button: 0, clientX: 100 });
+  await page.evaluate(() => window.dispatchEvent(new PointerEvent("pointermove", { pointerId: 17, clientX: 120 })));
+  await page.evaluate(() => window.dispatchEvent(new PointerEvent("pointerup", { pointerId: 17, clientX: 120 })));
+  await expect.poll(async () => Number(await sidebar.getAttribute("aria-valuenow"))).toBeGreaterThanOrEqual(initial + 29);
 });
 
 test("foundation overlays and navigation honor keyboard contracts", async ({ page }) => {

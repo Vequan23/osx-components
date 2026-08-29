@@ -29,6 +29,7 @@ import OsxMarkdownComponent from "./components/OsxMarkdown.ce.vue";
 import OsxPlanComponent from "./components/OsxPlan.ce.vue";
 import OsxPopoverComponent from "./components/OsxPopover.ce.vue";
 import OsxProgressComponent from "./components/OsxProgress.ce.vue";
+import OsxRadioGroupComponent from "./components/OsxRadioGroup.ce.vue";
 import OsxSegmentedControlComponent from "./components/OsxSegmentedControl.ce.vue";
 import OsxSelectComponent from "./components/OsxSelect.ce.vue";
 import OsxSheetComponent from "./components/OsxSheet.ce.vue";
@@ -40,6 +41,7 @@ import OsxSourcePanelComponent from "./components/OsxSourcePanel.ce.vue";
 import OsxSplitViewComponent from "./components/OsxSplitView.ce.vue";
 import OsxStatusBarComponent from "./components/OsxStatusBar.ce.vue";
 import OsxTableComponent from "./components/OsxTable.ce.vue";
+import OsxTextAreaComponent from "./components/OsxTextArea.ce.vue";
 import OsxTextFieldComponent from "./components/OsxTextField.ce.vue";
 import OsxThinkingComponent from "./components/OsxThinking.ce.vue";
 import OsxTerminalComponent from "./components/OsxTerminal.ce.vue";
@@ -81,6 +83,7 @@ export const componentDefinitions = {
   "osx-plan": OsxPlanComponent,
   "osx-popover": OsxPopoverComponent,
   "osx-progress": OsxProgressComponent,
+  "osx-radio-group": OsxRadioGroupComponent,
   "osx-segmented-control": OsxSegmentedControlComponent,
   "osx-select": OsxSelectComponent,
   "osx-sheet": OsxSheetComponent,
@@ -92,6 +95,7 @@ export const componentDefinitions = {
   "osx-split-view": OsxSplitViewComponent,
   "osx-status-bar": OsxStatusBarComponent,
   "osx-table": OsxTableComponent,
+  "osx-textarea": OsxTextAreaComponent,
   "osx-text-field": OsxTextFieldComponent,
   "osx-thinking": OsxThinkingComponent,
   "osx-terminal": OsxTerminalComponent,
@@ -109,7 +113,11 @@ export type OsxComponentName = keyof typeof componentDefinitions;
 export function registerOsxComponents(): void {
   if (typeof customElements === "undefined") return;
   for (const [name, component] of Object.entries(componentDefinitions)) {
-    if (!customElements.get(name)) customElements.define(name, defineCustomElement(component));
+    if (customElements.get(name)) continue;
+    const options = name === "osx-text-field"
+      ? { shadowRootOptions: { delegatesFocus: true } }
+      : undefined;
+    customElements.define(name, defineCustomElement(component, options));
   }
 }
 
@@ -143,6 +151,7 @@ export {
   OsxPlanComponent,
   OsxPopoverComponent,
   OsxProgressComponent,
+  OsxRadioGroupComponent,
   OsxSegmentedControlComponent,
   OsxSelectComponent,
   OsxSheetComponent,
@@ -154,6 +163,7 @@ export {
   OsxSplitViewComponent,
   OsxStatusBarComponent,
   OsxTableComponent,
+  OsxTextAreaComponent,
   OsxTextFieldComponent,
   OsxThinkingComponent,
   OsxTerminalComponent,

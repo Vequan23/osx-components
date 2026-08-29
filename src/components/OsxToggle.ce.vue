@@ -6,7 +6,7 @@ const emit = defineEmits<{ change: [checked: boolean] }>();
 const current = ref(props.checked);
 const descriptionId = `osx-toggle-${useId()}`;
 watch(() => props.checked, (checked) => { current.value = checked; });
-function update(event: Event) { current.value = (event.target as HTMLInputElement).checked; emit("change", current.value); }
+function update(event: Event) { event.stopPropagation(); current.value = (event.target as HTMLInputElement).checked; emit("change", current.value); }
 </script>
 
 <template>

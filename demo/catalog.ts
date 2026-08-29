@@ -66,6 +66,8 @@ type Artifact = HTMLElement & { content: string };
 type SourcePanel = HTMLElement & { sources: Array<{ id: string; title: string; url?: string; snippet?: string }>; selected: string };
 type Table = HTMLElement & { columns: Array<{ key: string; label: string; align?: "left" | "center" | "right"; sortable?: boolean }>; rows: Array<Record<string, string | number>> };
 type DataTable = HTMLElement & { columns: Array<{ key: string; label: string; align?: "left" | "center" | "right"; sortable?: boolean; searchable?: boolean }>; rows: Array<Record<string, string | number>> };
+type Select = HTMLElement & { options: Array<{ value: string; label: string; disabled?: boolean }> };
+type RadioGroup = HTMLElement & { options: Array<{ value: string; label: string; description?: string; disabled?: boolean }> };
 const diff = document.querySelector("#catalog-diff") as Diff | null;
 if (diff) diff.patch = ["@@ -14,6 +14,9 @@ export function createSession() {", "-  return store.create();", "+  const session = store.create();", "+  evidence.capture(session.id);", "+  return session;"].join("\n");
 const terminal = document.querySelector("#catalog-terminal") as Terminal | null;
@@ -137,6 +139,19 @@ if (dataTable) {
     { id: "opp-7", name: "Create the TypeScript integration snippet", channel: "Website", status: "Backlog", score: 61 },
   ];
 }
+const select = document.querySelector("#catalog-select") as Select | null;
+if (select) select.options = [
+  { value: "aqua", label: "Aqua" },
+  { value: "graphite", label: "Graphite" },
+  { value: "panther", label: "Panther" },
+  { value: "classic", label: "Classic (unavailable)", disabled: true },
+];
+const radioGroup = document.querySelector("#catalog-radio-group") as RadioGroup | null;
+if (radioGroup) radioGroup.options = [
+  { value: "local", label: "Local", description: "Keep execution on this machine." },
+  { value: "cloud", label: "Cloud", description: "Use the configured remote runtime." },
+  { value: "managed", label: "Managed", description: "Not configured for this workspace.", disabled: true },
+];
 
 const iconGrid = document.querySelector("#catalog-icon-grid");
 for (const name of iconNames) {

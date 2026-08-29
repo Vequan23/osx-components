@@ -27,16 +27,17 @@ test("agent installer copies the canonical skill and generates a Cursor adapter"
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
-test("interface audit rejects inaccessible sizing and unlabeled icon actions", async () => {
+test("interface audit rejects inaccessible sizing and unlabeled controls", async () => {
   const directory = await mkdtemp(join(tmpdir(), "osx-components-audit-"));
   try {
-    await writeFile(join(directory, "bad.vue"), '<style>.tiny { font-size: 10px }</style><osx-icon-button icon="close"></osx-icon-button>');
+    await writeFile(join(directory, "bad.vue"), '<style>.tiny { font-size: 10px }</style><osx-icon-button icon="close"></osx-icon-button><osx-text-field></osx-text-field>');
     await assert.rejects(exec(process.execPath, [audit.pathname, directory]), (error) => {
       assert.match(error.stdout, /minimum-font-size/);
       assert.match(error.stdout, /icon-button-label/);
+      assert.match(error.stdout, /form-control-label/);
       return true;
     });
-    await writeFile(join(directory, "bad.vue"), '<style>.copy { font-size: 12px }</style><osx-icon-button icon="close" label="Close"></osx-icon-button>');
+    await writeFile(join(directory, "bad.vue"), '<style>.copy { font-size: 12px }</style><osx-icon-button icon="close" label="Close"></osx-icon-button><osx-text-field label="Name"></osx-text-field><osx-menu-item label="Search" shortcut="⌘K"></osx-menu-item>');
     const result = await exec(process.execPath, [audit.pathname, directory]);
     assert.match(result.stdout, /0 error\(s\)/);
   } finally { await rm(directory, { recursive: true, force: true }); }

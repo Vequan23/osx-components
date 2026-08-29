@@ -70,7 +70,7 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 
 | Element | Purpose |
 | --- | --- |
-| `<osx-app-shell>` | Responsive application workspace with toolbar, sidebar, content, composer, inspector, and status slots |
+| `<osx-app-shell>` | Responsive application workspace with toolbar, sidebar, content, composer, inspector, status slots, and optional accessible panel resizing |
 | `<osx-agent-composer>` | Prompt input with Enter-to-send, busy state, model context, and stop action |
 | `<osx-agent-message>` | User, assistant, system, streaming, and error conversation states |
 | `<osx-agent-run-status>` | Plan, work, verify, complete, and failure lifecycle visualization |
@@ -107,18 +107,20 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 | `<osx-link>` | Native navigation with external, download, and disabled states |
 | `<osx-button>` | Default, primary, danger, loading, compact, and Lucide icon actions |
 | `<osx-checkbox>` | Checked, mixed, disabled, and slotted-label states |
+| `<osx-radio-group>` | Native single-choice forms with structured options, validation, and optional choice cards |
 | `<osx-toggle>` | Immediate on/off settings with native switch semantics |
 | `<osx-window>` | Window chrome, controls, toolbar and footer slots |
 | `<osx-toolbar>` | Three-region application toolbar |
 | `<osx-segmented-control>` | Accessible single-selection view control |
-| `<osx-select>` | Native selection with OS X pop-up styling |
+| `<osx-select>` | Native selection with structured options, validation, and OS X pop-up styling |
 | `<osx-sheet>` | Window-attached confirmation and task dialog |
 | `<osx-source-list>` | Finder-style application navigation |
 | `<osx-split-view>` | Primary-detail horizontal or vertical layout |
 | `<osx-status-bar>` | Readiness, activity, and connection state |
 | `<osx-table>` | Responsive native data table with sortable columns and safe narrow-screen scrolling |
 | `<osx-data-table>` | Searchable, sortable, selectable, paginated application data with client and server orchestration modes |
-| `<osx-text-field>` | Labeled text, email, password, and search inputs with optional Lucide icons |
+| `<osx-textarea>` | Labeled multi-line input with validation and controlled resize behavior |
+| `<osx-text-field>` | Labeled text, email, password, search, telephone, and URL inputs with validation and optional Lucide icons |
 | `<osx-progress>` | Determinate and indeterminate progress |
 
 ## Events
@@ -130,7 +132,7 @@ document.querySelector("osx-segmented-control")
   .addEventListener("change", (event) => console.log(event.detail[0]));
 ```
 
-`<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` also emits `input`, and `<osx-table>` emits `sort` with the selected key and direction. `<osx-data-table>` emits `search`, `sort`, `page-change`, `page-size-change`, `selection-change`, and `row-activate`, allowing its client-side behavior to be replaced by server orchestration without changing the visual contract. `<osx-ecosystem-card>` emits `activate` with its product name, destination, and optional tracking ID. It never sends analytics or makes network requests itself; the host application decides whether and how to measure discovery.
+`<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` and `<osx-textarea>` also emit `input`, and `<osx-table>` emits `sort` with the selected key and direction. `<osx-app-shell>` emits `panel-resize` with the panel name and its pixel width so the host can persist a preference. `<osx-data-table>` emits `search`, `sort`, `page-change`, `page-size-change`, `selection-change`, and `row-activate`, allowing its client-side behavior to be replaced by server orchestration without changing the visual contract. `<osx-ecosystem-card>` emits `activate` with its product name, destination, and optional tracking ID. It never sends analytics or makes network requests itself; the host application decides whether and how to measure discovery.
 
 Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`; `<osx-thinking>` emits `toggle`; `<osx-artifact>` emits `copy`, `download`, and `open`; `<osx-markdown>` emits `copy`; and citations coordinate through `activate` and `select`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
 
@@ -145,7 +147,7 @@ Use `<osx-icon-button>` for icon-only actions. It requires an accessible label a
 The agent components are deliberately composable. The shell manages layout; it does not execute tools or call a model.
 
 ```html
-<osx-app-shell app-title="Project Agent" inspector-open>
+<osx-app-shell app-title="Project Agent" inspector-open resizable>
   <nav slot="sidebar">...</nav>
   <osx-agent-message message-role="assistant" author="Agent" model="Your model">
     <p>I inspected the change and verified the focused test.</p>

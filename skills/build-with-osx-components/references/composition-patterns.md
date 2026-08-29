@@ -4,6 +4,8 @@
 
 Use `osx-app-shell` as the layout owner. Put primary navigation in `sidebar`, persistent actions in `toolbar`, contextual detail in `inspector`, creation input in `composer`, and concise state in `status`. Keep page-specific content in the default slot.
 
+Set `resizable` when desktop users benefit from changing the navigation or inspector width. Configure the four pixel bounds for the product's content, listen for `panel-resize`, and let the host persist the preference. Resize handles disappear when the shell stacks on narrow screens.
+
 Do not repeat project identity, model identity, or run status in multiple shell regions. Give each fact one stable home.
 
 ## Agent workbench
@@ -26,7 +28,7 @@ Use `osx-file-tree` beside `osx-diff-viewer` or an artifact preview. Use a resiz
 
 ## Settings
 
-Use semantic headings and copy, labeled inputs, toggles for immediate binary settings, checkboxes for independent selection, and segmented controls for a small set of mutually exclusive views. Use a sheet or dialog only when the decision must interrupt the current workflow.
+Use semantic headings and copy, `osx-text-field` for single-line values, and `osx-textarea` for multi-line content. Use `osx-radio-group` when a mutually exclusive choice should stay visible, `osx-select` when space matters, toggles for immediate binary settings, checkboxes for independent selection, and segmented controls for switching among a few views. Put validation text in the controls' `error` props so it remains programmatically associated. Use a sheet or dialog only when the decision must interrupt the current workflow.
 
 ## Data-heavy views
 

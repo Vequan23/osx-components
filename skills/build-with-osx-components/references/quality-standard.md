@@ -15,11 +15,13 @@
 - Show immediate feedback for save, submit, copy, connection, and destructive operations.
 - Return focus after dismissing a modal or popover.
 - Ensure loading states explain what is happening and do not trap the user.
+- Keep resizable panels operable by pointer and keyboard, expose their current value, and enforce practical minimum and maximum widths.
 
 ## Accessibility
 
 - Use semantic components and landmarks.
 - Provide visible labels for inputs and text labels or accessible names for every action.
+- Associate form hints and validation errors with their native controls, and never rely on a red border alone.
 - Use `osx-icon-button` only with `label`.
 - Keep status textual; color and icons may reinforce it but cannot be the only signal.
 - Verify focus visibility and logical keyboard order.
