@@ -5,15 +5,16 @@ import IconGlyph from "./IconGlyph.vue";
 withDefaults(defineProps<{
   variant?: "default" | "primary" | "danger";
   size?: "small" | "medium";
+  type?: "button" | "submit" | "reset";
   disabled?: boolean;
   loading?: boolean;
   icon?: OsxIconName;
   iconPosition?: "leading" | "trailing";
-}>(), { variant: "default", size: "medium", disabled: false, loading: false, icon: undefined, iconPosition: "leading" });
+}>(), { variant: "default", size: "medium", type: "button", disabled: false, loading: false, icon: undefined, iconPosition: "leading" });
 </script>
 
 <template>
-  <button :class="[variant, size]" :disabled="disabled || loading" :aria-busy="loading || undefined">
+  <button :class="[variant, size]" :type="type" :disabled="disabled || loading" :aria-busy="loading || undefined">
     <span v-if="loading" class="spinner" aria-hidden="true"></span>
     <IconGlyph v-else-if="icon && iconPosition === 'leading'" :name="icon" :size="size === 'small' ? 13 : 15" />
     <span class="label"><slot></slot></span>

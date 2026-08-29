@@ -1,20 +1,21 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from "vue";
+import { nextTick, onMounted, ref, useHost, watch } from "vue";
+import { emitElementEvent, updateElementState } from "../element-events";
 import IconGlyph from "./IconGlyph.vue";
-const props = withDefaults(defineProps<{ checked?: boolean; label?: string; disabled?: boolean; indeterminate?: boolean }>(), { checked: false, label: "", disabled: false, indeterminate: false });
-const emit = defineEmits<{ change: [checked: boolean] }>();
+const props = withDefaults(defineProps<{ checked?: boolean; label?: string; name?: string; value?: string; disabled?: boolean; required?: boolean; indeterminate?: boolean }>(), { checked: false, label: "", name: "", value: "on", disabled: false, required: false, indeterminate: false });
+const host = useHost();
 const current = ref(props.checked);
 const input = ref<HTMLInputElement | null>(null);
 watch(() => props.checked, (checked) => { current.value = checked; });
 async function syncIndeterminate() { await nextTick(); if (input.value) input.value.indeterminate = props.indeterminate; }
 watch(() => props.indeterminate, syncIndeterminate);
 onMounted(syncIndeterminate);
-function update(event: Event) { event.stopPropagation(); current.value = (event.target as HTMLInputElement).checked; emit("change", current.value); }
+function update(event: Event) { event.stopPropagation(); current.value = (event.target as HTMLInputElement).checked; updateElementState(host, "indeterminate", false); updateElementState(host, "checked", current.value); emitElementEvent(host, "change", [current.value]); }
 </script>
 
 <template>
   <label :class="{ disabled, indeterminate }">
-    <input ref="input" type="checkbox" :checked="current" :disabled="disabled" @change="update" />
+    <input ref="input" type="checkbox" :checked="current" :name="name || undefined" :value="value" :disabled="disabled" :required="required" @input.stop @change="update" />
     <span class="box" aria-hidden="true"><IconGlyph v-if="indeterminate" name="minus" :size="11" :stroke-width="2.5" /><IconGlyph v-else-if="current" name="check" :size="11" :stroke-width="2.5" /></span>
     <span class="copy"><slot>{{ label }}</slot></span>
   </label>
@@ -29,4 +30,5 @@ input:checked + .box, .indeterminate .box { border-color: color-mix(in srgb, var
 input:focus-visible + .box { outline: 3px solid var(--osx-focus); outline-offset: 2px; }
 .box b { font-size: 12px; line-height: 1; }.box i { width: 7px; height: 2px; border-radius: 1px; background: white; }
 .disabled { opacity: .55; cursor: not-allowed; }
+@media (forced-colors: active) { input:checked + .box, .indeterminate .box { border: 4px solid Highlight; background: Canvas; color: Highlight; } }
 </style>

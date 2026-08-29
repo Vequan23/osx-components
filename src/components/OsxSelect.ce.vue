@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, useId } from "vue";
+import { computed, useHost, useId } from "vue";
+import { emitElementEvent, updateElementState } from "../element-events";
 type SelectOption = { value: string; label: string; disabled?: boolean };
 const props = withDefaults(defineProps<{
   options?: string | SelectOption[];
@@ -12,7 +13,7 @@ const props = withDefaults(defineProps<{
   hint?: string;
   error?: string;
 }>(), { options: "", value: "", label: "", name: "", disabled: false, required: false, invalid: false, hint: "", error: "" });
-const emit = defineEmits<{ change: [value: string] }>();
+const host = useHost();
 const descriptionId = `osx-select-${useId()}`;
 const hasError = computed(() => props.invalid || Boolean(props.error));
 const description = computed(() => props.error || props.hint);
@@ -20,11 +21,11 @@ const choices = computed<SelectOption[]>(() => {
   if (Array.isArray(props.options)) return props.options;
   return props.options.split(",").map((item) => item.trim()).filter(Boolean).map((item) => ({ value: item, label: item }));
 });
-function change(event: Event) { event.stopPropagation(); emit("change", (event.target as HTMLSelectElement).value); }
+function change(event: Event) { event.stopPropagation(); const value = (event.target as HTMLSelectElement).value; updateElementState(host, "value", value); emitElementEvent(host, "change", [value]); }
 </script>
 
 <template>
-  <label :class="{ invalid: hasError, disabled }"><span v-if="label" class="label">{{ label }}<b v-if="required" aria-hidden="true">Required</b></span><span class="select-shell"><select :value="value" :name="name || undefined" :disabled="disabled" :required="required" :aria-invalid="hasError ? 'true' : undefined" :aria-describedby="description ? descriptionId : undefined" @change="change"><option v-for="option in choices" :key="option.value" :value="option.value" :disabled="option.disabled">{{ option.label }}</option></select><i aria-hidden="true"></i></span><small v-if="description" :id="descriptionId" :class="{ error: hasError }">{{ description }}</small></label>
+  <label :class="{ invalid: hasError, disabled }"><span v-if="label" class="label">{{ label }}<b v-if="required" aria-hidden="true">Required</b></span><span class="select-shell"><select :value="value" :name="name || undefined" :disabled="disabled" :required="required" :aria-invalid="hasError ? 'true' : undefined" :aria-describedby="description ? descriptionId : undefined" @input.stop @change="change"><option v-for="option in choices" :key="option.value" :value="option.value" :disabled="option.disabled">{{ option.label }}</option></select><i aria-hidden="true"></i></span><small v-if="description" :id="descriptionId" :class="{ error: hasError }">{{ description }}</small></label>
 </template>
 
 <style>

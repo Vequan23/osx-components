@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, useId, watch } from "vue";
+import { computed, ref, useHost, useId, watch } from "vue";
+import { emitElementEvent, updateElementState } from "../element-events";
 import type { OsxIconName } from "../icons";
 import IconGlyph from "./IconGlyph.vue";
 const props = withDefaults(defineProps<{
@@ -19,7 +20,7 @@ const props = withDefaults(defineProps<{
   icon?: OsxIconName;
   iconPosition?: "leading" | "trailing";
 }>(), { value: "", label: "", placeholder: "", type: "text", name: "", autocomplete: "", maxlength: undefined, disabled: false, readonly: false, required: false, invalid: false, hint: "", error: "", icon: undefined, iconPosition: "leading" });
-const emit = defineEmits<{ input: [value: string]; change: [value: string] }>();
+const host = useHost();
 const localValue = ref(props.value);
 const control = ref<HTMLInputElement | null>(null);
 const descriptionId = `osx-text-field-${useId()}`;
@@ -27,8 +28,8 @@ const displayedIcon = computed<OsxIconName | undefined>(() => props.icon ?? (pro
 const hasError = computed(() => props.invalid || Boolean(props.error));
 const description = computed(() => props.error || props.hint);
 watch(() => props.value, (value) => { localValue.value = value; });
-function update(event: Event) { event.stopPropagation(); localValue.value = (event.target as HTMLInputElement).value; emit("input", localValue.value); }
-function commit(event: Event) { event.stopPropagation(); emit("change", localValue.value); }
+function update(event: Event) { event.stopPropagation(); localValue.value = (event.target as HTMLInputElement).value; updateElementState(host, "value", localValue.value); emitElementEvent(host, "input", [localValue.value]); }
+function commit(event: Event) { event.stopPropagation(); emitElementEvent(host, "change", [localValue.value]); }
 function focusControl() { if (!props.disabled) control.value?.focus({ preventScroll: true }); }
 </script>
 

@@ -125,7 +125,7 @@ Every visual decision is exposed through `--osx-*` custom properties. Override t
 
 ## Events
 
-Custom-element events expose Vue event arguments in `event.detail`.
+Custom-element events expose Vue event arguments in `event.detail`. Form and selection events bubble through the document, cross shadow boundaries, and update the custom element's public `value` or `checked` property before listeners run.
 
 ```js
 document.querySelector("osx-segmented-control")
@@ -133,6 +133,18 @@ document.querySelector("osx-segmented-control")
 ```
 
 `<osx-window>` emits `close`, `minimize`, and `zoom`. `<osx-sheet>` emits `close` and `confirm`. Selection and form components emit `change`; `<osx-text-field>` and `<osx-textarea>` also emit `input`, and `<osx-table>` emits `sort` with the selected key and direction. `<osx-app-shell>` emits `panel-resize` with the panel name and its pixel width so the host can persist a preference. `<osx-data-table>` emits `search`, `sort`, `page-change`, `page-size-change`, `selection-change`, and `row-activate`, allowing its client-side behavior to be replaced by server orchestration without changing the visual contract. `<osx-ecosystem-card>` emits `activate` with its product name, destination, and optional tracking ID. It never sends analytics or makes network requests itself; the host application decides whether and how to measure discovery.
+
+## Native forms
+
+`<osx-text-field>`, `<osx-textarea>`, `<osx-select>`, `<osx-radio-group>`, `<osx-checkbox>`, and `<osx-toggle>` are form-associated custom elements. Named controls contribute to `FormData`, respect `required` and disabled fieldsets, expose standard validity methods, and restore their initial state on `form.reset()`. Checkbox and toggle values default to `on`. Use `<osx-button type="submit">` or `<osx-button type="reset">` for outer-form actions; the default type is `button`.
+
+```html
+<form id="preferences">
+  <osx-text-field name="project" label="Project" required></osx-text-field>
+  <osx-checkbox name="telemetry" label="Share diagnostics"></osx-checkbox>
+  <osx-button type="submit" variant="primary">Save</osx-button>
+</form>
+```
 
 Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`; `<osx-thinking>` emits `toggle`; `<osx-artifact>` emits `copy`, `download`, and `open`; `<osx-markdown>` emits `copy`; and citations coordinate through `activate` and `select`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
 

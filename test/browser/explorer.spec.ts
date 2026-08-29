@@ -69,7 +69,16 @@ test("sheet supports escape and composer supports enter", async ({ page }) => {
   await expect(page.getByRole("dialog", { name: "Install component?" })).toBeHidden();
   const composer = page.locator("#story-osx-agent-composer osx-agent-composer");
   const input = composer.getByRole("textbox", { name: "Message to agent" });
+  await composer.evaluate((element) => {
+    (window as Window & { __composerInputEvents?: unknown[] }).__composerInputEvents = [];
+    element.addEventListener("input", (event) => {
+      const custom = event as CustomEvent;
+      (window as Window & { __composerInputEvents?: unknown[] }).__composerInputEvents?.push({ detail: custom.detail, bubbles: custom.bubbles, composed: custom.composed });
+    });
+  });
   await input.fill("Review the patch");
+  expect(await page.evaluate(() => (window as Window & { __composerInputEvents?: unknown[] }).__composerInputEvents)).toEqual([{ detail: ["Review the patch"], bubbles: true, composed: true }]);
+  expect(await composer.evaluate((element) => (element as HTMLElement & { value: string }).value)).toBe("Review the patch");
   await composer.evaluate((element) => element.addEventListener("submit", (event: Event) => { (window as Window & { __submittedPrompt?: string }).__submittedPrompt = String((event as CustomEvent).detail?.[0]); }, { once: true }));
   await input.press("Enter");
   expect(await page.evaluate(() => (window as Window & { __submittedPrompt?: string }).__submittedPrompt)).toBe("Review the patch");
@@ -229,6 +238,105 @@ test("form controls preserve native input, choice, option, and validation semant
   const select = page.locator("#catalog-select").getByRole("combobox", { name: /Appearance/ });
   await expect(select.locator("option")).toHaveCount(4);
   await expect(select.locator('option[value="classic"]')).toHaveAttribute("disabled", "");
+});
+
+test("form controls participate in native submission, validation, reset, and public state", async ({ page }) => {
+  await page.evaluate(() => {
+    const form = document.createElement("form");
+    form.id = "native-form-fixture";
+    form.innerHTML = `
+      <osx-text-field name="project" label="Project" required></osx-text-field>
+      <osx-textarea name="notes" label="Notes" required></osx-textarea>
+      <osx-select name="appearance" label="Appearance" required></osx-select>
+      <osx-radio-group name="runtime" label="Runtime" required></osx-radio-group>
+      <osx-checkbox name="consent" value="accepted" label="Accept" required indeterminate></osx-checkbox>
+      <osx-toggle name="tools" value="enabled" label="Tools" checked></osx-toggle>
+      <osx-button type="submit">Save</osx-button>
+      <osx-button type="reset">Reset</osx-button>
+    `;
+    document.body.append(form);
+    (form.querySelector("osx-select") as HTMLElement & { options: unknown }).options = [
+      { value: "", label: "Choose" },
+      { value: "aqua", label: "Aqua" },
+    ];
+    (form.querySelector("osx-radio-group") as HTMLElement & { options: unknown }).options = [
+      { value: "local", label: "Local" },
+      { value: "cloud", label: "Cloud" },
+    ];
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      (window as Window & { __nativeSubmitCount?: number }).__nativeSubmitCount = ((window as Window & { __nativeSubmitCount?: number }).__nativeSubmitCount ?? 0) + 1;
+    });
+  });
+
+  const form = page.locator("#native-form-fixture");
+  await expect.poll(() => form.evaluate((element) => (element as HTMLFormElement).checkValidity())).toBe(false);
+
+  const field = form.locator("osx-text-field");
+  await field.evaluate((element) => {
+    element.addEventListener("input", (event) => {
+      const custom = event as CustomEvent;
+      (window as Window & { __formInput?: unknown }).__formInput = {
+        bubbles: custom.bubbles,
+        composed: custom.composed,
+        detail: custom.detail,
+        target: (custom.target as Element).localName,
+      };
+    }, { once: true });
+  });
+  await field.getByRole("textbox", { name: "Project" }).fill("Vraxis");
+  await form.locator("osx-textarea").getByRole("textbox", { name: "Notes" }).fill("Ready");
+  await form.locator("osx-select").getByRole("combobox", { name: "Appearance" }).selectOption("aqua");
+  await form.locator("osx-radio-group").getByRole("radio", { name: "Cloud" }).check();
+  await form.locator("osx-checkbox").getByRole("checkbox", { name: "Accept" }).check();
+
+  expect(await page.evaluate(() => (window as Window & { __formInput?: unknown }).__formInput)).toEqual({
+    bubbles: true,
+    composed: true,
+    detail: ["Vraxis"],
+    target: "osx-text-field",
+  });
+  await expect.poll(() => form.evaluate((element) => (element as HTMLFormElement).checkValidity())).toBe(true);
+  expect(await form.evaluate((element) => Object.fromEntries(new FormData(element as HTMLFormElement)))).toEqual({
+    appearance: "aqua",
+    consent: "accepted",
+    notes: "Ready",
+    project: "Vraxis",
+    runtime: "cloud",
+    tools: "enabled",
+  });
+  expect(await field.evaluate((element) => (element as HTMLElement & { value: string }).value)).toBe("Vraxis");
+  expect(await form.locator("osx-checkbox").evaluate((element) => ({
+    checked: (element as HTMLElement & { checked: boolean }).checked,
+    indeterminate: (element as HTMLElement & { indeterminate: boolean }).indeterminate,
+  }))).toEqual({ checked: true, indeterminate: false });
+
+  await form.getByRole("button", { name: "Save" }).click();
+  expect(await page.evaluate(() => (window as Window & { __nativeSubmitCount?: number }).__nativeSubmitCount)).toBe(1);
+  await form.getByRole("button", { name: "Reset" }).click();
+  await expect.poll(() => field.evaluate((element) => (element as HTMLElement & { value: string }).value)).toBe("");
+  await expect(form.locator("osx-checkbox").getByRole("checkbox", { name: "Accept" })).not.toBeChecked();
+  await expect(form.locator("osx-toggle").getByRole("switch", { name: "Tools" })).toBeChecked();
+});
+
+test("segmented control uses roving focus and remains distinguishable in forced colors", async ({ page }) => {
+  const control = page.locator("#story-osx-segmented-control osx-segmented-control");
+  const buttons = control.getByRole("radio");
+  await expect(buttons.nth(0)).toHaveAttribute("tabindex", "0");
+  await expect(buttons.nth(1)).toHaveAttribute("tabindex", "-1");
+  await buttons.nth(0).focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(buttons.nth(1)).toBeFocused();
+  await expect(buttons.nth(1)).toHaveAttribute("aria-checked", "true");
+  expect(await control.evaluate((element) => (element as HTMLElement & { value: string }).value)).toBe("Controls");
+  await page.keyboard.press("End");
+  await expect(buttons.nth(2)).toBeFocused();
+  await expect(buttons.nth(2)).toHaveAttribute("aria-checked", "true");
+
+  await page.emulateMedia({ forcedColors: "active" });
+  await expect.poll(() => buttons.nth(2).evaluate((element) => getComputedStyle(element).borderTopWidth)).toBe("3px");
+  const forcedColors = await buttons.evaluateAll((elements) => elements.map((element) => getComputedStyle(element).backgroundColor));
+  expect(forcedColors[2]).not.toBe(forcedColors[0]);
 });
 
 test("app shell panels resize with pointer and keyboard then stack without handles", async ({ page }, testInfo) => {

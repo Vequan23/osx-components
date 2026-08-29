@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { ref, useHost, watch } from "vue";
+import { emitElementEvent, updateElementState } from "../element-events";
 import IconGlyph from "./IconGlyph.vue";
 
 const props = withDefaults(defineProps<{
@@ -17,17 +18,19 @@ const props = withDefaults(defineProps<{
   disabled: false,
   rows: 3,
 });
-const emit = defineEmits<{ input: [value: string]; submit: [value: string]; stop: [] }>();
+const host = useHost();
 const current = ref(props.value);
 watch(() => props.value, (value) => { current.value = value; });
 function update(event: Event) {
+  event.stopPropagation();
   current.value = (event.target as HTMLTextAreaElement).value;
-  emit("input", current.value);
+  updateElementState(host, "value", current.value);
+  emitElementEvent(host, "input", [current.value]);
 }
 function submit() {
   const prompt = current.value.trim();
   if (!prompt || props.busy || props.disabled) return;
-  emit("submit", prompt);
+  emitElementEvent(host, "submit", [prompt]);
 }
 function onKeydown(event: KeyboardEvent) {
   if (event.key === "Enter" && !event.shiftKey && !event.isComposing) {
@@ -42,7 +45,7 @@ function onKeydown(event: KeyboardEvent) {
     <textarea :value="current" :rows="rows" :placeholder="placeholder" :disabled="disabled" aria-label="Message to agent" @input="update" @keydown="onKeydown"></textarea>
     <footer>
       <div><slot name="tools"></slot><span v-if="model">{{ model }}</span></div>
-      <button v-if="busy" class="stop" type="button" aria-label="Stop agent" @click="emit('stop')"><IconGlyph name="stop" :size="14" /> Stop</button>
+      <button v-if="busy" class="stop" type="button" aria-label="Stop agent" @click="emitElementEvent(host, 'stop', [])"><IconGlyph name="stop" :size="14" /> Stop</button>
       <button v-else class="send" type="submit" :disabled="disabled || !current.trim()">Send <IconGlyph name="corner-down-left" :size="14" /></button>
     </footer>
   </form>
@@ -51,7 +54,7 @@ function onKeydown(event: KeyboardEvent) {
 <style>
 :host { display: block; color: var(--osx-text); font-family: var(--osx-font); }
 form { padding: 10px; }
-textarea { width: 100%; min-height: 74px; resize: vertical; padding: 10px 11px; border: 1px solid var(--osx-border); border-radius: 8px; color: var(--osx-text); background: var(--osx-surface-sunken); box-shadow: 0 1px 2px rgba(0,0,0,.15) inset; font: 13px/1.5 var(--osx-font); }
+textarea { box-sizing: border-box; width: 100%; max-width: 100%; min-height: 74px; resize: vertical; padding: 10px 11px; border: 1px solid var(--osx-border); border-radius: 8px; color: var(--osx-text); background: var(--osx-surface-sunken); box-shadow: 0 1px 2px rgba(0,0,0,.15) inset; font: 13px/1.5 var(--osx-font); }
 textarea::placeholder { color: var(--osx-muted); }
 textarea:focus-visible { outline: 3px solid var(--osx-focus); outline-offset: 1px; }
 footer { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding-top: 8px; }

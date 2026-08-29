@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { ref, useId, watch } from "vue";
+import { ref, useHost, useId, watch } from "vue";
+import { emitElementEvent, updateElementState } from "../element-events";
 
-const props = withDefaults(defineProps<{ checked?: boolean; label?: string; description?: string; disabled?: boolean }>(), { checked: false, label: "", description: "", disabled: false });
-const emit = defineEmits<{ change: [checked: boolean] }>();
+const props = withDefaults(defineProps<{ checked?: boolean; label?: string; description?: string; name?: string; value?: string; disabled?: boolean; required?: boolean }>(), { checked: false, label: "", description: "", name: "", value: "on", disabled: false, required: false });
+const host = useHost();
 const current = ref(props.checked);
 const descriptionId = `osx-toggle-${useId()}`;
 watch(() => props.checked, (checked) => { current.value = checked; });
-function update(event: Event) { event.stopPropagation(); current.value = (event.target as HTMLInputElement).checked; emit("change", current.value); }
+function update(event: Event) { event.stopPropagation(); current.value = (event.target as HTMLInputElement).checked; updateElementState(host, "checked", current.value); emitElementEvent(host, "change", [current.value]); }
 </script>
 
 <template>
   <label :class="{ disabled }">
     <span class="copy"><span class="title"><slot>{{ label }}</slot></span><span v-if="description" :id="descriptionId" class="description">{{ description }}</span></span>
-    <span class="control"><input type="checkbox" role="switch" :checked="current" :disabled="disabled" :aria-describedby="description ? descriptionId : undefined" @change="update" /><span class="track" aria-hidden="true"><span class="thumb"></span></span></span>
+    <span class="control"><input type="checkbox" role="switch" :checked="current" :name="name || undefined" :value="value" :disabled="disabled" :required="required" :aria-describedby="description ? descriptionId : undefined" @input.stop @change="update" /><span class="track" aria-hidden="true"><span class="thumb"></span></span></span>
   </label>
 </template>
 
@@ -22,4 +23,5 @@ label { display: flex; gap: 14px; align-items: center; justify-content: space-be
 .control { flex: 0 0 auto; position: relative; }.control input { width: 1px; height: 1px; position: absolute; opacity: 0; }.track { width: 38px; height: 21px; display: block; position: relative; border: 1px solid var(--osx-border); border-radius: 999px; background: linear-gradient(var(--osx-surface-sunken), var(--osx-surface-raised)); box-shadow: 0 1px 2px rgba(0,0,0,.18) inset; transition: background .16s ease; }.thumb { width: 17px; height: 17px; position: absolute; top: 1px; left: 1px; border: 1px solid var(--osx-border); border-radius: 50%; background: linear-gradient(#fff, var(--osx-surface-raised)); box-shadow: 0 1px 2px rgba(0,0,0,.2); transition: transform .16s ease; }
 input:checked + .track { border-color: color-mix(in srgb, var(--osx-accent) 78%, #123); background: linear-gradient(var(--osx-accent-light), var(--osx-accent)); }.control input:checked + .track .thumb { transform: translateX(17px); }.control input:focus-visible + .track { outline: 3px solid var(--osx-focus); outline-offset: 2px; }.disabled { opacity: .55; cursor: not-allowed; }
 @media (prefers-reduced-motion: reduce) { .track, .thumb { transition: none; } }
+@media (forced-colors: active) { input:checked + .track { border: 4px solid Highlight; background: Canvas; }.control input:checked + .track .thumb { background: Highlight; } }
 </style>

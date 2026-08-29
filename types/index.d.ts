@@ -1,6 +1,17 @@
 import type { DefineComponent } from "vue";
 
 export type OsxIconName = "activity" | "book" | "bot" | "boxes" | "check" | "chevron-down" | "chevron-left" | "chevron-right" | "chevron-up" | "circle" | "circle-dashed" | "clock" | "code" | "command" | "copy" | "corner-down-left" | "download" | "ellipsis" | "external" | "eye" | "eye-off" | "file" | "file-code" | "file-text" | "flask" | "folder" | "folder-open" | "git-branch" | "grid" | "inbox" | "info" | "dashboard" | "list-checks" | "loader" | "lock" | "unlock" | "menu" | "minus" | "palette" | "panel" | "pencil" | "play" | "plus" | "refresh" | "search" | "send" | "settings" | "sparkle" | "square" | "stop" | "terminal" | "trash" | "warning" | "upload" | "user" | "close";
+export type OsxFormValueEvent<T> = CustomEvent<[value: T]>;
+export interface OsxFormAssociatedElement extends HTMLElement {
+  readonly form: HTMLFormElement | null;
+  readonly labels: NodeList;
+  readonly validity: ValidityState;
+  readonly validationMessage: string;
+  readonly willValidate: boolean;
+  checkValidity(): boolean;
+  reportValidity(): boolean;
+  setCustomValidity(message: string): void;
+}
 
 export type OsxAgentApprovalProps = {
   title?: string;
@@ -23,13 +34,14 @@ export type OsxAppShellProps = { appTitle?: string; sidebarWidth?: string; inspe
 export type OsxButtonProps = {
   variant?: "default" | "primary" | "danger";
   size?: "small" | "medium";
+  type?: "button" | "submit" | "reset";
   disabled?: boolean;
   loading?: boolean;
   icon?: OsxIconName;
   iconPosition?: "leading" | "trailing";
 };
 
-export type OsxCheckboxProps = { checked?: boolean; label?: string; disabled?: boolean; indeterminate?: boolean };
+export type OsxCheckboxProps = { checked?: boolean; label?: string; name?: string; value?: string; disabled?: boolean; required?: boolean; indeterminate?: boolean };
 export type OsxCopyProps = { as?: "p" | "span" | "div"; size?: "small" | "medium" | "large"; tone?: "default" | "muted" | "accent"; weight?: "regular" | "medium" | "bold"; measure?: "none" | "narrow" | "default" | "wide"; align?: "left" | "center" | "right" };
 export type OsxCitationProps = { index?: string | number; label?: string; title?: string; sourceId?: string; href?: string; selected?: boolean; disabled?: boolean };
 export type OsxDataTableColumn = { key: string; label: string; align?: "left" | "center" | "right"; sortable?: boolean; searchable?: boolean; width?: string };
@@ -116,7 +128,7 @@ export type OsxThinkingProps = { title?: string; summary?: string; status?: "idl
 export type OsxTerminalProps = { title?: string; command?: string; output?: string; cwd?: string; status?: "idle" | "running" | "success" | "error"; duration?: string; label?: string };
 export type OsxTabsProps = { items?: string; value?: string; label?: string; orientation?: "horizontal" | "vertical" };
 export type OsxToolbarProps = { label?: string; compact?: boolean };
-export type OsxToggleProps = { checked?: boolean; label?: string; description?: string; disabled?: boolean };
+export type OsxToggleProps = { checked?: boolean; label?: string; description?: string; name?: string; value?: string; disabled?: boolean; required?: boolean };
 export type OsxToastProps = { open?: boolean; tone?: "info" | "success" | "warning" | "error"; title?: string; message?: string; duration?: number; placement?: "top-right" | "top-left" | "bottom-right" | "bottom-left"; dismissible?: boolean; contained?: boolean };
 export type OsxTooltipProps = { text?: string; placement?: "top" | "right" | "bottom" | "left"; open?: boolean; delay?: number };
 export type OsxToolCallProps = { name?: string; status?: "queued" | "running" | "success" | "error"; summary?: string; duration?: string; open?: boolean };

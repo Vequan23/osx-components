@@ -58,7 +58,7 @@ test("component typography respects a 12px accessibility floor", async () => {
 
 test("component explorer renders every published element", async () => {
   const [source, page, behavior, config] = await Promise.all([read("src/index.ts"), read("components.html"), read("demo/catalog.ts"), read("vite.site.config.ts")]);
-  const tags = [...source.matchAll(/"(osx-[a-z-]+)":/g)].map((match) => match[1]);
+  const tags = [...new Set([...source.matchAll(/"(osx-[a-z-]+)":/g)].map((match) => match[1]))];
   assert.equal(tags.length, componentTags.length);
   for (const tag of tags) {
     assert.match(page, new RegExp(`id="story-${tag}"`));
@@ -136,7 +136,7 @@ test("table, spinner, toggle, buttons, and form controls expose native accessibl
   assert.match(spinner, /role="status"/);
   assert.match(spinner, /prefers-reduced-motion: reduce/);
   assert.match(toggle, /role="switch"/);
-  assert.match(toggle, /change: \[checked: boolean\]/);
+  assert.match(toggle, /emitElementEvent\(host, "change", \[current\.value\]\)/);
   assert.match(toggle, /aria-describedby/);
   assert.match(button, /IconGlyph/);
   assert.match(button, /iconPosition/);
@@ -148,6 +148,32 @@ test("table, spinner, toggle, buttons, and form controls expose native accessibl
   assert.match(radioGroup, /type="radio"/);
   assert.match(select, /Array\.isArray\(props\.options\)/);
   for (const name of ["OsxTableProps", "OsxSpinnerProps", "OsxToggleProps", "OsxTextAreaProps", "OsxRadioGroupProps", "OsxSelectOption", "icon?: OsxIconName", "iconPosition?: \"leading\" | \"trailing\""]) assert.match(types, new RegExp(name.replace("?", "\\?")));
+});
+
+test("form controls expose a consistent form, state, and event boundary", async () => {
+  const [registry, association, events, checkbox, segmented, types, readme] = await Promise.all([
+    read("src/index.ts"),
+    read("src/form-associated-element.ts"),
+    read("src/element-events.ts"),
+    read("src/components/OsxCheckbox.ce.vue"),
+    read("src/components/OsxSegmentedControl.ce.vue"),
+    read("types/index.d.ts"),
+    read("README.md"),
+  ]);
+  for (const tag of ["osx-checkbox", "osx-radio-group", "osx-select", "osx-textarea", "osx-text-field", "osx-toggle"]) {
+    assert.match(registry, new RegExp(`"${tag}"`));
+  }
+  for (const contract of ["static formAssociated = true", "attachInternals", "setFormValue", "setValidity", "formResetCallback", "formStateRestoreCallback", "setCustomValidity"]) {
+    assert.match(association, new RegExp(contract));
+  }
+  assert.match(events, /bubbles: true/);
+  assert.match(events, /composed: true/);
+  assert.match(checkbox, /updateElementState\(host, "indeterminate", false\)/);
+  for (const key of ["ArrowLeft", "ArrowRight", "Home", "End"]) assert.match(segmented, new RegExp(key));
+  assert.match(segmented, /tabindex="tabIndex/);
+  assert.match(types, /OsxFormAssociatedElement/);
+  assert.match(types, /type\?: "button" \| "submit" \| "reset"/);
+  assert.match(readme, /form-associated custom elements/);
 });
 
 test("data table exposes search, selection, pagination, loading, and server-control contracts", async () => {
@@ -239,7 +265,7 @@ test("agent primitives expose bounded interactions without owning a provider", a
     read("README.md"),
   ]);
   assert.match(composer, /event\.key === "Enter" && !event\.shiftKey/);
-  assert.match(composer, /submit: \[value: string\]/);
+  assert.match(composer, /emitElementEvent\(host, "submit", \[prompt\]\)/);
   assert.match(approval, /approve: \[\]; reject: \[\]/);
   for (const region of ["toolbar", "sidebar", "composer", "inspector", "status"]) assert.match(shell, new RegExp(`name="${region}"`));
   assert.match(shell, /aria-label="Workspace content"/);

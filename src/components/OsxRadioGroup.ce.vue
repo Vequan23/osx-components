@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, useId, watch } from "vue";
+import { computed, ref, useHost, useId, watch } from "vue";
+import { emitElementEvent, updateElementState } from "../element-events";
 
 type RadioOption = { value: string; label: string; description?: string; disabled?: boolean };
 const props = withDefaults(defineProps<{
@@ -28,7 +29,7 @@ const props = withDefaults(defineProps<{
   variant: "default",
 });
 
-const emit = defineEmits<{ change: [value: string] }>();
+const host = useHost();
 const current = ref(props.value);
 const groupId = `osx-radio-${useId()}`;
 const descriptionId = `${groupId}-description`;
@@ -44,7 +45,8 @@ function select(option: RadioOption, event: Event) {
   event.stopPropagation();
   if (props.disabled || option.disabled) return;
   current.value = option.value;
-  emit("change", option.value);
+  updateElementState(host, "value", option.value);
+  emitElementEvent(host, "change", [option.value]);
 }
 </script>
 
@@ -60,6 +62,7 @@ function select(option: RadioOption, event: Event) {
           :checked="current === option.value"
           :disabled="disabled || option.disabled"
           :required="required"
+          @input.stop
           @change="select(option, $event)"
         />
         <span class="radio" aria-hidden="true"><i></i></span>
@@ -77,4 +80,5 @@ label { min-width: 0; display: grid; grid-template-columns: 17px minmax(0,1fr); 
 .copy { min-width: 0; display: grid; gap: 2px; }.copy strong { font-size: 13px; }.copy small,.description { color: var(--osx-muted); font-size: 12px; line-height: 1.35; }.cards label { padding: 10px; border: 1px solid var(--osx-border); border-radius: 8px; background: var(--osx-surface-raised); box-shadow: 0 1px var(--osx-highlight) inset; }.cards label.selected { border-color: var(--osx-accent); background: color-mix(in srgb,var(--osx-accent) 8%,var(--osx-surface-raised)); }.cards label:has(input:focus-visible) { outline: 3px solid var(--osx-focus); outline-offset: 1px; }.cards label:has(input:focus-visible) .radio { outline: 0; }.invalid .radio,.invalid.cards label { border-color: var(--osx-danger); }.error { color: color-mix(in srgb,var(--osx-danger) 80%,var(--osx-text)); }.disabled { opacity: .55; cursor: not-allowed; }
 @media (max-width: 620px) { .horizontal .options { align-items: stretch; flex-direction: column; } }
 @media (prefers-reduced-motion: reduce) { .radio i { transition: none; } }
+@media (forced-colors: active) { input:checked + .radio { border: 4px solid Highlight; background: Canvas; }input:checked + .radio i { background: Highlight; }.cards label.selected { border: 3px solid Highlight; background: Canvas; } }
 </style>

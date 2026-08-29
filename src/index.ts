@@ -1,5 +1,6 @@
 import { defineCustomElement } from "vue";
 import "./theme.css";
+import { defineFormAssociatedElement, defineFormButtonElement, type FormControlConfig } from "./form-associated-element";
 import OsxAgentApprovalComponent from "./components/OsxAgentApproval.ce.vue";
 import OsxAgentComposerComponent from "./components/OsxAgentComposer.ce.vue";
 import OsxAgentMessageComponent from "./components/OsxAgentMessage.ce.vue";
@@ -110,14 +111,42 @@ export const componentDefinitions = {
 
 export type OsxComponentName = keyof typeof componentDefinitions;
 
+const focusDelegatedComponents = new Set<OsxComponentName>([
+  "osx-agent-composer",
+  "osx-button",
+  "osx-checkbox",
+  "osx-radio-group",
+  "osx-segmented-control",
+  "osx-select",
+  "osx-textarea",
+  "osx-text-field",
+  "osx-toggle",
+]);
+
+const formControlConfigs: Partial<Record<OsxComponentName, FormControlConfig>> = {
+  "osx-checkbox": { controlSelector: 'input[type="checkbox"]', stateProperty: "checked", stateEvent: "change", resetIndeterminate: true },
+  "osx-radio-group": { controlSelector: 'input[type="radio"]:checked, input[type="radio"]', stateProperty: "value", stateEvent: "change" },
+  "osx-select": { controlSelector: "select", stateProperty: "value", stateEvent: "change" },
+  "osx-textarea": { controlSelector: "textarea", stateProperty: "value", stateEvent: "input" },
+  "osx-text-field": { controlSelector: "input", stateProperty: "value", stateEvent: "input" },
+  "osx-toggle": { controlSelector: 'input[type="checkbox"]', stateProperty: "checked", stateEvent: "change" },
+};
+
 export function registerOsxComponents(): void {
   if (typeof customElements === "undefined") return;
-  for (const [name, component] of Object.entries(componentDefinitions)) {
+  for (const [rawName, component] of Object.entries(componentDefinitions)) {
+    const name = rawName as OsxComponentName;
     if (customElements.get(name)) continue;
-    const options = name === "osx-text-field"
+    const options = focusDelegatedComponents.has(name)
       ? { shadowRootOptions: { delegatesFocus: true } }
       : undefined;
-    customElements.define(name, defineCustomElement(component, options));
+    const formConfig = formControlConfigs[name];
+    const element = name === "osx-button"
+      ? defineFormButtonElement(component, options)
+      : formConfig
+        ? defineFormAssociatedElement(component, formConfig, options)
+        : defineCustomElement(component, options);
+    customElements.define(name, element);
   }
 }
 
