@@ -7,12 +7,12 @@ The project recreates the interaction language—not Apple assets or source code
 ## Install
 
 ```bash
-npm install osx-components
+npm install @vraxis/osx-components
 ```
 
 ```ts
-import { registerOsxComponents } from "osx-components";
-import "osx-components/theme.css";
+import { registerOsxComponents } from "@vraxis/osx-components";
+import "@vraxis/osx-components/theme.css";
 
 registerOsxComponents();
 ```
@@ -23,16 +23,16 @@ Install the versioned `build-with-osx-components` skill so coding agents select 
 
 ```bash
 # Portable Agent Skills location; works with compatible agents
-npx osx-components agent install
+npx @vraxis/osx-components agent install
 
 # Agent-specific project installation
-npx osx-components agent install --target codex
-npx osx-components agent install --target claude
-npx osx-components agent install --target opencode
-npx osx-components agent install --target cursor
+npx @vraxis/osx-components agent install --target codex
+npx @vraxis/osx-components agent install --target claude
+npx @vraxis/osx-components agent install --target opencode
+npx @vraxis/osx-components agent install --target cursor
 
 # Install every project adapter
-npx osx-components agent install --target all
+npx @vraxis/osx-components agent install --target all
 ```
 
 Use `--scope user` with `agents`, `codex`, `claude`, or `opencode` to install the skill globally. Re-run with `--force` after upgrading the package. Cursor rules remain project scoped.
@@ -40,7 +40,7 @@ Use `--scope user` with `agents`, `codex`, `claude`, or `opencode` to install th
 The skill includes component-selection guidance, framework integration patterns, application and agent-workspace compositions, the project quality standard, and a deterministic interface audit:
 
 ```bash
-npx osx-components agent install --target agents
+npx @vraxis/osx-components agent install --target agents
 node .agents/skills/build-with-osx-components/scripts/audit-osx-ui.mjs .
 ```
 
@@ -169,6 +169,22 @@ The agent components are deliberately composable. The shell manages layout; it d
   <osx-status-bar slot="status" label="Ready"></osx-status-bar>
 </osx-app-shell>
 ```
+
+The shell fills a definite-height container and keeps oversized workspace content inside its scroll regions. Define the application height chain when the shell should occupy the viewport:
+
+```css
+html,
+body,
+#app {
+  height: 100%;
+}
+
+osx-app-shell {
+  height: 100%;
+}
+```
+
+Use `height: 100dvh` on `<osx-app-shell>` when it is the viewport root. The component retains a 520px minimum height; on narrow screens its workspace remains independently scrollable, and the shell can scroll when the stacked regions exceed the assigned height.
 
 ## Framework starters
 

@@ -6,8 +6,8 @@ Register the custom elements once and import the theme once. Avoid invoking `reg
 
 ```html
 <script type="module">
-  import { registerOsxComponents } from "osx-components";
-  import "osx-components/theme.css";
+  import { registerOsxComponents } from "@vraxis/osx-components";
+  import "@vraxis/osx-components/theme.css";
   registerOsxComponents();
 </script>
 
@@ -32,8 +32,8 @@ table.addEventListener("selection-change", (event) => {
 Register from the client entry point:
 
 ```ts
-import { registerOsxComponents } from "osx-components";
-import "osx-components/theme.css";
+import { registerOsxComponents } from "@vraxis/osx-components";
+import "@vraxis/osx-components/theme.css";
 
 registerOsxComponents();
 ```
@@ -57,8 +57,8 @@ Register in a client-only entry module. React 19 handles custom-element properti
 
 ```tsx
 import { useEffect, useRef } from "react";
-import { registerOsxComponents } from "osx-components";
-import "osx-components/theme.css";
+import { registerOsxComponents } from "@vraxis/osx-components";
+import "@vraxis/osx-components/theme.css";
 
 registerOsxComponents();
 
@@ -82,8 +82,8 @@ Register once in a client entry or `onMount`, then assign complex properties thr
 ```svelte
 <script lang="ts">
   import { onMount } from "svelte";
-  import { registerOsxComponents } from "osx-components";
-  import "osx-components/theme.css";
+  import { registerOsxComponents } from "@vraxis/osx-components";
+  import "@vraxis/osx-components/theme.css";
   onMount(registerOsxComponents);
 </script>
 

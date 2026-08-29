@@ -1,6 +1,6 @@
 ---
 name: build-with-osx-components
-description: Build, refactor, or review web interfaces that use the osx-components package and its OS X-inspired custom elements. Use for application shells, dashboards, settings, data tables, agent workbenches, feedback, typography, theming, icons, responsive layouts, accessibility, or migrations from bespoke controls to osx-components in HTML, Vue, React, Svelte, Astro, and other web projects.
+description: Build, refactor, or review web interfaces that use the @vraxis/osx-components package and its OS X-inspired custom elements. Use for application shells, dashboards, settings, data tables, agent workbenches, feedback, typography, theming, icons, responsive layouts, accessibility, or migrations from bespoke controls to OSX Components in HTML, Vue, React, Svelte, Astro, and other web projects.
 ---
 
 # Build with OSX Components
@@ -10,15 +10,15 @@ Build cohesive interfaces from the published primitives before creating custom U
 ## Workflow
 
 1. Inspect the host project before editing.
-   - Identify its framework, package manager, entry point, theme root, and existing `osx-components` version.
+   - Identify its framework, package manager, entry point, theme root, and existing `@vraxis/osx-components` version.
    - Search for existing OSX Components usage and preserve established composition patterns.
    - Do not install, upgrade, or replace dependencies unless the task authorizes it.
 2. Choose primitives before writing markup.
    - Read [references/component-selection.md](references/component-selection.md) when selecting or combining components.
-   - Inspect `node_modules/osx-components/types/index.d.ts` for the exact installed API. In the library repository, inspect `types/index.d.ts` and `demo/component-docs.ts`.
+   - Inspect `node_modules/@vraxis/osx-components/types/index.d.ts` for the exact installed API. In the library repository, inspect `types/index.d.ts` and `demo/component-docs.ts`.
    - Never invent a component, prop, slot, event, token, or icon name.
 3. Integrate once at the application boundary.
-   - Import `osx-components/theme.css` once.
+   - Import `@vraxis/osx-components/theme.css` once.
    - Call `registerOsxComponents()` once in the client entry point.
    - Set `data-osx-theme="aqua"`, `graphite`, or `panther` on a stable ancestor.
    - Read [references/framework-usage.md](references/framework-usage.md) only for the active framework.

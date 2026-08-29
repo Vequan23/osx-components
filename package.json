@@ -1,6 +1,6 @@
 {
-  "name": "osx-components",
-  "version": "0.11.2",
+  "name": "@vraxis/osx-components",
+  "version": "0.11.3",
   "description": "OS X-inspired web components authored with Vue.",
   "type": "module",
   "sideEffects": [
@@ -51,6 +51,9 @@
     "design-system"
   ],
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Vequan23/osx-components.git"

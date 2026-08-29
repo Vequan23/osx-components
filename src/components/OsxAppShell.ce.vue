@@ -160,8 +160,8 @@ onBeforeUnmount(removePointerListeners);
 </template>
 
 <style>
-:host { display: block; min-width: 0; color: var(--osx-text); font-family: var(--osx-font); }
-.shell { height: 100%; min-height: 520px; display: grid; grid-template: "toolbar toolbar toolbar" auto "sidebar main inspector" minmax(0,1fr) "status status status" auto / var(--osx-sidebar-width) minmax(0,1fr) var(--osx-inspector-width); overflow: hidden; border: 1px solid var(--osx-border); border-radius: 9px; background: var(--osx-surface); box-shadow: var(--osx-shadow); }
+:host { width: 100%; height: 100%; min-width: 0; min-height: 0; display: block; color: var(--osx-text); font-family: var(--osx-font); }
+.shell { height: 100%; min-height: 520px; box-sizing: border-box; display: grid; grid-template: "toolbar toolbar toolbar" auto "sidebar main inspector" minmax(0,1fr) "status status status" auto / var(--osx-sidebar-width) minmax(0,1fr) var(--osx-inspector-width); overflow: hidden; border: 1px solid var(--osx-border); border-radius: 9px; background: var(--osx-surface); box-shadow: var(--osx-shadow); }
 .shell.without-inspector { grid-template: "toolbar toolbar" auto "sidebar main" minmax(0,1fr) "status status" auto / var(--osx-sidebar-width) minmax(0,1fr); }
 .shell.resizable { grid-template: "toolbar toolbar toolbar toolbar toolbar" auto "sidebar sidebar-resizer main inspector-resizer inspector" minmax(0,1fr) "status status status status status" auto / var(--osx-sidebar-width) 9px minmax(0,1fr) 9px var(--osx-inspector-width); }
 .shell.resizable.without-inspector { grid-template: "toolbar toolbar toolbar" auto "sidebar sidebar-resizer main" minmax(0,1fr) "status status status" auto / var(--osx-sidebar-width) 9px minmax(0,1fr); }
@@ -178,7 +178,7 @@ header div { min-width: 0; display: flex; gap: 8px; align-items: center; justify
 .resizer { position: relative; z-index: 2; padding: 0; outline: 0; background: var(--osx-surface-sunken); cursor: col-resize; touch-action: none; }.resizer::after { width: 1px; position: absolute; inset: 0 auto 0 4px; background: var(--osx-border); content: ""; }.resizer:hover::after,.resizer:focus-visible::after { width: 3px; left: 3px; border-radius: 2px; background: var(--osx-accent); }.resizer:focus-visible { box-shadow: 0 0 0 3px var(--osx-focus) inset; }.sidebar-resizer { grid-area: sidebar-resizer; }.inspector-resizer { grid-area: inspector-resizer; }
 footer { grid-area: status; min-width: 0; border-top: 1px solid var(--osx-border); background: linear-gradient(var(--osx-title-start),var(--osx-title-end)); }
 @media (max-width: 760px) {
-  .shell,.shell.resizable,.shell.without-inspector,.shell.resizable.without-inspector { grid-template: "toolbar" auto "sidebar" auto "main" minmax(420px,auto) "inspector" auto "status" auto / minmax(0,1fr); }
+  .shell,.shell.resizable,.shell.without-inspector,.shell.resizable.without-inspector { grid-template: "toolbar" auto "sidebar" auto "main" minmax(420px,auto) "inspector" auto "status" auto / minmax(0,1fr); overflow: auto; }
   .shell.without-inspector,.shell.resizable.without-inspector { grid-template-areas: "toolbar" "sidebar" "main" "status"; }
   .resizer { display: none; }
   .sidebar { max-height: 150px; border-right: 0; border-bottom: 1px solid var(--osx-border); }

@@ -15,6 +15,8 @@ test("publishes a framework-neutral custom element registry", async () => {
 
 test("package exports point to shipped runtime, theme, and consumer types", async () => {
   const manifest = JSON.parse(await read("package.json"));
+  assert.equal(manifest.name, "@vraxis/osx-components");
+  assert.equal(manifest.publishConfig.access, "public");
   assert.equal(manifest.exports["."].import, "./dist/osx-components.js");
   assert.equal(manifest.exports["."].types, "./types/index.d.ts");
   assert.equal(manifest.exports["./theme.css"], "./dist/osx-components.css");
@@ -274,7 +276,10 @@ test("agent primitives expose bounded interactions without owning a provider", a
   assert.match(shell, /ArrowLeft/);
   assert.match(shell, /setPointerCapture/);
   assert.doesNotMatch(shell, /<main>/);
+  assert.match(shell, /:host \{ width: 100%; height: 100%; min-width: 0; min-height: 0/);
   assert.match(shell, /\.shell \{ height: 100%; min-height: 520px/);
+  assert.match(shell, /box-sizing: border-box/);
+  assert.match(shell, /minmax\(420px,auto\).*overflow: auto/);
   for (const name of ["OsxAgentComposerProps", "OsxAgentApprovalProps", "OsxAppShellProps", "OsxToolCallProps"]) assert.match(types, new RegExp(name));
   assert.match(page, /id="agent-shell"/);
   for (const id of ["agent-thread", "agent-composer", "agent-run", "agent-approval", "agent-status"]) {

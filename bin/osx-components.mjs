@@ -24,9 +24,9 @@ Options:
   --help                       Show this help
 
 Examples:
-  npx osx-components agent install
-  npx osx-components agent install --target claude --scope user
-  npx osx-components agent install --target all --force
+  npx @vraxis/osx-components agent install
+  npx @vraxis/osx-components agent install --target claude --scope user
+  npx @vraxis/osx-components agent install --target all --force
 `);
 }
 

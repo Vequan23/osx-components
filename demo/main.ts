@@ -176,10 +176,10 @@ agentTerminal?.addEventListener("clear", () => setAgentStatus("Terminal cleared"
 const snippets = {
   HTML: {
     file: "index.html",
-    code: `<!-- npm install osx-components · serve with Vite -->
+    code: `<!-- npm install @vraxis/osx-components · serve with Vite -->
 <script type="module">
-  import { registerOsxComponents } from "osx-components";
-  import "osx-components/theme.css";
+  import { registerOsxComponents } from "@vraxis/osx-components";
+  import "@vraxis/osx-components/theme.css";
   registerOsxComponents();
 </script>
 
@@ -197,8 +197,8 @@ const snippets = {
     file: "AgentWorkspace.vue",
     code: `<script setup lang="ts">
 import { onMounted } from "vue";
-import { registerOsxComponents } from "osx-components";
-import "osx-components/theme.css";
+import { registerOsxComponents } from "@vraxis/osx-components";
+import "@vraxis/osx-components/theme.css";
 
 onMounted(registerOsxComponents);
 </script>
@@ -217,8 +217,8 @@ onMounted(registerOsxComponents);
   React: {
     file: "AgentWorkspace.tsx",
     code: `import { useEffect } from "react";
-import { registerOsxComponents } from "osx-components";
-import "osx-components/theme.css";
+import { registerOsxComponents } from "@vraxis/osx-components";
+import "@vraxis/osx-components/theme.css";
 
 export function AgentWorkspace() {
   useEffect(() => registerOsxComponents(), []);
@@ -239,8 +239,8 @@ export function AgentWorkspace() {
     file: "AgentWorkspace.svelte",
     code: `<script lang="ts">
   import { onMount } from "svelte";
-  import { registerOsxComponents } from "osx-components";
-  import "osx-components/theme.css";
+  import { registerOsxComponents } from "@vraxis/osx-components";
+  import "@vraxis/osx-components/theme.css";
 
   onMount(registerOsxComponents);
 </script>

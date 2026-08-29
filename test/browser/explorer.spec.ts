@@ -339,6 +339,50 @@ test("segmented control uses roving focus and remains distinguishable in forced 
   expect(forcedColors[2]).not.toBe(forcedColors[0]);
 });
 
+test("app shell fills its assigned height without content-driven growth", async ({ page }, testInfo) => {
+  await page.evaluate(() => {
+    const fixture = document.createElement("div");
+    fixture.id = "app-shell-height-fixture";
+    fixture.style.height = "640px";
+    fixture.innerHTML = `
+      <osx-app-shell app-title="Height contract" inspector-open>
+        <nav slot="sidebar">Navigation</nav>
+        <div style="height: 1800px">Tall workspace content</div>
+        <aside slot="inspector">Inspector</aside>
+        <osx-status-bar slot="status" label="Ready"></osx-status-bar>
+      </osx-app-shell>
+    `;
+    document.body.append(fixture);
+  });
+
+  const shell = page.locator("#app-shell-height-fixture osx-app-shell");
+  const metrics = await shell.evaluate((element) => {
+    const root = element.shadowRoot?.querySelector<HTMLElement>(".shell");
+    const content = element.shadowRoot?.querySelector<HTMLElement>(".content");
+    if (!root || !content) throw new Error("App shell internals did not render");
+    return {
+      hostHeight: Math.round(element.getBoundingClientRect().height),
+      rootHeight: Math.round(root.getBoundingClientRect().height),
+      rootClientHeight: root.clientHeight,
+      rootScrollHeight: root.scrollHeight,
+      rootOverflow: getComputedStyle(root).overflowY,
+      contentClientHeight: content.clientHeight,
+      contentScrollHeight: content.scrollHeight,
+    };
+  });
+
+  expect(metrics.hostHeight).toBe(640);
+  expect(metrics.rootHeight).toBe(640);
+  expect(metrics.contentScrollHeight).toBeGreaterThan(metrics.contentClientHeight);
+  if (testInfo.project.name === "mobile") {
+    expect(metrics.rootOverflow).toBe("auto");
+    expect(metrics.rootScrollHeight).toBeGreaterThanOrEqual(metrics.rootClientHeight);
+  } else {
+    expect(metrics.rootOverflow).toBe("hidden");
+    expect(metrics.rootScrollHeight).toBeLessThanOrEqual(metrics.rootClientHeight);
+  }
+});
+
 test("app shell panels resize with pointer and keyboard then stack without handles", async ({ page }, testInfo) => {
   const shell = page.locator("#story-osx-app-shell osx-app-shell");
   const handles = shell.locator(".resizer:visible");
