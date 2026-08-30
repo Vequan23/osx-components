@@ -1,9 +1,9 @@
 ---
 name: build-with-osx-components
-description: Build, refactor, or review web interfaces that use the @vraxis/osx-components package and its OS X-inspired custom elements. Use for application shells, dashboards, settings, data tables, agent workbenches, feedback, typography, theming, icons, responsive layouts, accessibility, or migrations from bespoke controls to OSX Components in HTML, Vue, React, Svelte, Astro, and other web projects.
+description: Build, refactor, or review web interfaces that use the @vraxis/osx-components package and its OS X-inspired custom elements. Use for application shells, dashboards, settings, data tables, agent workbenches, feedback, typography, theming, icons, responsive layouts, accessibility, or migrations from bespoke controls to osx Components in HTML, Vue, React, Svelte, Astro, and other web projects.
 ---
 
-# Build with OSX Components
+# Build with osx Components
 
 Build cohesive interfaces from the published primitives before creating custom UI. Treat the package as a framework-neutral Custom Elements design system: the host owns application state, data, routing, model calls, tool execution, persistence, and analytics.
 
@@ -11,7 +11,7 @@ Build cohesive interfaces from the published primitives before creating custom U
 
 1. Inspect the host project before editing.
    - Identify its framework, package manager, entry point, theme root, and existing `@vraxis/osx-components` version.
-   - Search for existing OSX Components usage and preserve established composition patterns.
+   - Search for existing osx Components usage and preserve established composition patterns.
    - Do not install, upgrade, or replace dependencies unless the task authorizes it.
 2. Choose primitives before writing markup.
    - Read [references/component-selection.md](references/component-selection.md) when selecting or combining components.
@@ -54,4 +54,4 @@ Assign arrays and objects as DOM properties when possible. JSON attributes remai
 
 ## Completion report
 
-State which OSX Components were used, any intentional custom CSS or missing primitive, the theme verified, and the checks run. Mention unresolved accessibility, mobile, or API uncertainty explicitly.
+State which osx Components were used, any intentional custom CSS or missing primitive, the theme verified, and the checks run. Mention unresolved accessibility, mobile, or API uncertainty explicitly.

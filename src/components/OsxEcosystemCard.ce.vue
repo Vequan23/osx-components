@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<{
   href: "",
   actionLabel: "Explore product",
   mark: "",
-  provenance: "Built with OSX Components",
+  provenance: "Built with osx Components",
   trackingId: "",
   tone: "info",
   compact: false,

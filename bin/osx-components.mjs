@@ -10,7 +10,7 @@ const skillName = "build-with-osx-components";
 const skillSource = join(packageRoot, "skills", skillName);
 
 function help() {
-  console.log(`OSX Components agent installer
+  console.log(`osx Components agent installer
 
 Usage:
   osx-components agent install [options]

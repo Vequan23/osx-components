@@ -66,6 +66,6 @@ const warnings = findings.filter((finding) => finding.severity === "warning");
 if (json) console.log(JSON.stringify({ target, errors: errors.length, warnings: warnings.length, findings }, null, 2));
 else {
   for (const finding of findings) console.log(`${finding.severity.toUpperCase()} ${finding.file}:${finding.line} [${finding.rule}] ${finding.message}`);
-  console.log(`OSX Components audit: ${errors.length} error(s), ${warnings.length} warning(s).`);
+  console.log(`osx Components audit: ${errors.length} error(s), ${warnings.length} warning(s).`);
 }
 process.exitCode = errors.length || (strict && warnings.length) ? 1 : 0;

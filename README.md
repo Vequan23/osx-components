@@ -1,6 +1,6 @@
-# OSX Components
+# osx Components
 
-OSX Components is an open-source collection of OS X-inspired web components authored with Vue 3. Components render through the Custom Elements API, so they work in Vue, React, Svelte, Astro, or plain HTML.
+osx Components is an open-source collection of OS X-inspired web components authored with Vue 3. Components render through the Custom Elements API, so they work in Vue, React, Svelte, Astro, or plain HTML.
 
 The project recreates the interaction language—not Apple assets or source code—with accessible controls, Shadow DOM encapsulation, and a shared token contract.
 

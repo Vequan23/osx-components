@@ -1,4 +1,4 @@
 interface:
-  display_name: "Build with OSX Components"
-  short_description: "Build consistent interfaces with OSX Components"
-  default_prompt: "Use $build-with-osx-components to build this interface from accessible OSX Components primitives."
+  display_name: "Build with osx Components"
+  short_description: "Build consistent interfaces with osx Components"
+  default_prompt: "Use $build-with-osx-components to build this interface from accessible osx Components primitives."

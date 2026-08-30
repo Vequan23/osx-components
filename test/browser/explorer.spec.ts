@@ -102,7 +102,7 @@ test("typography stories preserve semantic hierarchy and link states", async ({ 
 test("ecosystem cards expose provenance and host-owned activation", async ({ page }) => {
   const card = page.locator("#story-osx-ecosystem-card osx-ecosystem-card").first();
   const link = card.getByRole("link", { name: "Explore Aperta: Aperta" });
-  await expect(card.getByText("Built with OSX Components")).toBeVisible();
+  await expect(card.getByText("Built with osx Components")).toBeVisible();
   await expect(link).toHaveAttribute("href", "https://aperta-six.vercel.app/");
   await expect(link).toHaveAttribute("rel", "noreferrer noopener");
   await card.evaluate((element) => {
