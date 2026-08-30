@@ -519,6 +519,7 @@ test("foundation overlays and navigation honor keyboard contracts", async ({ pag
 
 test("signature stories remain visually stable", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Desktop baselines own theme fidelity");
+  test.skip(process.platform !== "darwin", "macOS baselines own theme fidelity");
   await page.getByRole("radio", { name: "Aqua" }).click();
   await expect(page.locator("#story-osx-alert")).toHaveScreenshot("alert-aqua.png");
   await expect(page.locator("#story-osx-diff-viewer")).toHaveScreenshot("diff-aqua.png");
