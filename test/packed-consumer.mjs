@@ -1,10 +1,11 @@
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtemp, readFile, stat, writeFile } from "node:fs/promises";
+import { mkdtemp, readFile, realpath, stat, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { build } from "vite";
 
-const workspace = await mkdtemp("/private/tmp/osx-packed-consumer-");
+const workspace = await realpath(await mkdtemp(join(tmpdir(), "osx-packed-consumer-")));
 const sourceManifest = JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8"));
 const packageName = sourceManifest.name;
 const packageDirectory = join(workspace, "node_modules", ...packageName.split("/"));
