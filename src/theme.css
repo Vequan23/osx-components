@@ -28,6 +28,28 @@
   --osx-focus: rgba(91, 121, 140, 0.32);
 }
 
+[data-osx-theme="graphite-dark"] {
+  --osx-text: #f2f3f4;
+  --osx-muted: #b4b7ba;
+  --osx-border: #56595d;
+  --osx-border-soft: #303236;
+  --osx-surface: #17181a;
+  --osx-surface-raised: #222326;
+  --osx-surface-sunken: #0d0e10;
+  --osx-title-start: #36383b;
+  --osx-title-end: #202225;
+  --osx-accent: #4b5055;
+  --osx-accent-ink: #c9cdd1;
+  --osx-accent-light: #686e74;
+  --osx-success: #5fa273;
+  --osx-warning: #c69d53;
+  --osx-danger: #c96c68;
+  --osx-focus: rgba(199, 205, 211, 0.36);
+  --osx-shadow: 0 18px 48px rgba(0, 0, 0, 0.64), 0 2px 8px rgba(0, 0, 0, 0.56);
+  --osx-highlight: rgba(255, 255, 255, 0.1);
+  color-scheme: dark;
+}
+
 [data-osx-theme="panther"] {
   --osx-text: #edf3f7;
   --osx-muted: #a9b5bd;

@@ -8,6 +8,7 @@ type StatusElement = HTMLElement & { label: string; status: "ready" | "working" 
 const picker = document.querySelector("#theme-picker") as HTMLElement & { value: string } | null;
 const statusBar = document.querySelector("#demo-status") as StatusElement | null;
 function eventValue(event: Event): string { return String((event as CustomEvent).detail?.[0] ?? ""); }
+function themeValue(label: string): string { return label === "Dark Graphite" ? "graphite-dark" : label.toLowerCase(); }
 function setStatus(label: string, status: StatusElement["status"] = "ready", detail = "Just now") {
   if (!statusBar) return;
   statusBar.label = label;
@@ -15,10 +16,9 @@ function setStatus(label: string, status: StatusElement["status"] = "ready", det
   statusBar.detail = detail;
 }
 picker?.addEventListener("change", (event) => {
-  const selected = eventValue(event) || "Aqua";
+  const selected = eventValue(event) || "Dark Graphite";
   picker.value = selected;
-  const value = selected.toLowerCase();
-  root.dataset.osxTheme = value;
+  root.dataset.osxTheme = themeValue(selected);
   setStatus(`${selected} theme applied`);
 });
 
@@ -54,7 +54,7 @@ document.querySelector("#preference-view")?.addEventListener("change", (event) =
 document.querySelector("#source-list")?.addEventListener("change", (event) => setStatus(`${eventValue(event)} opened`));
 document.querySelector("#highlight-select")?.addEventListener("change", (event) => {
   const selected = eventValue(event);
-  if (selected) root.dataset.osxTheme = selected.toLowerCase();
+  if (selected) root.dataset.osxTheme = themeValue(selected);
   setStatus(`${selected} highlight selected`);
 });
 document.querySelector("#smooth-scroll")?.addEventListener("change", (event) => setStatus(`Smooth scrolling ${eventValue(event) === "true" ? "enabled" : "disabled"}`));
@@ -183,7 +183,7 @@ const snippets = {
   registerOsxComponents();
 </script>
 
-<div data-osx-theme="panther">
+<div data-osx-theme="graphite-dark">
   <osx-app-shell app-title="Project Agent" inspector-open>
     <osx-agent-message author="Agent" model="Your model">
       I inspected the patch and verified the focused test.
@@ -204,7 +204,7 @@ onMounted(registerOsxComponents);
 </script>
 
 <template>
-  <div data-osx-theme="panther">
+  <div data-osx-theme="graphite-dark">
     <osx-app-shell app-title="Project Agent" inspector-open>
       <osx-agent-message author="Agent" model="Your model">
         I inspected the patch and verified the focused test.
@@ -224,7 +224,7 @@ export function AgentWorkspace() {
   useEffect(() => registerOsxComponents(), []);
 
   return (
-    <div data-osx-theme="panther">
+    <div data-osx-theme="graphite-dark">
       <osx-app-shell app-title="Project Agent" inspector-open="true">
         <osx-agent-message author="Agent" model="Your model">
           I inspected the patch and verified the focused test.
@@ -245,7 +245,7 @@ export function AgentWorkspace() {
   onMount(registerOsxComponents);
 </script>
 
-<div data-osx-theme="panther">
+<div data-osx-theme="graphite-dark">
   <osx-app-shell app-title="Project Agent" inspector-open>
     <osx-agent-message author="Agent" model="Your model">
       I inspected the patch and verified the focused test.

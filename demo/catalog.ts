@@ -9,9 +9,10 @@ const storyNav = document.querySelector("#story-nav");
 if (storyNav) [...storyNav.querySelectorAll("a")].sort((a,b) => (a.textContent || "").localeCompare(b.textContent || "")).forEach((link) => storyNav.append(link));
 
 function detailValue(event: Event): string { return String((event as CustomEvent).detail?.[0] ?? ""); }
+function themeValue(label: string): string { return label === "Dark Graphite" ? "graphite-dark" : label.toLowerCase(); }
 const root = document.documentElement;
 const theme = document.querySelector("#catalog-theme") as HTMLElement & { value: string } | null;
-theme?.addEventListener("change", (event) => { const value = detailValue(event) || "Aqua"; theme.value = value; root.dataset.osxTheme = value.toLowerCase(); });
+theme?.addEventListener("change", (event) => { const value = detailValue(event) || "Dark Graphite"; theme.value = value; root.dataset.osxTheme = themeValue(value); });
 
 const search = document.querySelector("#story-search") as HTMLInputElement | null;
 const stories = [...document.querySelectorAll<HTMLElement>(".story")];
@@ -144,6 +145,7 @@ if (select) select.options = [
   { value: "aqua", label: "Aqua" },
   { value: "graphite", label: "Graphite" },
   { value: "panther", label: "Panther" },
+  { value: "graphite-dark", label: "Dark Graphite" },
   { value: "classic", label: "Classic (unavailable)", disabled: true },
 ];
 const radioGroup = document.querySelector("#catalog-radio-group") as RadioGroup | null;

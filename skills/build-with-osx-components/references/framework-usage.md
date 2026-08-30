@@ -11,7 +11,7 @@ Register the custom elements once and import the theme once. Avoid invoking `reg
   registerOsxComponents();
 </script>
 
-<main data-osx-theme="panther">
+<main data-osx-theme="graphite-dark">
   <osx-button variant="primary" icon="sparkle">Create</osx-button>
 </main>
 ```
@@ -101,5 +101,7 @@ Apply one theme to the highest stable product container:
 ```html
 <div data-osx-theme="aqua">...</div>
 ```
+
+Supported values are `aqua`, `graphite`, `panther`, and `graphite-dark`.
 
 Nest a different theme only for a deliberate preview or isolated surface. Prefer `--osx-*` token overrides on the product container over penetrating component shadow roots.

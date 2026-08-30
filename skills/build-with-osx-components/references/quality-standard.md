@@ -25,7 +25,7 @@
 - Use `osx-icon-button` only with `label`.
 - Keep status textual; color and icons may reinforce it but cannot be the only signal.
 - Verify focus visibility and logical keyboard order.
-- Respect reduced motion and sufficient contrast in Aqua, Graphite, and Panther where applicable.
+- Respect reduced motion and sufficient contrast in Aqua, Graphite, Panther, and Dark Graphite where applicable.
 
 ## Responsive behavior
 

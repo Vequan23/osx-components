@@ -23,5 +23,5 @@ h1,h2,h3,h4,h5,h6 { margin: 0; color: inherit; text-wrap: balance; }
 .section { font: 600 20px/1.2 Georgia,"Times New Roman",serif; }
 .label { font: 800 12px/1.25 var(--osx-font); letter-spacing: .13em; text-transform: uppercase; }
 .align-center { text-align: center; }.align-right { text-align: right; }
-.tone-muted { color: var(--osx-muted); }.tone-accent { color: var(--osx-accent); }
+.tone-muted { color: var(--osx-muted); }.tone-accent { color: var(--osx-accent-ink); }
 </style>

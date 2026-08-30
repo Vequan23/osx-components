@@ -63,6 +63,7 @@ Set `data-osx-theme` on any ancestor. Tokens inherit across each component's Sha
 - `aqua` — bright blue, translucent highlights, and cool raised surfaces
 - `graphite` — the Aqua structure with a neutral accent system
 - `panther` — a dark interpretation designed as if the original system had shipped one
+- `graphite-dark` — a modern near-black theme with restrained neutral controls and minimal decorative color
 
 Every visual decision is exposed through `--osx-*` custom properties. Override the tokens on an application shell or an individual component.
 Use `--osx-accent` for interactive fills and borders; use `--osx-accent-ink` when accent-colored text must retain contrast across themes.

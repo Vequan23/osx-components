@@ -17,7 +17,7 @@ withDefaults(defineProps<{
 
 <style>
 :host { display: inline-block; color: var(--osx-text); font-family: var(--osx-font); }
-.spinner-shell { display: inline-flex; gap: 8px; align-items: center; color: var(--osx-accent); font: 600 12px/1.2 var(--osx-font); }
+.spinner-shell { display: inline-flex; gap: 8px; align-items: center; color: var(--osx-accent-ink); font: 600 12px/1.2 var(--osx-font); }
 svg { width: 20px; height: 20px; display: block; overflow: visible; animation: spin .8s linear infinite; fill: none; stroke-width: 3; stroke-linecap: round; }
 .track { stroke: color-mix(in srgb, currentColor 22%, transparent); }.indicator { stroke: currentColor; }
 .small svg { width: 14px; height: 14px; stroke-width: 3.5; }.large svg { width: 28px; height: 28px; stroke-width: 2.5; }

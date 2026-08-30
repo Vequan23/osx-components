@@ -20,7 +20,7 @@ Build cohesive interfaces from the published primitives before creating custom U
 3. Integrate once at the application boundary.
    - Import `@vraxis/osx-components/theme.css` once.
    - Call `registerOsxComponents()` once in the client entry point.
-   - Set `data-osx-theme="aqua"`, `graphite`, or `panther` on a stable ancestor.
+   - Set `data-osx-theme="aqua"`, `graphite`, `panther`, or `graphite-dark` on a stable ancestor.
    - Read [references/framework-usage.md](references/framework-usage.md) only for the active framework.
 4. Compose the interface.
    - Read [references/composition-patterns.md](references/composition-patterns.md) for shells, agent workspaces, settings, repository tools, and data-heavy views.

@@ -23,7 +23,7 @@ function blockDisabled(event: MouseEvent) { if (props.disabled) event.preventDef
 </template>
 
 <style>
-:host { display: inline; color: var(--osx-accent); font-family: var(--osx-font); }
+:host { display: inline; color: var(--osx-accent-ink); font-family: var(--osx-font); }
 a { color: inherit; font-size: inherit; font-weight: 650; line-height: inherit; text-decoration-thickness: 1px; text-underline-offset: .16em; border-radius: 2px; cursor: pointer; }
 .underline-hover { text-decoration-color: transparent; }.underline-hover:hover { text-decoration-color: currentColor; }.underline-none { text-decoration: none; }
 a:focus-visible { outline: 3px solid var(--osx-focus); outline-offset: 3px; }

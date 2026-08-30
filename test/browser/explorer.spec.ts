@@ -7,13 +7,13 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Every component, rendered." })).toBeVisible();
 });
 
-test("marketing site and component explorer default to Panther", async ({ page }) => {
-  await expect(page.locator("html")).toHaveAttribute("data-osx-theme", "panther");
-  await expect(page.getByRole("radio", { name: "Panther" })).toHaveAttribute("aria-checked", "true");
+test("marketing site and component explorer default to Dark Graphite", async ({ page }) => {
+  await expect(page.locator("html")).toHaveAttribute("data-osx-theme", "graphite-dark");
+  await expect(page.getByRole("radio", { name: "Dark Graphite" })).toHaveAttribute("aria-checked", "true");
 
   await page.goto("/");
-  await expect(page.locator("html")).toHaveAttribute("data-osx-theme", "panther");
-  await expect(page.locator("#theme-picker").getByRole("radio", { name: "Panther" })).toHaveAttribute("aria-checked", "true");
+  await expect(page.locator("html")).toHaveAttribute("data-osx-theme", "graphite-dark");
+  await expect(page.locator("#theme-picker").getByRole("radio", { name: "Dark Graphite" })).toHaveAttribute("aria-checked", "true");
 });
 
 test("explorer has no serious accessibility violations", async ({ page }) => {
@@ -23,8 +23,8 @@ test("explorer has no serious accessibility violations", async ({ page }) => {
 });
 
 test("changed forms and app shell have no serious violations in every theme", async ({ page }) => {
-  for (const theme of ["Aqua", "Graphite", "Panther"]) {
-    await page.getByRole("radio", { name: theme }).click();
+  for (const theme of ["Aqua", "Graphite", "Panther", "Dark Graphite"]) {
+    await page.getByRole("radio", { name: theme, exact: true }).click();
     const results = await new AxeBuilder({ page })
       .include("#story-osx-app-shell")
       .include("#story-osx-text-field")
@@ -245,7 +245,7 @@ test("form controls preserve native input, choice, option, and validation semant
   expect(await page.evaluate(() => (window as Window & { __checkboxValue?: boolean }).__checkboxValue)).toBe(false);
 
   const select = page.locator("#catalog-select").getByRole("combobox", { name: /Appearance/ });
-  await expect(select.locator("option")).toHaveCount(4);
+  await expect(select.locator("option")).toHaveCount(5);
   await expect(select.locator('option[value="classic"]')).toHaveAttribute("disabled", "");
 });
 
@@ -441,4 +441,8 @@ test("signature stories remain visually stable", async ({ page }, testInfo) => {
   await expect(page.locator("#story-osx-alert")).toHaveScreenshot("alert-panther.png");
   await expect(page.locator("#story-osx-terminal")).toHaveScreenshot("terminal-panther.png");
   await expect(page.locator("#story-osx-ecosystem-card")).toHaveScreenshot("ecosystem-card-panther.png");
+  await page.getByRole("radio", { name: "Dark Graphite" }).click();
+  await expect(page.locator("#story-osx-alert")).toHaveScreenshot("alert-graphite-dark.png");
+  await expect(page.locator("#story-osx-terminal")).toHaveScreenshot("terminal-graphite-dark.png");
+  await expect(page.locator("#story-osx-ecosystem-card")).toHaveScreenshot("ecosystem-card-graphite-dark.png");
 });

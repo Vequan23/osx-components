@@ -29,7 +29,7 @@ article { padding: 14px 16px; border-bottom: 1px solid var(--osx-border-soft); b
 article.user { background: color-mix(in srgb,var(--osx-accent) 7%,var(--osx-surface)); }
 article.error { border-left: 3px solid var(--osx-danger,#c74d47); }
 header { display: grid; grid-template-columns: auto auto minmax(0,1fr) auto; gap: 7px; align-items: center; }
-.avatar { width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid var(--osx-border); border-radius: 50%; color: var(--osx-accent); background: var(--osx-surface-raised); font-size: 12px; font-weight: 800; }
+.avatar { width: 22px; height: 22px; display: grid; place-items: center; border: 1px solid var(--osx-border); border-radius: 50%; color: var(--osx-accent-ink); background: var(--osx-surface-raised); font-size: 12px; font-weight: 800; }
 header strong { font-size: 13px; }header small,header time { overflow: hidden; color: var(--osx-muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }header time { justify-self: end; }
 .body { padding: 10px 0 0 29px; overflow-wrap: anywhere; font-size: 13px; line-height: 1.58; }
 .body :slotted(p) { margin: 0 0 9px; }.body :slotted(pre) { max-width: 100%; overflow: auto; padding: 10px; border: 1px solid var(--osx-border-soft); border-radius: 6px; background: var(--osx-surface-sunken); font: 12px/1.5 ui-monospace,monospace; }
