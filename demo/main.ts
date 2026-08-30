@@ -69,12 +69,46 @@ demoWindow?.addEventListener("close", () => setStatus("Close requested", "workin
 demoWindow?.addEventListener("minimize", () => setStatus("Minimize requested", "working"));
 demoWindow?.addEventListener("zoom", () => setStatus("Zoom requested", "working"));
 
-type AgentComposerElement = HTMLElement & { value: string; busy: boolean };
+type AgentComposerElement = HTMLElement & {
+  value: string;
+  busy: boolean;
+  models: Array<{ id: string; label: string; description?: string; badge?: string }>;
+  reasoningOptions: Array<{ id: string; label: string; description?: string }>;
+  accessModes: Array<{ id: string; label: string; description?: string }>;
+  suggestions: Array<{ id: string; kind: "command" | "skill" | "file" | "folder" | "tool" | "custom"; trigger: "/" | "$" | "@"; label: string; description?: string; badge?: string; group?: string; keywords?: string[]; insertText?: string; selectionBehavior?: "insert" | "attach" | "emit" }>;
+  contextItems: Array<{ id: string; label: string; kind?: "command" | "skill" | "file" | "folder" | "tool" | "custom"; description?: string; removable?: boolean }>;
+};
 type AgentRunElement = HTMLElement & { phase: "planning" | "working" | "verifying" | "complete" | "error"; detail: string };
 const agentComposer = document.querySelector("#agent-composer") as AgentComposerElement | null;
 const agentRun = document.querySelector("#agent-run") as AgentRunElement | null;
 const agentStatus = document.querySelector("#agent-status") as StatusElement | null;
 const agentThread = document.querySelector("#agent-thread");
+if (agentComposer) {
+  agentComposer.models = [
+    { id: "sonnet", label: "Claude Sonnet", description: "Balanced coding and tool use", badge: "Anthropic" },
+    { id: "gpt", label: "GPT-5", description: "Long-running software tasks", badge: "OpenAI" },
+    { id: "local", label: "Local coder", description: "Runs on this machine", badge: "Local" },
+  ];
+  agentComposer.reasoningOptions = [
+    { id: "low", label: "Low", description: "Faster direct answers" },
+    { id: "high", label: "High", description: "More planning and verification" },
+    { id: "max", label: "Max", description: "Deep work on difficult tasks" },
+  ];
+  agentComposer.accessModes = [
+    { id: "read", label: "Read only", description: "Inspect without changing files" },
+    { id: "workspace", label: "Workspace", description: "Edit files in this workspace" },
+    { id: "full", label: "Full access", description: "Use capabilities granted by the host" },
+  ];
+  agentComposer.suggestions = [
+    { id: "command-plan", kind: "command", trigger: "/", label: "plan", description: "Plan before editing files", group: "Commands", insertText: "/plan ", selectionBehavior: "insert" },
+    { id: "command-status", kind: "command", trigger: "/", label: "status", description: "Show current run status", group: "Commands", selectionBehavior: "emit" },
+    { id: "skill-osx", kind: "skill", trigger: "$", label: "Build with osx Components", description: "Use the shared interface contract", badge: "Project", group: "Skills" },
+    { id: "skill-security", kind: "skill", trigger: "$", label: "Security Audit", description: "Review release security", badge: "User", group: "Skills" },
+    { id: "file-composer", kind: "file", trigger: "@", label: "OsxAgentComposer.ce.vue", description: "src/components/OsxAgentComposer.ce.vue", badge: "Vue", group: "Workspace" },
+    { id: "folder-src", kind: "folder", trigger: "@", label: "src/components", description: "Component source directory", group: "Workspace" },
+  ];
+  agentComposer.contextItems = [{ id: "file-composer", label: "OsxAgentComposer.ce.vue", kind: "file", description: "src/components", removable: true }];
+}
 function setAgentStatus(label: string, status: StatusElement["status"], detail: string) {
   if (!agentStatus) return;
   agentStatus.label = label;

@@ -267,7 +267,14 @@ test("agent primitives expose bounded interactions without owning a provider", a
     read("README.md"),
   ]);
   assert.match(composer, /event\.key === "Enter" && !event\.shiftKey/);
-  assert.match(composer, /emitElementEvent\(host, "submit", \[prompt\]\)/);
+  assert.match(composer, /emitElementEvent\(host, "submit", \[prompt, payload\]\)/);
+  for (const event of ["suggestion-query", "suggestion-select", "context-change", "attachment-request", "attachment-add", "model-change", "reasoning-change", "access-mode-change", "voice-request"]) assert.match(composer, new RegExp(`["']${event}["']`));
+  for (const trigger of ["/", "\\$", "@"]) assert.match(composer, new RegExp(trigger));
+  assert.match(composer, /aria-activedescendant/);
+  assert.match(composer, /role="listbox"/);
+  assert.match(composer, /event\.isComposing/);
+  assert.match(composer, /prefers-reduced-motion: reduce/);
+  for (const name of ["OsxAgentComposerOption", "OsxAgentComposerSuggestion", "OsxAgentComposerContextItem", "OsxAgentComposerAttachment", "OsxAgentComposerSubmission"]) assert.match(types, new RegExp(name));
   assert.match(approval, /approve: \[\]; reject: \[\]/);
   for (const region of ["toolbar", "sidebar", "composer", "inspector", "status"]) assert.match(shell, new RegExp(`name="${region}"`));
   assert.match(shell, /aria-label="Workspace content"/);

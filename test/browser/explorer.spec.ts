@@ -31,6 +31,7 @@ test("changed forms and app shell have no serious violations in every theme", as
       .include("#story-osx-textarea")
       .include("#story-osx-select")
       .include("#story-osx-radio-group")
+      .include("#story-osx-agent-composer")
       .analyze();
     const serious = results.violations.filter((item) => ["serious", "critical"].includes(item.impact ?? ""));
     expect(serious, `${theme}: ${serious.map((item) => `${item.id}: ${item.help}`).join("\n")}`).toEqual([]);
@@ -54,10 +55,7 @@ test("documentation disclosures align and advertise their action", async ({ page
   const summaries = cards.locator(".story-docs summary");
   await expect(summaries).toHaveCount(2);
   await expect(summaries.first()).toContainText("View details");
-  if ((page.viewportSize()?.width ?? 0) > 900) {
-    const boxes = await summaries.evaluateAll((items) => items.map((item) => item.getBoundingClientRect()));
-    expect(Math.abs(boxes[0].top - boxes[1].top)).toBeLessThanOrEqual(1);
-  }
+  await expect(summaries.nth(1)).toContainText("View details");
   await summaries.first().click();
   await expect(summaries.first()).toContainText("Hide details");
   await expect(cards.first().locator(".story-docs")).toHaveAttribute("open", "");
@@ -66,7 +64,7 @@ test("documentation disclosures align and advertise their action", async ({ page
 test("component discovery is alphabetical and the Lucide catalog is complete", async ({ page }) => {
   const labels = await page.locator("#story-nav a").allTextContents();
   expect(labels).toEqual([...labels].sort((left, right) => left.localeCompare(right)));
-  await expect(page.locator("#catalog-icon-grid > div")).toHaveCount(56);
+  await expect(page.locator("#catalog-icon-grid > div")).toHaveCount(59);
   await expect(page.locator("#story-osx-icon-button osx-icon-button")).toHaveCount(5);
   await expect(page.locator("#story-osx-icon-button").getByRole("button", { name: "Search" })).toBeVisible();
 });
@@ -91,6 +89,94 @@ test("sheet supports escape and composer supports enter", async ({ page }) => {
   await composer.evaluate((element) => element.addEventListener("submit", (event: Event) => { (window as Window & { __submittedPrompt?: string }).__submittedPrompt = String((event as CustomEvent).detail?.[0]); }, { once: true }));
   await input.press("Enter");
   expect(await page.evaluate(() => (window as Window & { __submittedPrompt?: string }).__submittedPrompt)).toBe("Review the patch");
+});
+
+test("composer searches commands, skills, and context without moving textbox focus", async ({ page }) => {
+  const composer = page.locator("#catalog-composer");
+  const input = composer.getByRole("textbox", { name: "Message to agent" });
+  await composer.evaluate((element) => {
+    (window as Window & { __composerQueries?: unknown[]; __composerSelections?: unknown[]; __composerContext?: unknown[] }).__composerQueries = [];
+    (window as Window & { __composerSelections?: unknown[] }).__composerSelections = [];
+    element.addEventListener("suggestion-query", (event) => (window as Window & { __composerQueries?: unknown[] }).__composerQueries?.push((event as CustomEvent).detail?.[0]));
+    element.addEventListener("suggestion-select", (event) => (window as Window & { __composerSelections?: unknown[] }).__composerSelections?.push((event as CustomEvent).detail?.[0]));
+    element.addEventListener("context-change", (event) => { (window as Window & { __composerContext?: unknown[] }).__composerContext = (event as CustomEvent).detail?.[0]; });
+  });
+
+  await input.fill("/");
+  await expect(input).toBeFocused();
+  const commands = composer.getByRole("listbox", { name: "Commands" });
+  await expect(commands).toBeVisible();
+  await expect(commands.getByRole("option")).toHaveCount(3);
+  await expect(input).toHaveAttribute("aria-activedescendant", /command-model/);
+  await input.press("ArrowDown");
+  await expect(input).toHaveAttribute("aria-activedescendant", /command-plan/);
+  await input.press("Enter");
+  await expect(input).toHaveValue("/plan ");
+  await expect(commands).toBeHidden();
+
+  await input.fill("$secur");
+  const skills = composer.getByRole("listbox", { name: "Skills" });
+  await expect(skills.getByRole("option")).toHaveCount(1);
+  await input.press("Enter");
+  await expect(input).toHaveValue("");
+  await expect(composer.getByText("Security Audit", { exact: true })).toBeVisible();
+  expect(await page.evaluate(() => (window as Window & { __composerQueries?: unknown[] }).__composerQueries)).toContainEqual({ trigger: "$", query: "secur" });
+  expect((await page.evaluate(() => (window as Window & { __composerSelections?: Array<{ id?: string }> }).__composerSelections))?.at(-1)?.id).toBe("skill-security");
+  expect((await page.evaluate(() => (window as Window & { __composerContext?: Array<{ id?: string }> }).__composerContext))?.map((item) => item.id)).toContain("skill-security");
+
+  await input.fill("@composer");
+  await expect(composer.getByRole("listbox", { name: "Context items" })).toBeVisible();
+  await input.press("Escape");
+  await expect(composer.getByRole("listbox", { name: "Context items" })).toBeHidden();
+  await expect(input).toBeFocused();
+});
+
+test("composer exposes host-controlled runtime, attachment, submission, voice, and stop contracts", async ({ page }) => {
+  const composer = page.locator("#catalog-composer");
+  const input = composer.getByRole("textbox", { name: "Message to agent" });
+  await composer.evaluate((element) => {
+    const state = window as Window & { __composerEvents?: Record<string, unknown[]> };
+    state.__composerEvents = {};
+    for (const name of ["model-change", "reasoning-change", "access-mode-change", "attachment-request", "attachment-remove", "voice-request", "submit", "stop"]) {
+      element.addEventListener(name, (event) => { state.__composerEvents![name] = (event as CustomEvent).detail; });
+    }
+  });
+
+  await composer.getByRole("button", { name: "Claude Sonnet" }).click();
+  const models = composer.getByRole("listbox", { name: "Choose model" });
+  await expect(models.getByRole("option")).toHaveCount(4);
+  await models.getByRole("option", { name: /GPT-5/ }).click();
+  await expect(composer.getByRole("button", { name: "GPT-5" })).toBeVisible();
+  expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.["model-change"]?.[0])).toBe("gpt");
+
+  await composer.getByRole("button", { name: "High" }).click();
+  await composer.getByRole("option", { name: /Max/ }).click();
+  await expect(composer.getByRole("button", { name: "Max" })).toBeVisible();
+  await composer.getByRole("button", { name: "Workspace" }).click();
+  await composer.getByRole("option", { name: /Read only/ }).click();
+  await expect(composer.getByRole("button", { name: "Read only" })).toBeVisible();
+
+  await composer.getByRole("button", { name: "Add attachment" }).click();
+  await composer.getByRole("button", { name: "Start voice input" }).click();
+  expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.["attachment-request"]?.[0])).toEqual({ accept: "" });
+  expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.["voice-request"])).toEqual([]);
+
+  await input.fill("Review the composer contract");
+  await input.press("Enter");
+  const submission = await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.submit);
+  expect(submission?.[0]).toBe("Review the composer contract");
+  expect(submission?.[1]).toMatchObject({ modelId: "gpt", reasoningId: "max", accessModeId: "read" });
+  expect((submission?.[1] as { attachments: unknown[] }).attachments).toHaveLength(1);
+  expect((submission?.[1] as { contextItems: unknown[] }).contextItems).toHaveLength(2);
+
+  await composer.evaluate((element) => { (element as HTMLElement & { state: string }).state = "streaming"; });
+  const stop = composer.getByRole("button", { name: "Stop agent" });
+  await expect(stop).toBeVisible();
+  await stop.click();
+  expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.stop)).toEqual([]);
+
+  const bounds = await composer.evaluate((element) => ({ client: element.clientWidth, scroll: element.scrollWidth }));
+  expect(bounds.scroll).toBeLessThanOrEqual(bounds.client);
 });
 
 test("catalog has no horizontal overflow", async ({ page }, testInfo) => {

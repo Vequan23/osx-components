@@ -117,7 +117,7 @@
               <osx-agent-approval id="agent-approval" title="Promote verified patch" description="Apply the isolated changes to your working tree." risk="medium" scope="2 files · +18 −6" approve-label="Promote" reject-label="Keep isolated"></osx-agent-approval>
             </div>
           </div>
-          <osx-agent-composer id="agent-composer" slot="composer" model="Claude Sonnet · local tools" placeholder="Ask a follow-up or describe the next change…"></osx-agent-composer>
+          <osx-agent-composer id="agent-composer" slot="composer" model-id="sonnet" reasoning-id="high" access-mode-id="workspace" allow-voice placeholder="Ask anything. @ add context, $ use skills, / run commands."></osx-agent-composer>
           <aside class="agent-inspector" slot="inspector">
             <p>RUN CONTEXT</p><dl><div><dt>Branch</dt><dd>main</dd></div><div><dt>Files</dt><dd>2 changed</dd></div><div><dt>Checks</dt><dd class="pass">6 passed</dd></div><div><dt>Context</dt><dd>42%</dd></div></dl>
             <p>BOUNDARIES</p><ul><li>Repository files</li><li>Focused test command</li><li>No network access</li></ul>

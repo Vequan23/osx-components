@@ -73,7 +73,7 @@ Use `--osx-accent` for interactive fills and borders; use `--osx-accent-ink` whe
 | Element | Purpose |
 | --- | --- |
 | `<osx-app-shell>` | Responsive application workspace with toolbar, sidebar, content, composer, inspector, status slots, and optional accessible panel resizing |
-| `<osx-agent-composer>` | Prompt input with Enter-to-send, busy state, model context, and stop action |
+| `<osx-agent-composer>` | Advanced agent input with commands, skills, context, attachments, runtime controls, lifecycle state, and accessible keyboard behavior |
 | `<osx-agent-message>` | User, assistant, system, streaming, and error conversation states |
 | `<osx-agent-run-status>` | Plan, work, verify, complete, and failure lifecycle visualization |
 | `<osx-agent-approval>` | Risk-aware human approval with explicit action scope |
@@ -148,11 +148,11 @@ document.querySelector("osx-segmented-control")
 </form>
 ```
 
-Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, and `stop`; `<osx-agent-approval>` emits `approve` and `reject`; `<osx-thinking>` emits `toggle`; `<osx-artifact>` emits `copy`, `download`, and `open`; `<osx-markdown>` emits `copy`; and citations coordinate through `activate` and `select`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns model calls, tool execution, permission policy, persistence, and streaming transport.
+Agent events preserve backend neutrality. `<osx-agent-composer>` emits `input`, `submit`, `stop`, suggestion queries and selections, context and attachment changes, runtime selection changes, and optional voice requests. The first `submit` argument remains the prompt string; the second contains the selected context, attachments, model, reasoning, and access IDs. `<osx-agent-approval>` emits `approve` and `reject`; `<osx-thinking>` emits `toggle`; `<osx-artifact>` emits `copy`, `download`, and `open`; `<osx-markdown>` emits `copy`; and citations coordinate through `activate` and `select`. `<osx-diff-viewer>` emits `view-change` and `copy`; `<osx-terminal>` emits `rerun`, `interrupt`, and `clear`; `<osx-file-tree>` emits `select` and `toggle`. `<osx-alert>` emits `dismiss`; `<osx-toast>` emits `dismiss` with either `manual` or `timeout` as its reason. Your application owns discovery, model calls, uploads, voice capture, tool execution, permission policy, persistence, and streaming transport.
 
 ## Icons
 
-`<osx-icon>` is the library's shared icon contract. It exposes a curated 56-icon vocabulary from the maintained `@lucide/vue` package, using direct SVG component imports instead of an icon font. Icons share Lucide's consistent stroke geometry and support custom size, stroke width, and accessible labels. Decorative icons are hidden from assistive technology; pass `label` when an icon carries meaning.
+`<osx-icon>` is the library's shared icon contract. It exposes a curated 59-icon vocabulary from the maintained `@lucide/vue` package, using direct SVG component imports instead of an icon font. Icons share Lucide's consistent stroke geometry and support custom size, stroke width, and accessible labels. Decorative icons are hidden from assistive technology; pass `label` when an icon carries meaning.
 
 Use `<osx-icon-button>` for icon-only actions. It requires an accessible label and standardizes small, medium, and large hit areas; pair unfamiliar actions with `<osx-tooltip>` for visible guidance. Standard `<osx-button>` actions accept `icon` and `icon-position` when an icon should reinforce a visible text label.
 
@@ -166,7 +166,7 @@ The agent components are deliberately composable. The shell manages layout; it d
   <osx-agent-message message-role="assistant" author="Agent" model="Your model">
     <p>I inspected the change and verified the focused test.</p>
   </osx-agent-message>
-  <osx-agent-composer slot="composer" model="Provider · Model"></osx-agent-composer>
+  <osx-agent-composer slot="composer" model="Provider · Model" reasoning="High" access-mode="Workspace"></osx-agent-composer>
   <aside slot="inspector">...</aside>
   <osx-status-bar slot="status" label="Ready"></osx-status-bar>
 </osx-app-shell>
@@ -209,7 +209,7 @@ The showcase deliberately consumes the library as native HTML elements. That kee
 
 ## Direction
 
-The next useful components are breadcrumbs, date pickers, command palettes, disclosure groups, context meters, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
+The next useful components are breadcrumbs, date pickers, disclosure groups, context meters, and inspector panels. Visual fidelity matters, but accessibility and predictable web behavior win when the two conflict.
 
 ## License
 

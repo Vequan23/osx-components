@@ -1,6 +1,6 @@
 import type { DefineComponent } from "vue";
 
-export type OsxIconName = "activity" | "book" | "bot" | "boxes" | "check" | "chevron-down" | "chevron-left" | "chevron-right" | "chevron-up" | "circle" | "circle-dashed" | "clock" | "code" | "command" | "copy" | "corner-down-left" | "download" | "ellipsis" | "external" | "eye" | "eye-off" | "file" | "file-code" | "file-text" | "flask" | "folder" | "folder-open" | "git-branch" | "grid" | "inbox" | "info" | "dashboard" | "list-checks" | "loader" | "lock" | "unlock" | "menu" | "minus" | "palette" | "panel" | "pencil" | "play" | "plus" | "refresh" | "search" | "send" | "settings" | "sparkle" | "square" | "stop" | "terminal" | "trash" | "warning" | "upload" | "user" | "close";
+export type OsxIconName = "activity" | "book" | "bot" | "boxes" | "check" | "chevron-down" | "chevron-left" | "chevron-right" | "chevron-up" | "circle" | "circle-dashed" | "clock" | "code" | "command" | "copy" | "corner-down-left" | "download" | "ellipsis" | "external" | "eye" | "eye-off" | "file" | "file-code" | "file-text" | "flask" | "folder" | "folder-open" | "git-branch" | "grid" | "image" | "inbox" | "info" | "dashboard" | "list-checks" | "loader" | "lock" | "unlock" | "menu" | "microphone" | "minus" | "palette" | "panel" | "paperclip" | "pencil" | "play" | "plus" | "refresh" | "search" | "send" | "settings" | "sparkle" | "square" | "stop" | "terminal" | "trash" | "warning" | "upload" | "user" | "close";
 export type OsxFormValueEvent<T> = CustomEvent<[value: T]>;
 export interface OsxFormAssociatedElement extends HTMLElement {
   readonly form: HTMLFormElement | null;
@@ -22,7 +22,91 @@ export type OsxAgentApprovalProps = {
   rejectLabel?: string;
   disabled?: boolean;
 };
-export type OsxAgentComposerProps = { value?: string; placeholder?: string; model?: string; busy?: boolean; disabled?: boolean; rows?: number };
+export type OsxAgentComposerState = "idle" | "submitting" | "streaming" | "stopping" | "error";
+export type OsxAgentComposerTrigger = "/" | "$" | "@";
+export type OsxAgentComposerSuggestionKind = "command" | "skill" | "file" | "folder" | "tool" | "custom";
+export type OsxAgentComposerOption = {
+  id: string;
+  label: string;
+  description?: string;
+  icon?: OsxIconName;
+  badge?: string;
+  disabled?: boolean;
+  disabledReason?: string;
+};
+export type OsxAgentComposerSuggestion = {
+  id: string;
+  kind: OsxAgentComposerSuggestionKind;
+  trigger: OsxAgentComposerTrigger;
+  label: string;
+  description?: string;
+  icon?: OsxIconName;
+  badge?: string;
+  group?: string;
+  keywords?: string[];
+  disabled?: boolean;
+  disabledReason?: string;
+  insertText?: string;
+  selectionBehavior?: "insert" | "attach" | "emit";
+};
+export type OsxAgentComposerContextItem = {
+  id: string;
+  label: string;
+  kind?: OsxAgentComposerSuggestionKind;
+  description?: string;
+  icon?: OsxIconName;
+  removable?: boolean;
+};
+export type OsxAgentComposerAttachment = {
+  id: string;
+  name: string;
+  kind?: "image" | "file";
+  mediaType?: string;
+  previewUrl?: string;
+  status?: "ready" | "loading" | "error";
+  progress?: number;
+  error?: string;
+  removable?: boolean;
+  retryable?: boolean;
+};
+export type OsxAgentComposerSubmission = {
+  text: string;
+  contextItems: OsxAgentComposerContextItem[];
+  attachments: OsxAgentComposerAttachment[];
+  modelId: string;
+  reasoningId: string;
+  accessModeId: string;
+};
+export type OsxAgentComposerProps = {
+  value?: string;
+  placeholder?: string;
+  label?: string;
+  model?: string;
+  reasoning?: string;
+  accessMode?: string;
+  modelId?: string;
+  reasoningId?: string;
+  accessModeId?: string;
+  models?: OsxAgentComposerOption[];
+  reasoningOptions?: OsxAgentComposerOption[];
+  accessModes?: OsxAgentComposerOption[];
+  suggestions?: OsxAgentComposerSuggestion[];
+  suggestionsLoading?: boolean;
+  suggestionsError?: string;
+  contextItems?: OsxAgentComposerContextItem[];
+  attachments?: OsxAgentComposerAttachment[];
+  state?: OsxAgentComposerState;
+  statusText?: string;
+  error?: string;
+  busy?: boolean;
+  disabled?: boolean;
+  rows?: number;
+  maxRows?: number;
+  submitShortcut?: "enter" | "mod-enter";
+  allowAttachments?: boolean;
+  allowVoice?: boolean;
+  attachmentAccept?: string;
+};
 export type OsxAgentMessageProps = { messageRole?: "user" | "assistant" | "system"; author?: string; model?: string; timestamp?: string; status?: "complete" | "streaming" | "error" };
 export type OsxAgentRunStatusProps = { phase?: "planning" | "working" | "verifying" | "complete" | "error"; label?: string; detail?: string };
 export type OsxAlertProps = { tone?: "info" | "success" | "warning" | "error"; title?: string; description?: string; dismissible?: boolean; label?: string };

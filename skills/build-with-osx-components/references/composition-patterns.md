@@ -22,6 +22,8 @@ Compose:
 
 Show the response immediately after completion. Keep raw tool traces in activity, not in the primary response body. Never manufacture changes when the agent answered with analysis only.
 
+Assign composer suggestions, model options, selected context, and attachments as JavaScript properties. Handle its query, selection, attachment, runtime, submission, voice, and stop events in the host. Do not put provider discovery, file uploads, microphone access, permission decisions, or execution inside the component. Keep workspace and branch identity in the shell toolbar or status region instead of repeating them in the composer.
+
 ## Repository comprehension
 
 Use `osx-file-tree` beside `osx-diff-viewer` or an artifact preview. Use a resizable `osx-split-view` when both panes need sustained attention. Put verification output in `osx-terminal`; summarize the result in an alert or status bar rather than duplicating the complete log.

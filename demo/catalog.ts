@@ -69,6 +69,15 @@ type Table = HTMLElement & { columns: Array<{ key: string; label: string; align?
 type DataTable = HTMLElement & { columns: Array<{ key: string; label: string; align?: "left" | "center" | "right"; sortable?: boolean; searchable?: boolean }>; rows: Array<Record<string, string | number>> };
 type Select = HTMLElement & { options: Array<{ value: string; label: string; disabled?: boolean }> };
 type RadioGroup = HTMLElement & { options: Array<{ value: string; label: string; description?: string; disabled?: boolean }> };
+type Composer = HTMLElement & {
+  suggestions: Array<{ id: string; kind: "command" | "skill" | "file" | "folder" | "tool" | "custom"; trigger: "/" | "$" | "@"; label: string; description?: string; badge?: string; group?: string; keywords?: string[]; disabled?: boolean; disabledReason?: string; insertText?: string; selectionBehavior?: "insert" | "attach" | "emit" }>;
+  models: Array<{ id: string; label: string; description?: string; badge?: string; disabled?: boolean; disabledReason?: string }>;
+  reasoningOptions: Array<{ id: string; label: string; description?: string }>;
+  accessModes: Array<{ id: string; label: string; description?: string }>;
+  contextItems: Array<{ id: string; label: string; kind?: "command" | "skill" | "file" | "folder" | "tool" | "custom"; description?: string; removable?: boolean }>;
+  attachments: Array<{ id: string; name: string; kind?: "image" | "file"; mediaType?: string; status?: "ready" | "loading" | "error"; progress?: number; removable?: boolean }>;
+  statusText: string;
+};
 const diff = document.querySelector("#catalog-diff") as Diff | null;
 if (diff) diff.patch = ["@@ -14,6 +14,9 @@ export function createSession() {", "-  return store.create();", "+  const session = store.create();", "+  evidence.capture(session.id);", "+  return session;"].join("\n");
 const terminal = document.querySelector("#catalog-terminal") as Terminal | null;
@@ -154,6 +163,45 @@ if (radioGroup) radioGroup.options = [
   { value: "cloud", label: "Cloud", description: "Use the configured remote runtime." },
   { value: "managed", label: "Managed", description: "Not configured for this workspace.", disabled: true },
 ];
+const composer = document.querySelector("#catalog-composer") as Composer | null;
+if (composer) {
+  composer.models = [
+    { id: "sonnet", label: "Claude Sonnet", description: "Balanced coding and tool use", badge: "Anthropic" },
+    { id: "gpt", label: "GPT-5", description: "Long-running software tasks", badge: "OpenAI" },
+    { id: "local", label: "Qwen Coder", description: "Runs through the configured local runtime", badge: "Local" },
+    { id: "setup", label: "Gemini Pro", description: "Provider credentials are not configured", disabled: true, disabledReason: "Setup required" },
+  ];
+  composer.reasoningOptions = [
+    { id: "low", label: "Low", description: "Faster answers for direct requests" },
+    { id: "high", label: "High", description: "More time for planning and verification" },
+    { id: "max", label: "Max", description: "Deep work on difficult tasks" },
+  ];
+  composer.accessModes = [
+    { id: "read", label: "Read only", description: "Inspect the workspace without changing files" },
+    { id: "workspace", label: "Workspace", description: "Edit files inside the selected workspace" },
+    { id: "full", label: "Full access", description: "Use every capability granted by the host" },
+  ];
+  composer.suggestions = [
+    { id: "command-model", kind: "command", trigger: "/", label: "model", description: "Choose the response model", group: "Commands", selectionBehavior: "emit" },
+    { id: "command-plan", kind: "command", trigger: "/", label: "plan", description: "Plan the work before editing files", group: "Commands", selectionBehavior: "insert", insertText: "/plan " },
+    { id: "command-status", kind: "command", trigger: "/", label: "status", description: "Show run, context, and usage status", group: "Commands", selectionBehavior: "emit" },
+    { id: "skill-osx", kind: "skill", trigger: "$", label: "Build with osx Components", description: "Build consistent interfaces with osx Components", badge: "Project", group: "Skills", keywords: ["design system", "web components"] },
+    { id: "skill-security", kind: "skill", trigger: "$", label: "Security Audit", description: "Review application security before release", badge: "User", group: "Skills", keywords: ["audit", "release"] },
+    { id: "skill-browser", kind: "skill", trigger: "$", label: "Browser", description: "Inspect and control the in-app browser", badge: "Plugin", group: "Skills" },
+    { id: "file-composer", kind: "file", trigger: "@", label: "OsxAgentComposer.ce.vue", description: "src/components/OsxAgentComposer.ce.vue", badge: "Vue", group: "Workspace" },
+    { id: "file-types", kind: "file", trigger: "@", label: "index.d.ts", description: "types/index.d.ts", badge: "TypeScript", group: "Workspace" },
+    { id: "folder-src", kind: "folder", trigger: "@", label: "src/components", description: "Component source directory", group: "Workspace" },
+  ];
+  composer.contextItems = [
+    { id: "skill-osx", label: "Build with osx Components", kind: "skill", description: "Project skill", removable: true },
+    { id: "file-composer", label: "OsxAgentComposer.ce.vue", kind: "file", description: "src/components", removable: true },
+  ];
+  composer.attachments = [
+    { id: "composer-reference", name: "composer-reference.png", kind: "image", mediaType: "image/png", status: "ready", removable: true },
+  ];
+  composer.addEventListener("attachment-request", () => { composer.statusText = "The host application opens its file picker here."; });
+  composer.addEventListener("voice-request", () => { composer.statusText = "The host application starts voice input here."; });
+}
 
 const iconGrid = document.querySelector("#catalog-icon-grid");
 for (const name of iconNames) {
