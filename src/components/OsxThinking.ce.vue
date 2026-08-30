@@ -49,12 +49,12 @@ details { overflow: hidden; border: 1px solid var(--osx-border-soft); border-rad
 summary { min-height: 46px; display: grid; grid-template-columns: auto minmax(0,1fr) auto auto; gap: 9px; align-items: center; padding: 8px 11px; cursor: pointer; list-style: none; }
 summary::-webkit-details-marker { display: none; }
 summary:focus-visible { outline: 3px solid var(--osx-focus); outline-offset: -3px; }
-.state { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid var(--osx-border); border-radius: 50%; color: var(--osx-accent); background: var(--osx-surface-sunken); }
+.state { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid var(--osx-border); border-radius: 50%; color: var(--osx-accent-ink); background: var(--osx-surface-sunken); }
 .streaming .state { animation: pulse 1.35s ease-in-out infinite; }
 .complete .state { color: var(--osx-success); border-color: color-mix(in srgb,var(--osx-success) 65%,var(--osx-border)); }
 .error .state { color: var(--osx-danger); border-color: color-mix(in srgb,var(--osx-danger) 65%,var(--osx-border)); }
 .copy { min-width: 0; display: grid; gap: 2px; }.copy strong { font-size: 13px; }.copy small,.stream-label { overflow: hidden; color: var(--osx-muted); font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-.stream-label { color: var(--osx-accent); font-weight: 700; }.chevron { color: var(--osx-muted); transition: transform .16s ease; }details[open] .chevron { transform: rotate(180deg); }
+.stream-label { color: var(--osx-accent-ink); font-weight: 700; }.chevron { color: var(--osx-muted); transition: transform .16s ease; }details[open] .chevron { transform: rotate(180deg); }
 .content { padding: 12px 14px 14px 47px; border-top: 1px solid var(--osx-border-soft); color: var(--osx-muted); background: var(--osx-surface-sunken); font-size: 13px; line-height: 1.58; overflow-wrap: anywhere; }
 @keyframes pulse { 50% { opacity: .45; transform: scale(.9); } }
 @media (prefers-reduced-motion: reduce) { .streaming .state { animation: none; }.chevron { transition: none; } }

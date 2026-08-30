@@ -7,6 +7,15 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Every component, rendered." })).toBeVisible();
 });
 
+test("marketing site and component explorer default to Panther", async ({ page }) => {
+  await expect(page.locator("html")).toHaveAttribute("data-osx-theme", "panther");
+  await expect(page.getByRole("radio", { name: "Panther" })).toHaveAttribute("aria-checked", "true");
+
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveAttribute("data-osx-theme", "panther");
+  await expect(page.locator("#theme-picker").getByRole("radio", { name: "Panther" })).toHaveAttribute("aria-checked", "true");
+});
+
 test("explorer has no serious accessibility violations", async ({ page }) => {
   const results = await new AxeBuilder({ page }).exclude("osx-app-shell").analyze();
   const serious = results.violations.filter((item) => ["serious", "critical"].includes(item.impact ?? ""));
@@ -424,6 +433,7 @@ test("foundation overlays and navigation honor keyboard contracts", async ({ pag
 
 test("signature stories remain visually stable", async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== "desktop", "Desktop baselines own theme fidelity");
+  await page.getByRole("radio", { name: "Aqua" }).click();
   await expect(page.locator("#story-osx-alert")).toHaveScreenshot("alert-aqua.png");
   await expect(page.locator("#story-osx-diff-viewer")).toHaveScreenshot("diff-aqua.png");
   await expect(page.locator("#story-osx-ecosystem-card")).toHaveScreenshot("ecosystem-card-aqua.png");

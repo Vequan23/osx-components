@@ -47,7 +47,7 @@ test("ships one canonical, progressively disclosed agent skill", async () => {
 test("ships Aqua, Graphite, and Panther token contracts", async () => {
   const theme = await read("src/theme.css");
   for (const themeName of ["aqua", "graphite", "panther"]) assert.match(theme, new RegExp(`data-osx-theme="${themeName}"`));
-  for (const token of ["--osx-accent", "--osx-surface", "--osx-border", "--osx-focus"]) assert.match(theme, new RegExp(token));
+  for (const token of ["--osx-accent", "--osx-accent-ink", "--osx-surface", "--osx-border", "--osx-focus"]) assert.match(theme, new RegExp(token));
 });
 
 test("component typography respects a 12px accessibility floor", async () => {

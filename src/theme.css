@@ -11,6 +11,7 @@
   --osx-title-start: #eef3f6;
   --osx-title-end: #bdc8cf;
   --osx-accent: #006da8;
+  --osx-accent-ink: #006da8;
   --osx-accent-light: #75c8f5;
   --osx-success: #2f9951;
   --osx-warning: #c9821e;
@@ -22,13 +23,14 @@
 }
 [data-osx-theme="graphite"] {
   --osx-accent: #506978;
+  --osx-accent-ink: #506978;
   --osx-accent-light: #a7bac6;
   --osx-focus: rgba(91, 121, 140, 0.32);
 }
 
 [data-osx-theme="panther"] {
-  --osx-text: #e5edf2;
-  --osx-muted: #93a3ad;
+  --osx-text: #edf3f7;
+  --osx-muted: #a9b5bd;
   --osx-border: #52616b;
   --osx-border-soft: #354149;
   --osx-surface: #1b2328;
@@ -37,6 +39,7 @@
   --osx-title-start: #465159;
   --osx-title-end: #293138;
   --osx-accent: #1594d6;
+  --osx-accent-ink: #54bced;
   --osx-accent-light: #54bced;
   --osx-success: #42ae67;
   --osx-warning: #dfa23b;

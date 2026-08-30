@@ -65,6 +65,7 @@ Set `data-osx-theme` on any ancestor. Tokens inherit across each component's Sha
 - `panther` — a dark interpretation designed as if the original system had shipped one
 
 Every visual decision is exposed through `--osx-*` custom properties. Override the tokens on an application shell or an individual component.
+Use `--osx-accent` for interactive fills and borders; use `--osx-accent-ink` when accent-colored text must retain contrast across themes.
 
 ## Components
 
@@ -188,11 +189,11 @@ Use `height: 100dvh` on `<osx-app-shell>` when it is the viewport root. The comp
 
 ## Framework starters
 
-The showcase includes shareable, URL-addressable starters for HTML, Vue, React, and Svelte. Choose a framework in the [Snippet Lab](https://osx-components.vercel.app/#snippets), copy the generated component shell, or share a URL such as `?framework=react#snippets`.
+The showcase includes shareable, URL-addressable starters for HTML, Vue, React, and Svelte. Choose a framework in the [Snippet Lab](https://components.vraxis.dev/#snippets), copy the generated component shell, or share a URL such as `?framework=react#snippets`.
 
 ## Component explorer
 
-The [Component Explorer](https://osx-components.vercel.app/components) is a Storybook-style second entry point with searchable, deep-linkable, live examples of every published element. It is built from the same package entry point consumers install, so the stories exercise the actual Custom Elements API rather than a private Vue-only layer.
+The [Component Explorer](https://components.vraxis.dev/components) is a Storybook-style second entry point with searchable, deep-linkable, live examples of every published element. It is built from the same package entry point consumers install, so the stories exercise the actual Custom Elements API rather than a private Vue-only layer.
 
 ## Development
 

@@ -63,6 +63,7 @@ h1 { max-width: 920px; margin: 0; font: 500 clamp(42px, 6.2vw, 76px)/.98 Georgia
 }
 
 .brand span { font: 800 15px/1 Georgia,serif; text-shadow: 0 -1px rgba(0,0,0,.35); }
+.site-header nav a:hover,.eyebrow,.catalog-meta > a,.card-doc,.catalog-grid article > span,.catalog-grid b { color: var(--osx-accent-ink); }
 
 @media (max-width: 380px) {
   .brand strong { font-size: 13px; }
