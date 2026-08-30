@@ -54,6 +54,12 @@ type ComposerAttachment = {
 };
 type ControlName = "model" | "reasoning" | "access";
 type QueryState = { trigger: ComposerTrigger; query: string; start: number; end: number };
+type SuggestionSelection = {
+  trigger: ComposerTrigger;
+  query: string;
+  behavior: "insert" | "attach" | "emit";
+  value: string;
+};
 const controlEventNames = { model: "model-change", reasoning: "reasoning-change", access: "access-mode-change" } as const;
 
 const props = withDefaults(defineProps<{
@@ -122,6 +128,7 @@ const textareaId = `${instanceId}-input`;
 const paletteId = `${instanceId}-suggestions`;
 const statusId = `${instanceId}-status`;
 const textarea = ref<HTMLTextAreaElement | null>(null);
+const fileInput = ref<HTMLInputElement | null>(null);
 const current = ref(props.value);
 const currentContext = ref<ComposerContextItem[]>([...props.contextItems]);
 const currentAttachments = ref<ComposerAttachment[]>([...props.attachments]);
@@ -319,7 +326,9 @@ function chooseSuggestion(item: ComposerSuggestion) {
   setCurrentValue(value, caret);
   if (behavior === "attach") addContext(item);
   announcement.value = `${item.label} selected.`;
-  emitElementEvent(host, "suggestion-select", [item]);
+  const selection: SuggestionSelection = { trigger: query.trigger, query: query.query, behavior, value };
+  emitElementEvent(host, "suggestion-select", [item, selection]);
+  if (item.kind === "command") emitElementEvent(host, "command-select", [item, selection]);
   void nextTick(() => textarea.value?.focus());
 }
 
@@ -365,6 +374,7 @@ function updateHostCollection(property: "contextItems" | "attachments", value: C
 function requestAttachments() {
   if (!props.allowAttachments || props.disabled) return;
   emitElementEvent(host, "attachment-request", [{ accept: props.attachmentAccept }]);
+  fileInput.value?.click();
 }
 
 function emitFiles(files: FileList | File[]) {
@@ -372,6 +382,12 @@ function emitFiles(files: FileList | File[]) {
   if (!selected.length || !props.allowAttachments || props.disabled) return;
   emitElementEvent(host, "attachment-add", [selected]);
   announcement.value = `${selected.length} ${selected.length === 1 ? "attachment" : "attachments"} ready for the host application.`;
+}
+
+function onFileInput(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (input.files?.length) emitFiles(input.files);
+  input.value = "";
 }
 
 function onPaste(event: ClipboardEvent) {
@@ -601,6 +617,16 @@ function onDocumentPointerDown(event: PointerEvent) {
 
       <footer class="composer-footer">
         <div class="leading-actions">
+          <input
+            v-if="allowAttachments"
+            ref="fileInput"
+            type="file"
+            multiple
+            hidden
+            :accept="attachmentAccept || undefined"
+            :disabled="disabled"
+            @change="onFileInput"
+          />
           <button v-if="allowAttachments" type="button" class="icon-action" :disabled="disabled" aria-label="Add attachment" title="Add attachment" @click="requestAttachments"><IconGlyph name="paperclip" :size="18" /></button>
           <slot name="tools"></slot>
           <slot name="leading-actions"></slot>

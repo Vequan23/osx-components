@@ -95,10 +95,12 @@ test("composer searches commands, skills, and context without moving textbox foc
   const composer = page.locator("#catalog-composer");
   const input = composer.getByRole("textbox", { name: "Message to agent" });
   await composer.evaluate((element) => {
-    (window as Window & { __composerQueries?: unknown[]; __composerSelections?: unknown[]; __composerContext?: unknown[] }).__composerQueries = [];
+    (window as Window & { __composerQueries?: unknown[]; __composerSelections?: unknown[]; __composerCommands?: unknown[]; __composerContext?: unknown[] }).__composerQueries = [];
     (window as Window & { __composerSelections?: unknown[] }).__composerSelections = [];
+    (window as Window & { __composerCommands?: unknown[] }).__composerCommands = [];
     element.addEventListener("suggestion-query", (event) => (window as Window & { __composerQueries?: unknown[] }).__composerQueries?.push((event as CustomEvent).detail?.[0]));
-    element.addEventListener("suggestion-select", (event) => (window as Window & { __composerSelections?: unknown[] }).__composerSelections?.push((event as CustomEvent).detail?.[0]));
+    element.addEventListener("suggestion-select", (event) => (window as Window & { __composerSelections?: unknown[] }).__composerSelections?.push((event as CustomEvent).detail));
+    element.addEventListener("command-select", (event) => (window as Window & { __composerCommands?: unknown[] }).__composerCommands?.push((event as CustomEvent).detail));
     element.addEventListener("context-change", (event) => { (window as Window & { __composerContext?: unknown[] }).__composerContext = (event as CustomEvent).detail?.[0]; });
   });
 
@@ -108,11 +110,19 @@ test("composer searches commands, skills, and context without moving textbox foc
   await expect(commands).toBeVisible();
   await expect(commands.getByRole("option")).toHaveCount(3);
   await expect(input).toHaveAttribute("aria-activedescendant", /command-model/);
+  await input.press("Enter");
+  await expect(input).toHaveValue("");
+  expect((await page.evaluate(() => (window as Window & { __composerCommands?: Array<[unknown, { trigger?: string; query?: string; behavior?: string; value?: string }]> }).__composerCommands))?.at(-1)?.[1]).toEqual({ trigger: "/", query: "", behavior: "emit", value: "" });
+
+  await input.fill("/");
   await input.press("ArrowDown");
   await expect(input).toHaveAttribute("aria-activedescendant", /command-plan/);
   await input.press("Enter");
   await expect(input).toHaveValue("/plan ");
   await expect(commands).toBeHidden();
+  const commandSelection = (await page.evaluate(() => (window as Window & { __composerCommands?: Array<[{ id?: string }, { behavior?: string; value?: string }]> }).__composerCommands))?.at(-1);
+  expect(commandSelection?.[0]?.id).toBe("command-plan");
+  expect(commandSelection?.[1]).toMatchObject({ behavior: "insert", value: "/plan " });
 
   await input.fill("$secur");
   const skills = composer.getByRole("listbox", { name: "Skills" });
@@ -121,7 +131,7 @@ test("composer searches commands, skills, and context without moving textbox foc
   await expect(input).toHaveValue("");
   await expect(composer.getByText("Security Audit", { exact: true })).toBeVisible();
   expect(await page.evaluate(() => (window as Window & { __composerQueries?: unknown[] }).__composerQueries)).toContainEqual({ trigger: "$", query: "secur" });
-  expect((await page.evaluate(() => (window as Window & { __composerSelections?: Array<{ id?: string }> }).__composerSelections))?.at(-1)?.id).toBe("skill-security");
+  expect((await page.evaluate(() => (window as Window & { __composerSelections?: Array<[{ id?: string }]> }).__composerSelections))?.at(-1)?.[0]?.id).toBe("skill-security");
   expect((await page.evaluate(() => (window as Window & { __composerContext?: Array<{ id?: string }> }).__composerContext))?.map((item) => item.id)).toContain("skill-security");
 
   await input.fill("@composer");
@@ -137,7 +147,7 @@ test("composer exposes host-controlled runtime, attachment, submission, voice, a
   await composer.evaluate((element) => {
     const state = window as Window & { __composerEvents?: Record<string, unknown[]> };
     state.__composerEvents = {};
-    for (const name of ["model-change", "reasoning-change", "access-mode-change", "attachment-request", "attachment-remove", "voice-request", "submit", "stop"]) {
+    for (const name of ["model-change", "reasoning-change", "access-mode-change", "attachment-request", "attachment-add", "attachment-remove", "voice-request", "submit", "stop"]) {
       element.addEventListener(name, (event) => { state.__composerEvents![name] = (event as CustomEvent).detail; });
     }
   });
@@ -156,9 +166,17 @@ test("composer exposes host-controlled runtime, attachment, submission, voice, a
   await composer.getByRole("option", { name: /Read only/ }).click();
   await expect(composer.getByRole("button", { name: "Read only" })).toBeVisible();
 
+  await composer.evaluate((element) => { (element as HTMLElement & { attachmentAccept: string }).attachmentAccept = ".md,image/*"; });
+  const chooserPromise = page.waitForEvent("filechooser");
   await composer.getByRole("button", { name: "Add attachment" }).click();
+  const chooser = await chooserPromise;
+  expect(chooser.isMultiple()).toBe(true);
+  expect(await chooser.element().getAttribute("accept")).toBe(".md,image/*");
+  await chooser.setFiles({ name: "release-notes.md", mimeType: "text/markdown", buffer: Buffer.from("Verified release") });
   await composer.getByRole("button", { name: "Start voice input" }).click();
-  expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.["attachment-request"]?.[0])).toEqual({ accept: "" });
+  expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.["attachment-request"]?.[0])).toEqual({ accept: ".md,image/*" });
+  expect(await page.evaluate(() => ((window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.["attachment-add"]?.[0] as File[]).map((file) => ({ name: file.name, type: file.type, size: file.size })))).toEqual([{ name: "release-notes.md", type: "text/markdown", size: 16 }]);
+  await expect(composer.getByText("release-notes.md", { exact: true })).toBeVisible();
   expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.["voice-request"])).toEqual([]);
 
   await input.fill("Review the composer contract");
@@ -166,7 +184,7 @@ test("composer exposes host-controlled runtime, attachment, submission, voice, a
   const submission = await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.submit);
   expect(submission?.[0]).toBe("Review the composer contract");
   expect(submission?.[1]).toMatchObject({ modelId: "gpt", reasoningId: "max", accessModeId: "read" });
-  expect((submission?.[1] as { attachments: unknown[] }).attachments).toHaveLength(1);
+  expect((submission?.[1] as { attachments: unknown[] }).attachments).toHaveLength(2);
   expect((submission?.[1] as { contextItems: unknown[] }).contextItems).toHaveLength(2);
 
   await composer.evaluate((element) => { (element as HTMLElement & { state: string }).state = "streaming"; });

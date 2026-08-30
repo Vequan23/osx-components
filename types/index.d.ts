@@ -49,6 +49,12 @@ export type OsxAgentComposerSuggestion = {
   insertText?: string;
   selectionBehavior?: "insert" | "attach" | "emit";
 };
+export type OsxAgentComposerSuggestionSelection = {
+  trigger: OsxAgentComposerTrigger;
+  query: string;
+  behavior: "insert" | "attach" | "emit";
+  value: string;
+};
 export type OsxAgentComposerContextItem = {
   id: string;
   label: string;

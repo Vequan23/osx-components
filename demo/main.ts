@@ -77,6 +77,7 @@ type AgentComposerElement = HTMLElement & {
   accessModes: Array<{ id: string; label: string; description?: string }>;
   suggestions: Array<{ id: string; kind: "command" | "skill" | "file" | "folder" | "tool" | "custom"; trigger: "/" | "$" | "@"; label: string; description?: string; badge?: string; group?: string; keywords?: string[]; insertText?: string; selectionBehavior?: "insert" | "attach" | "emit" }>;
   contextItems: Array<{ id: string; label: string; kind?: "command" | "skill" | "file" | "folder" | "tool" | "custom"; description?: string; removable?: boolean }>;
+  attachments: Array<{ id: string; name: string; kind?: "image" | "file"; mediaType?: string; previewUrl?: string; status?: "ready" | "loading" | "error"; removable?: boolean }>;
 };
 type AgentRunElement = HTMLElement & { phase: "planning" | "working" | "verifying" | "complete" | "error"; detail: string };
 const agentComposer = document.querySelector("#agent-composer") as AgentComposerElement | null;
@@ -140,6 +141,25 @@ agentComposer?.addEventListener("stop", () => {
   agentComposer.busy = false;
   if (agentRun) { agentRun.phase = "error"; agentRun.detail = "Stopped by user"; }
   setAgentStatus("Run stopped", "offline", "No changes applied");
+});
+agentComposer?.addEventListener("attachment-add", (event) => {
+  if (!agentComposer) return;
+  const files = (event as CustomEvent<[File[]]>).detail?.[0] ?? [];
+  const added = files.map((file, index) => ({
+    id: `picker-${Date.now()}-${index}`,
+    name: file.name,
+    kind: file.type.startsWith("image/") ? "image" as const : "file" as const,
+    mediaType: file.type || "application/octet-stream",
+    previewUrl: file.type.startsWith("image/") ? URL.createObjectURL(file) : undefined,
+    status: "ready" as const,
+    removable: true,
+  }));
+  agentComposer.attachments = [...agentComposer.attachments, ...added];
+  setAgentStatus(`${files.length} ${files.length === 1 ? "file" : "files"} attached`, "ready", "Ready for host upload");
+});
+agentComposer?.addEventListener("command-select", (event) => {
+  const [command, selection] = (event as CustomEvent<[{ label: string }, { behavior: string }]>).detail;
+  setAgentStatus(`${command.label} command selected`, "ready", `${selection.behavior} behavior`);
 });
 const approval = document.querySelector("#agent-approval") as HTMLElement & { disabled: boolean } | null;
 approval?.addEventListener("approve", () => {

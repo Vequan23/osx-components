@@ -22,7 +22,7 @@ Compose:
 
 Show the response immediately after completion. Keep raw tool traces in activity, not in the primary response body. Never manufacture changes when the agent answered with analysis only.
 
-Assign composer suggestions, model options, selected context, and attachments as JavaScript properties. Handle its query, selection, attachment, runtime, submission, voice, and stop events in the host. Do not put provider discovery, file uploads, microphone access, permission decisions, or execution inside the component. Keep workspace and branch identity in the shell toolbar or status region instead of repeating them in the composer.
+Assign composer suggestions, model options, selected context, and attachments as JavaScript properties. The paperclip opens the native multiple-file picker, while paste and drop use the same `attachment-add(files)` boundary; the host still validates, uploads, and reflects attachment state. Handle `command-select(command, selection)` for command execution and use its resolved `behavior` and `value` instead of re-parsing the prompt. Keep provider discovery, uploads, microphone access, permission decisions, and execution in the host. Keep workspace and branch identity in the shell toolbar or status region instead of repeating them in the composer.
 
 ## Repository comprehension
 

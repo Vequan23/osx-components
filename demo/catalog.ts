@@ -199,7 +199,25 @@ if (composer) {
   composer.attachments = [
     { id: "composer-reference", name: "composer-reference.png", kind: "image", mediaType: "image/png", status: "ready", removable: true },
   ];
-  composer.addEventListener("attachment-request", () => { composer.statusText = "The host application opens its file picker here."; });
+  composer.addEventListener("attachment-request", () => { composer.statusText = "Choose one or more files to attach."; });
+  composer.addEventListener("attachment-add", (event) => {
+    const files = (event as CustomEvent<[File[]]>).detail?.[0] ?? [];
+    const added = files.map((file, index) => ({
+      id: `picker-${Date.now()}-${index}`,
+      name: file.name,
+      kind: file.type.startsWith("image/") ? "image" as const : "file" as const,
+      mediaType: file.type || "application/octet-stream",
+      previewUrl: file.type.startsWith("image/") ? URL.createObjectURL(file) : undefined,
+      status: "ready" as const,
+      removable: true,
+    }));
+    composer.attachments = [...composer.attachments, ...added];
+    composer.statusText = `${files.length} ${files.length === 1 ? "file" : "files"} selected. The host now owns validation and upload.`;
+  });
+  composer.addEventListener("command-select", (event) => {
+    const [command, selection] = (event as CustomEvent<[{ label: string }, { behavior: string }]>).detail;
+    composer.statusText = `${command.label} command selected with ${selection.behavior} behavior.`;
+  });
   composer.addEventListener("voice-request", () => { composer.statusText = "The host application starts voice input here."; });
 }
 

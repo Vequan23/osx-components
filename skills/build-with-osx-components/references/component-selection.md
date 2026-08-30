@@ -36,7 +36,7 @@ Use this guide to choose a primitive. Inspect the installed `types/index.d.ts` b
 
 ## Agent interfaces
 
-- `osx-agent-composer`: prompt entry, `/` commands, `$` skills, `@` context, attachments, runtime selectors, lifecycle state, submission, and stop action. The host supplies every option and owns execution.
+- `osx-agent-composer`: prompt entry, `/` commands, `$` skills, `@` context, native file selection, runtime selectors, lifecycle state, submission, and stop action. The host supplies every option, handles `command-select`, and owns uploads and execution.
 - `osx-agent-message`: user, assistant, system, streaming, and error messages.
 - `osx-agent-run-status`: run-level plan, work, verify, completion, and failure lifecycle.
 - `osx-agent-approval`: explicit human approval for a bounded action.
