@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import IconGlyph from "./IconGlyph.vue";
+import { useHostTitle } from "../native-host-attributes";
 withDefaults(defineProps<{
-  title?: string;
   description?: string;
   risk?: "low" | "medium" | "high";
   scope?: string;
@@ -9,7 +9,6 @@ withDefaults(defineProps<{
   rejectLabel?: string;
   disabled?: boolean;
 }>(), {
-  title: "Approval required",
   description: "Review this action before the agent continues.",
   risk: "medium",
   scope: "",
@@ -17,6 +16,7 @@ withDefaults(defineProps<{
   rejectLabel: "Deny",
   disabled: false,
 });
+const title = useHostTitle("Approval required");
 const emit = defineEmits<{ approve: []; reject: [] }>();
 </script>
 

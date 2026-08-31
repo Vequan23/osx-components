@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import IconGlyph from "./IconGlyph.vue";
-const props = withDefaults(defineProps<{ tone?: "info" | "success" | "warning" | "error"; title?: string; description?: string; dismissible?: boolean; label?: string }>(), { tone: "info", title: "Notice", description: "", dismissible: false, label: "" });
+import { useHostTitle } from "../native-host-attributes";
+const props = withDefaults(defineProps<{ tone?: "info" | "success" | "warning" | "error"; description?: string; dismissible?: boolean; label?: string }>(), { tone: "info", description: "", dismissible: false, label: "" });
+const title = useHostTitle("Notice");
 const emit = defineEmits<{ dismiss: [] }>();
 const glyph = computed(() => ({ info: "info", success: "check", warning: "warning", error: "close" } as const)[props.tone]);
 const liveRole = computed(() => props.tone === "error" ? "alert" : "status");

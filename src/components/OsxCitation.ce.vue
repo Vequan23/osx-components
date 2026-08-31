@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import IconGlyph from "./IconGlyph.vue";
+import { useHostTitle } from "../native-host-attributes";
 const props = withDefaults(defineProps<{
   index?: string | number;
   label?: string;
-  title?: string;
   sourceId?: string;
   href?: string;
   selected?: boolean;
   disabled?: boolean;
-}>(), { index: "1", label: "Source", title: "", sourceId: "", href: "", selected: false, disabled: false });
+}>(), { index: "1", label: "Source", sourceId: "", href: "", selected: false, disabled: false });
+const title = useHostTitle("");
 const emit = defineEmits<{ activate: [sourceId: string] }>();
 function activate(event: Event) { if (props.disabled) { event.preventDefault(); return; } emit("activate", props.sourceId || String(props.index)); }
 </script>

@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import IconGlyph from "./IconGlyph.vue";
+import { useHostTitle } from "../native-host-attributes";
 
 const props = withDefaults(defineProps<{
-  title?: string;
   summary?: string;
   status?: "idle" | "streaming" | "complete" | "error";
   open?: boolean;
   label?: string;
 }>(), {
-  title: "Reasoning",
   summary: "",
   status: "idle",
   open: false,
   label: "Reasoning summary",
 });
+const title = useHostTitle("Reasoning");
 
 const emit = defineEmits<{ toggle: [open: boolean] }>();
 const expanded = ref(props.open);

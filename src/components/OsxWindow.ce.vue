@@ -1,5 +1,7 @@
 <script setup lang="ts">
-withDefaults(defineProps<{ title?: string; subtitle?: string; active?: boolean; closeable?: boolean; minimizable?: boolean; zoomable?: boolean }>(), { title: "Untitled", active: true, closeable: true, minimizable: true, zoomable: true });
+import { useHostTitle } from "../native-host-attributes";
+withDefaults(defineProps<{ subtitle?: string; active?: boolean; closeable?: boolean; minimizable?: boolean; zoomable?: boolean }>(), { active: true, closeable: true, minimizable: true, zoomable: true });
+const title = useHostTitle("Untitled");
 const emit = defineEmits<{ close: []; minimize: []; zoom: [] }>();
 </script>
 

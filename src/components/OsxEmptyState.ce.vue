@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import IconGlyph from "./IconGlyph.vue";
 import type { OsxIconName } from "../icons";
-withDefaults(defineProps<{ title?: string; description?: string; actionLabel?: string; icon?: OsxIconName }>(), { title: "Nothing here yet", description: "", actionLabel: "", icon: "inbox" });
+import { useHostTitle } from "../native-host-attributes";
+withDefaults(defineProps<{ description?: string; actionLabel?: string; icon?: OsxIconName }>(), { description: "", actionLabel: "", icon: "inbox" });
+const title = useHostTitle("Nothing here yet");
 const emit = defineEmits<{ action: [] }>();
 </script>
 <template><section :aria-label="title"><div class="icon"><slot name="icon"><IconGlyph :name="icon" :size="28" /></slot></div><h2>{{ title }}</h2><p v-if="description">{{ description }}</p><div class="content"><slot></slot></div><div class="actions"><slot name="actions"><button v-if="actionLabel" type="button" @click="emit('action')">{{ actionLabel }}</button></slot></div></section></template>

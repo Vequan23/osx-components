@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
+import { useHostTitle } from "../native-host-attributes";
 const props = withDefaults(defineProps<{
-  title?: string;
   command?: string;
   output?: string;
   cwd?: string;
   status?: "idle" | "running" | "success" | "error";
   duration?: string;
   label?: string;
-}>(), { title: "Terminal", command: "", output: "", cwd: "", status: "idle", duration: "", label: "Terminal output" });
+}>(), { command: "", output: "", cwd: "", status: "idle", duration: "", label: "Terminal output" });
+const title = useHostTitle("Terminal");
 const emit = defineEmits<{ rerun: [command: string]; interrupt: []; clear: [] }>();
 const currentOutput = ref(props.output);
 watch(() => props.output, (output) => { currentOutput.value = output; });

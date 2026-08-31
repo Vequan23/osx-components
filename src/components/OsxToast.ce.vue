@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue";
 import IconGlyph from "./IconGlyph.vue";
-const props = withDefaults(defineProps<{ open?: boolean; tone?: "info" | "success" | "warning" | "error"; title?: string; message?: string; duration?: number; placement?: "top-right" | "top-left" | "bottom-right" | "bottom-left"; dismissible?: boolean; contained?: boolean }>(), { open: false, tone: "info", title: "Notification", message: "", duration: 4500, placement: "top-right", dismissible: true, contained: false });
+import { useHostTitle } from "../native-host-attributes";
+const props = withDefaults(defineProps<{ open?: boolean; tone?: "info" | "success" | "warning" | "error"; message?: string; duration?: number; placement?: "top-right" | "top-left" | "bottom-right" | "bottom-left"; dismissible?: boolean; contained?: boolean }>(), { open: false, tone: "info", message: "", duration: 4500, placement: "top-right", dismissible: true, contained: false });
+const title = useHostTitle("Notification");
 const emit = defineEmits<{ dismiss: [reason: "manual" | "timeout"] }>();
 const visible = ref(props.open);
 let timer: number | undefined;

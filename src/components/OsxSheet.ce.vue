@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
 import IconGlyph from "./IconGlyph.vue";
-const props = withDefaults(defineProps<{ open?: boolean; title?: string; description?: string; dismissible?: boolean }>(), { open: false, title: "Confirm", description: "", dismissible: true });
+import { useHostTitle } from "../native-host-attributes";
+const props = withDefaults(defineProps<{ open?: boolean; description?: string; dismissible?: boolean }>(), { open: false, description: "", dismissible: true });
+const title = useHostTitle("Confirm");
 const emit = defineEmits<{ close: []; confirm: [] }>();
 const dialog = ref<HTMLElement | null>(null);
 watch(() => props.open, async (open) => { if (open) { await nextTick(); dialog.value?.focus(); } });

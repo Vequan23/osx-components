@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import IconGlyph from "./IconGlyph.vue";
+import { useHostTitle } from "../native-host-attributes";
 
 type StepState = "pending" | "active" | "done" | "failed" | "skipped";
 type PlanStep = { id?: string; title: string; detail?: string; state?: StepState };
 const props = withDefaults(defineProps<{
   steps?: string | PlanStep[];
-  title?: string;
   label?: string;
   compact?: boolean;
   showProgress?: boolean;
-}>(), { steps: "[]", title: "Plan", label: "Agent plan", compact: false, showProgress: true });
+}>(), { steps: "[]", label: "Agent plan", compact: false, showProgress: true });
+const title = useHostTitle("Plan");
 
 const parsedSteps = computed<PlanStep[]>(() => {
   if (Array.isArray(props.steps)) return props.steps;

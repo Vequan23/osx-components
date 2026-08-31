@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import IconGlyph from "./IconGlyph.vue";
+import { useHostTitle } from "../native-host-attributes";
 
 const props = withDefaults(defineProps<{
-  title?: string;
   description?: string;
   kind?: "file" | "document" | "code";
   filename?: string;
@@ -16,7 +16,6 @@ const props = withDefaults(defineProps<{
   openable?: boolean;
   status?: "draft" | "ready" | "updated";
 }>(), {
-  title: "Generated artifact",
   description: "",
   kind: "file",
   filename: "artifact.txt",
@@ -29,6 +28,7 @@ const props = withDefaults(defineProps<{
   openable: false,
   status: "ready",
 });
+const title = useHostTitle("Generated artifact");
 const emit = defineEmits<{ copy: [content: string]; download: [filename: string]; open: [href: string] }>();
 const copied = ref(false);
 const icon = computed(() => props.kind === "code" ? "file-code" : props.kind === "document" ? "file-text" : "file");

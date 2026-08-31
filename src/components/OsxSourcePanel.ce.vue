@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import IconGlyph from "./IconGlyph.vue";
+import { useHostTitle } from "../native-host-attributes";
 
 type SourceItem = { id: string; title: string; url?: string; domain?: string; snippet?: string };
-const props = withDefaults(defineProps<{ sources?: string | SourceItem[]; title?: string; label?: string; selected?: string; compact?: boolean }>(), { sources: "[]", title: "Sources", label: "Response sources", selected: "", compact: false });
+const props = withDefaults(defineProps<{ sources?: string | SourceItem[]; label?: string; selected?: string; compact?: boolean }>(), { sources: "[]", label: "Response sources", selected: "", compact: false });
+const title = useHostTitle("Sources");
 const emit = defineEmits<{ select: [sourceId: string] }>();
 const items = computed<SourceItem[]>(() => {
   if (Array.isArray(props.sources)) return props.sources;

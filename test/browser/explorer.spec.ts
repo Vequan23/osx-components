@@ -7,6 +7,21 @@ test.beforeEach(async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Every component, rendered." })).toBeVisible();
 });
 
+test("native title attributes render reactively without Vue custom-element collisions", async ({ page }) => {
+  const warnings: string[] = [];
+  page.on("console", (message) => {
+    if (message.type() === "warning" || message.type() === "warn") warnings.push(message.text());
+  });
+
+  await page.reload();
+  await expect(page.getByRole("heading", { name: "Every component, rendered." })).toBeVisible();
+  expect(warnings.filter((message) => message.includes("Custom element prop") && message.includes("title"))).toEqual([]);
+
+  const alert = page.locator("#story-osx-alert osx-alert").first();
+  await alert.evaluate((element) => { (element as HTMLElement).title = "Registry-backed title"; });
+  await expect(alert.getByText("Registry-backed title", { exact: true })).toBeVisible();
+});
+
 test("marketing site and component explorer default to Dark Graphite", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("data-osx-theme", "graphite-dark");
   await expect(page.getByRole("radio", { name: "Dark Graphite" })).toHaveAttribute("aria-checked", "true");

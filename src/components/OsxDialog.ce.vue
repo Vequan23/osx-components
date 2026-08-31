@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { nextTick, ref, watch } from "vue";
 import IconGlyph from "./IconGlyph.vue";
-const props = withDefaults(defineProps<{ open?: boolean; title?: string; description?: string; size?: "small" | "medium" | "large"; dismissible?: boolean; confirmLabel?: string; cancelLabel?: string }>(), { open: false, title: "Dialog", description: "", size: "medium", dismissible: true, confirmLabel: "Continue", cancelLabel: "Cancel" });
+import { useHostTitle } from "../native-host-attributes";
+const props = withDefaults(defineProps<{ open?: boolean; description?: string; size?: "small" | "medium" | "large"; dismissible?: boolean; confirmLabel?: string; cancelLabel?: string }>(), { open: false, description: "", size: "medium", dismissible: true, confirmLabel: "Continue", cancelLabel: "Cancel" });
+const title = useHostTitle("Dialog");
 const emit = defineEmits<{ close: []; confirm: [] }>(); const dialog = ref<HTMLElement | null>(null);
 watch(() => props.open, async (open) => { if (open) { await nextTick(); dialog.value?.focus(); } });
 function trap(event: KeyboardEvent) { if (event.key === "Escape" && props.dismissible) { emit("close"); return; } if (event.key !== "Tab" || !dialog.value) return; const nodes = [...dialog.value.querySelectorAll<HTMLElement>("button,[href],[tabindex]:not([tabindex='-1'])")].filter((node) => !node.hasAttribute("disabled")); if (!nodes.length) return; const first = nodes[0], last = nodes.at(-1)!; const active = (dialog.value.getRootNode() as ShadowRoot).activeElement; if (event.shiftKey && active === first) { event.preventDefault(); last.focus(); } else if (!event.shiftKey && active === last) { event.preventDefault(); first.focus(); } }
