@@ -1,6 +1,6 @@
 {
   "name": "@vraxis/osx-components",
-  "version": "0.12.2",
+  "version": "0.12.3",
   "description": "OS X-inspired web components authored with Vue.",
   "type": "module",
   "sideEffects": [

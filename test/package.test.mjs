@@ -268,6 +268,7 @@ test("agent primitives expose bounded interactions without owning a provider", a
   ]);
   assert.match(composer, /event\.key === "Enter" && !event\.shiftKey/);
   assert.match(composer, /emitElementEvent\(host, "submit", \[prompt, payload\]\)/);
+  assert.match(composer, /allowSubmitWhileRunning/);
   for (const event of ["suggestion-query", "suggestion-select", "command-select", "context-change", "attachment-request", "attachment-add", "model-change", "reasoning-change", "access-mode-change", "voice-request"]) assert.match(composer, new RegExp(`["']${event}["']`));
   assert.match(composer, /type="file"/);
   assert.match(composer, /fileInput\.value\?\.click\(\)/);

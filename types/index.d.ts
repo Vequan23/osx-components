@@ -105,6 +105,7 @@ export type OsxAgentComposerProps = {
   statusText?: string;
   error?: string;
   busy?: boolean;
+  allowSubmitWhileRunning?: boolean;
   disabled?: boolean;
   rows?: number;
   maxRows?: number;

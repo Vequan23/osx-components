@@ -84,6 +84,7 @@ const props = withDefaults(defineProps<{
   statusText?: string;
   error?: string;
   busy?: boolean;
+  allowSubmitWhileRunning?: boolean;
   disabled?: boolean;
   rows?: number;
   maxRows?: number;
@@ -113,6 +114,7 @@ const props = withDefaults(defineProps<{
   statusText: "",
   error: "",
   busy: false,
+  allowSubmitWhileRunning: false,
   disabled: false,
   rows: 3,
   maxRows: 10,
@@ -141,7 +143,11 @@ let lastQueryKey = "";
 let dismissedQueryKey = "";
 
 const running = computed(() => props.busy || ["submitting", "streaming", "stopping"].includes(props.state));
-const canSubmit = computed(() => !props.disabled && !running.value && Boolean(current.value.trim() || currentContext.value.length || currentAttachments.value.length));
+const submissionBlocked = computed(() => props.disabled
+  || props.state === "submitting"
+  || props.state === "stopping"
+  || (running.value && !props.allowSubmitWhileRunning));
+const canSubmit = computed(() => !submissionBlocked.value && Boolean(current.value.trim() || currentContext.value.length || currentAttachments.value.length));
 const paletteOpen = computed(() => Boolean(queryState.value));
 const activeDescendant = computed(() => {
   const item = visibleSuggestions.value[activeSuggestion.value];
@@ -678,7 +684,7 @@ function onDocumentPointerDown(event: PointerEvent) {
           <slot name="trailing-actions"></slot>
           <button v-if="allowVoice" type="button" class="icon-action" :disabled="disabled || running" aria-label="Start voice input" title="Start voice input" @click="emitElementEvent(host, 'voice-request', [])"><IconGlyph name="microphone" :size="18" /></button>
           <button v-if="running" type="button" class="primary-action stop-action" :disabled="disabled || state === 'stopping'" aria-label="Stop agent" title="Stop agent" @click="emitElementEvent(host, 'stop', [])"><IconGlyph name="stop" :size="17" /></button>
-          <button v-else type="submit" class="primary-action send-action" :disabled="!canSubmit" aria-label="Send message" title="Send message"><IconGlyph name="send" :size="18" /></button>
+          <button v-if="!running || allowSubmitWhileRunning" type="submit" class="primary-action send-action" :disabled="!canSubmit" aria-label="Send message" title="Send message"><IconGlyph name="send" :size="18" /></button>
         </div>
       </footer>
     </div>

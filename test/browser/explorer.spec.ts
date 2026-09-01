@@ -205,6 +205,12 @@ test("composer exposes host-controlled runtime, attachment, submission, voice, a
   await composer.evaluate((element) => { (element as HTMLElement & { state: string }).state = "streaming"; });
   const stop = composer.getByRole("button", { name: "Stop agent" });
   await expect(stop).toBeVisible();
+  await expect(composer.getByRole("button", { name: "Send message" })).toHaveCount(0);
+  await composer.evaluate((element) => { (element as HTMLElement & { allowSubmitWhileRunning: boolean }).allowSubmitWhileRunning = true; });
+  await input.fill("Queue the focused tests next");
+  await expect(composer.getByRole("button", { name: "Send message" })).toBeEnabled();
+  await input.press("Enter");
+  expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.submit?.[0])).toBe("Queue the focused tests next");
   await stop.click();
   expect(await page.evaluate(() => (window as Window & { __composerEvents?: Record<string, unknown[]> }).__composerEvents?.stop)).toEqual([]);
 
