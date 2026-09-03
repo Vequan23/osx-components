@@ -193,6 +193,7 @@ if (composer) {
     { id: "folder-src", kind: "folder", trigger: "@", label: "src/components", description: "Component source directory", group: "Workspace" },
   ];
   composer.contextItems = [
+    { id: "browser-current", label: "Vraxis Code", kind: "custom", description: "Current browser page", removable: false },
     { id: "skill-osx", label: "Build with osx Components", kind: "skill", description: "Project skill", removable: true },
     { id: "file-composer", label: "OsxAgentComposer.ce.vue", kind: "file", description: "src/components", removable: true },
   ];

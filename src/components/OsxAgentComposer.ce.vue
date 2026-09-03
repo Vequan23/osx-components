@@ -590,7 +590,7 @@ function onDocumentPointerDown(event: PointerEvent) {
           <button v-if="attachment.removable !== false" type="button" class="tray-action" :aria-label="`Remove ${attachment.name}`" @click="removeAttachment(attachment)"><IconGlyph name="close" :size="15" /></button>
           <span v-if="attachment.status === 'loading' && attachment.progress !== undefined" class="attachment-progress" :style="{ '--progress': `${Math.max(0, Math.min(100, attachment.progress))}%` }" aria-hidden="true"></span>
         </article>
-        <span v-for="item in currentContext" :key="item.id" class="context-chip" :title="item.description || undefined">
+        <span v-for="item in currentContext" :key="item.id" :class="['context-chip', { removable: item.removable !== false }]" :title="item.description || undefined">
           <IconGlyph :name="contextIcon(item)" :size="15" />
           <span>{{ item.label }}</span>
           <button v-if="item.removable !== false" type="button" :aria-label="`Remove ${item.label}`" @click="removeContext(item)"><IconGlyph name="close" :size="14" /></button>
@@ -714,7 +714,8 @@ textarea:disabled { cursor: not-allowed; }
 .attachment-progress { height: 2px; position: absolute; inset: auto 0 0; background: linear-gradient(90deg,var(--osx-accent) var(--progress),transparent var(--progress)); }
 .tray-action,.context-chip button { width: 28px; height: 28px; display: grid; flex: 0 0 auto; place-items: center; padding: 0; border: 0; border-radius: 6px; color: var(--osx-muted); background: transparent; cursor: pointer; }
 .tray-action:hover,.context-chip button:hover { color: var(--osx-text); background: color-mix(in srgb,var(--osx-text) 9%,transparent); }
-.context-chip { max-width: 210px; min-height: 32px; display: inline-flex; flex: 0 0 auto; gap: 6px; align-items: center; padding: 2px 3px 2px 9px; border: 1px solid var(--osx-border-soft); border-radius: 9px; color: var(--osx-text); background: var(--osx-surface-sunken); font-size: 12px; font-weight: 650; }
+.context-chip { max-width: 210px; min-height: 32px; box-sizing: border-box; display: inline-flex; flex: 0 0 auto; gap: 6px; align-items: center; padding: 1px 9px; border: 1px solid var(--osx-border-soft); border-radius: 9px; color: var(--osx-text); background: var(--osx-surface-sunken); font-size: 12px; font-weight: 650; }
+.context-chip.removable { padding-right: 3px; }
 .context-chip > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .composer-error { display: flex; gap: 6px; align-items: center; margin: 0; padding: 0 14px 7px; color: var(--osx-danger); font-size: 12px; }
 .composer-footer { min-width: 0; display: grid; grid-template-columns: minmax(max-content,1fr) minmax(0,auto) minmax(max-content,1fr); gap: 10px; align-items: end; padding: 6px 8px 8px; }

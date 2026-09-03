@@ -159,6 +159,16 @@ test("composer searches commands, skills, and context without moving textbox foc
 test("composer exposes host-controlled runtime, attachment, submission, voice, and stop contracts", async ({ page }) => {
   const composer = page.locator("#catalog-composer");
   const input = composer.getByRole("textbox", { name: "Message to agent" });
+  const fixedContextChip = composer.locator(".context-chip").filter({ hasText: "Vraxis Code" });
+  const removableContextChip = composer.locator(".context-chip").filter({ hasText: "Build with osx Components" });
+  expect(await fixedContextChip.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { height: element.getBoundingClientRect().height, paddingLeft: style.paddingLeft, paddingRight: style.paddingRight };
+  })).toEqual({ height: 32, paddingLeft: "9px", paddingRight: "9px" });
+  expect(await removableContextChip.evaluate((element) => {
+    const style = getComputedStyle(element);
+    return { height: element.getBoundingClientRect().height, paddingRight: style.paddingRight };
+  })).toEqual({ height: 32, paddingRight: "3px" });
   await composer.evaluate((element) => {
     const state = window as Window & { __composerEvents?: Record<string, unknown[]> };
     state.__composerEvents = {};
@@ -200,7 +210,7 @@ test("composer exposes host-controlled runtime, attachment, submission, voice, a
   expect(submission?.[0]).toBe("Review the composer contract");
   expect(submission?.[1]).toMatchObject({ modelId: "gpt", reasoningId: "max", accessModeId: "read" });
   expect((submission?.[1] as { attachments: unknown[] }).attachments).toHaveLength(2);
-  expect((submission?.[1] as { contextItems: unknown[] }).contextItems).toHaveLength(2);
+  expect((submission?.[1] as { contextItems: unknown[] }).contextItems).toHaveLength(3);
 
   await composer.evaluate((element) => { (element as HTMLElement & { state: string }).state = "streaming"; });
   const stop = composer.getByRole("button", { name: "Stop agent" });
@@ -251,6 +261,19 @@ test("agent output primitives preserve structure, state, and source coordination
   const thinking = page.locator("#story-osx-thinking osx-thinking").first();
   await expect(thinking.locator("details")).toHaveAttribute("aria-busy", "true");
   await expect(thinking.locator("details")).toHaveAttribute("open", "");
+
+  const toolCall = page.locator("#story-osx-tool-call osx-tool-call").first();
+  const thinkingState = await thinking.locator(".state").evaluate((element) => {
+    const bounds = element.getBoundingClientRect();
+    const icon = element.querySelector("svg")?.getBoundingClientRect();
+    return { width: bounds.width, height: bounds.height, iconWidth: icon?.width, iconHeight: icon?.height };
+  });
+  const toolState = await toolCall.locator(".state").evaluate((element) => {
+    const bounds = element.getBoundingClientRect();
+    const icon = element.querySelector("svg")?.getBoundingClientRect();
+    return { width: bounds.width, height: bounds.height, iconWidth: icon?.width, iconHeight: icon?.height };
+  });
+  expect(toolState).toEqual(thinkingState);
 
   const plan = page.locator("#catalog-plan");
   await expect(plan.locator("li")).toHaveCount(4);
