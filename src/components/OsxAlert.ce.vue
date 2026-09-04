@@ -19,7 +19,7 @@ const liveRole = computed(() => props.tone === "error" ? "alert" : "status");
 
 <style>
 :host { display: block; color: var(--osx-text); font-family: var(--osx-font); }
-.alert { --tone: var(--osx-accent); display: grid; grid-template-columns: 30px minmax(0,1fr) auto; gap: 10px; align-items: start; padding: 12px 13px; border: 1px solid color-mix(in srgb,var(--tone) 55%,var(--osx-border)); border-radius: 8px; background: color-mix(in srgb,var(--tone) 11%,var(--osx-surface-raised)); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+.alert { --tone: var(--osx-accent); display: grid; grid-template-columns: 30px minmax(0,1fr) auto; gap: 10px; align-items: start; padding: var(--osx-alert-padding, 12px 13px); border: 1px solid color-mix(in srgb,var(--tone) 55%,var(--osx-border)); border-radius: 8px; background: color-mix(in srgb,var(--tone) 11%,var(--osx-surface-raised)); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
 .success { --tone: var(--osx-success,#2f9951); }.warning { --tone: var(--osx-warning,#c28519); }.error { --tone: var(--osx-danger,#c74d47); }
 .glyph { width: 27px; height: 27px; display: grid; place-items: center; border: 1px solid color-mix(in srgb,var(--tone) 75%,#222); border-radius: 50%; color: white; background: linear-gradient(color-mix(in srgb,var(--tone) 75%,white),var(--tone)); font: 800 16px Georgia,serif; text-shadow: 0 -1px rgba(0,0,0,.35); }
 strong { display: block; font-size: 13px; line-height: 1.35; }p,.content { margin: 3px 0 0; color: var(--osx-muted); font-size: 12px; line-height: 1.5; }.content:empty,.actions:empty { display: none; }.actions { display: flex; gap: 8px; margin-top: 9px; }
