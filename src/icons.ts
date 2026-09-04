@@ -2,7 +2,7 @@ import {
   Activity, BookOpen, Bot, Boxes, Check, ChevronDown, ChevronLeft, ChevronRight, ChevronUp,
   Circle, CircleDashed, Clock, Code2, Command, Copy, CornerDownLeft, Download, Ellipsis,
   ExternalLink, Eye, EyeOff, File, FileCode, FileText, FlaskConical, Folder, FolderOpen,
-  GitBranch, Grid2X2, Image, Inbox, Info, LayoutDashboard, ListChecks, LoaderCircle, Lock, LockOpen,
+  GitBranch, Globe, Grid2X2, Image, Inbox, Info, LayoutDashboard, ListChecks, LoaderCircle, Lock, LockOpen,
   Menu, Mic, Minus, Palette, PanelLeft, Paperclip, Pencil, Play, Plus, RotateCw, Search, Send, Settings,
   Sparkles, Square, SquareStop, Terminal, Trash2, TriangleAlert, Upload, User, X,
 } from "@lucide/vue";
@@ -36,6 +36,7 @@ export const iconRegistry = {
   folder: Folder,
   "folder-open": FolderOpen,
   "git-branch": GitBranch,
+  globe: Globe,
   grid: Grid2X2,
   image: Image,
   inbox: Inbox,
