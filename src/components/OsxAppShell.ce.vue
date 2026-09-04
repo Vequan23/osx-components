@@ -171,14 +171,14 @@ header div { min-width: 0; display: flex; gap: 8px; align-items: center; justify
 .sidebar { grid-area: sidebar; min-width: 0; overflow: auto; border-right: 1px solid var(--osx-border); background: var(--osx-surface-sunken); }
 .resizable .sidebar { border-right: 0; }
 .workspace { grid-area: main; min-width: 0; min-height: 0; display: grid; grid-template-rows: minmax(0,1fr) auto; background: var(--osx-surface); }
-.content { min-width: 0; min-height: 0; overflow: auto; }
-.composer { border-top: 1px solid var(--osx-border-soft); background: var(--osx-surface-raised); }
+.content { min-width: 0; min-height: 0; overflow-x: clip; overflow-y: auto; }
+.composer { min-width: 0; border-top: 1px solid var(--osx-border-soft); background: var(--osx-surface-raised); }
 .inspector { grid-area: inspector; min-width: 0; overflow: auto; border-left: 1px solid var(--osx-border); background: var(--osx-surface-sunken); }
 .resizable .inspector { border-left: 0; }
 .resizer { position: relative; z-index: 2; padding: 0; outline: 0; background: var(--osx-surface-sunken); cursor: col-resize; touch-action: none; }.resizer::after { width: 1px; position: absolute; inset: 0 auto 0 4px; background: var(--osx-border); content: ""; }.resizer:hover::after,.resizer:focus-visible::after { width: 3px; left: 3px; border-radius: 2px; background: var(--osx-accent); }.resizer:focus-visible { box-shadow: 0 0 0 3px var(--osx-focus) inset; }.sidebar-resizer { grid-area: sidebar-resizer; }.inspector-resizer { grid-area: inspector-resizer; }
 footer { grid-area: status; min-width: 0; border-top: 1px solid var(--osx-border); background: linear-gradient(var(--osx-title-start),var(--osx-title-end)); }
 @media (max-width: 760px) {
-  .shell,.shell.resizable,.shell.without-inspector,.shell.resizable.without-inspector { grid-template: "toolbar" auto "sidebar" auto "main" minmax(420px,auto) "inspector" auto "status" auto / minmax(0,1fr); overflow: auto; }
+  .shell,.shell.resizable,.shell.without-inspector,.shell.resizable.without-inspector { grid-template: "toolbar" auto "sidebar" auto "main" minmax(0,1fr) "inspector" auto "status" auto / minmax(0,1fr); overflow-x: clip; overflow-y: auto; }
   .shell.without-inspector,.shell.resizable.without-inspector { grid-template-areas: "toolbar" "sidebar" "main" "status"; }
   .resizer { display: none; }
   .sidebar { max-height: 150px; border-right: 0; border-bottom: 1px solid var(--osx-border); }
